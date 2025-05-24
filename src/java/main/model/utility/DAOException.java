@@ -1,5 +1,4 @@
-package db_lab.data;
-
+package model.utility;
 import java.io.Serial;
 
 // This is a runtime exception we define to wrap all the exceptions coming from

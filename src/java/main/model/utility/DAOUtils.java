@@ -1,4 +1,4 @@
-package db_lab.data;
+package model.utility;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

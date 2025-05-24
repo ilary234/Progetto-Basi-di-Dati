@@ -1,14 +1,14 @@
-package src.amministratore.model;
+package model.utente;
 
-import src.DAOException;
-import src.DAOUtils;
 import java.sql.SQLException;
+import model.utility.DAOException;
+import model.utility.DAOUtils;
 
-public class AppAmministrazione {
+public class AppUser {
 
     public static void main(String[] args) throws SQLException {
         var connection = DAOUtils.localMySQLConnection("AgenziaBus", "root", "");
-        //var model = Model.fromConnection(connection);
+        var model = new ModelUser(connection);
         /*var view = new View(() -> {
             try {
                 connection.close();
@@ -18,5 +18,5 @@ public class AppAmministrazione {
         //view.setController(controller);
         //controller.userRequestedInitialPage();
     }
-    
+
 }

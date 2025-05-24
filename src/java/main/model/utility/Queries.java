@@ -1,4 +1,4 @@
-package db_lab.data;
+package model.utility;
 
 public final class Queries {
 
