@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -14,7 +15,7 @@ public class Autista extends Dipendente{
 
     private Optional<Pair<Integer, String>> Kb = Optional.empty();
 
-    public Autista(String cF, String nome, String cognome, String dataNascita, String luogoNascita, String residenza,
+    public Autista(String cF, String nome, String cognome, Date dataNascita, String luogoNascita, String residenza,
             String telefono, String numeroPatente, String tipoPatente, String scadenzaPatente, String scadenzaCQC) {
 
         super(cF, nome, cognome, dataNascita, luogoNascita, residenza, telefono);
@@ -22,7 +23,7 @@ public class Autista extends Dipendente{
         this.setPatente(numeroPatente, tipoPatente, scadenzaPatente);
     }
 
-    public Autista(String cF, String nome, String cognome, String dataNascita, String luogoNascita, String residenza,
+    public Autista(String cF, String nome, String cognome, Date dataNascita, String luogoNascita, String residenza,
             String telefono, String numeroPatente, String tipoPatente, String scadenzaPatente, String scadenzaCQC, 
             int numeroKb, String scadenzaKb) {
 

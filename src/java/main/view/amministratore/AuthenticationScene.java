@@ -40,9 +40,11 @@ public class AuthenticationScene implements Scene {
             public void actionPerformed(ActionEvent e) {
                 var cod = insertCodice.getText();
                 var pass = insertPassword.getPassword();
-                if (controller.checkImpiegato(cod, pass)) {
-                    controller.enter();
-                };
+                if (!cod.isBlank() && pass.length > 0) {
+                    if (controller.checkImpiegato(cod, pass)) {
+                        controller.enter();
+                    };
+                }
                 insertCodice.setText("");
                 insertPassword.setText("");
             }

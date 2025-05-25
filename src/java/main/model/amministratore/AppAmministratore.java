@@ -1,6 +1,5 @@
 package model.amministratore;
 
-import model.utility.DAOException;
 import model.utility.DAOUtils;
 import view.amministratore.api.ViewAmm;
 
@@ -18,9 +17,8 @@ public class AppAmministratore {
                 connection.close();
             } catch (Exception ignored) {}
         });
-        var controller = new ControllerAmm();
+        var controller = new ControllerAmm(view, model);
         view.setController(controller);
-        //controller.userRequestedInitialPage();
     }
 
 }

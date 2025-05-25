@@ -23,11 +23,11 @@ public final class Queries {
             and product_code = ?
         """;
 
-    public static final String FIND_PRODUCT =
+    public static final String FIND_IMPIEGATO =
         """
             select *
-            from PRODUCT as P, COMPOSITION as C
-            where P.code = C.product_code
-            and P.code = ?
+            from impiegati as i
+            where i.CodImpiegato = ?
+            and i.Password = ?
         """;
 }
