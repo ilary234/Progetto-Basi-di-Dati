@@ -2,20 +2,24 @@ package model.amministratore;
 
 import model.utility.DAOException;
 import model.utility.DAOUtils;
+import view.amministratore.api.ViewAmm;
+
 import java.sql.SQLException;
+
+import controller.amministratore.ControllerAmm;
 
 public class AppAmministratore {
 
     public static void main(String[] args) throws SQLException {
         var connection = DAOUtils.localMySQLConnection("AgenziaBus", "root", "");
         var model = new ModelAmm(connection);
-        /*var view = new View(() -> {
+        var view = new ViewAmm(() -> {
             try {
                 connection.close();
             } catch (Exception ignored) {}
-        });*/
-        //var controller = new Controller(model, view);
-        //view.setController(controller);
+        });
+        var controller = new ControllerAmm();
+        view.setController(controller);
         //controller.userRequestedInitialPage();
     }
 
