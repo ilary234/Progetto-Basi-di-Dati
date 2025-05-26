@@ -2,6 +2,13 @@ package model.utility;
 
 public final class Queries {
 
+    public static final String GET_VOLANDE = 
+        """
+            select * 
+            from VolandeRelazioni 
+            where Data = ?
+        """;
+
     public static final String GET_DATES =
         """
             select Data
@@ -11,8 +18,8 @@ public final class Queries {
     public static final String FIND_IMPIEGATO =
         """
             select *
-            from impiegati as i
-            where i.CodImpiegato = ?
-            and i.Password = ?
+            from impiegati
+            where CodImpiegato = ?
+            and Password = ?
         """;
 }
