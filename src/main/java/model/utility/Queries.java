@@ -2,6 +2,12 @@ package model.utility;
 
 public final class Queries {
 
+    public static final String REMOVE_DATE = 
+        """
+            delete from giornaliere
+            where Data = ?
+        """;
+
     public static final String GET_VOLANDE = 
         """
             select * 

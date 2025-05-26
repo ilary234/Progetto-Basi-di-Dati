@@ -39,6 +39,16 @@ public class Giornaliera {
             }
             return dates;
         }
+
+        public static void removeDate(Connection connection, Date date) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.REMOVE_DATE, date);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
     }
 
 }

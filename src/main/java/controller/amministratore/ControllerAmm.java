@@ -33,4 +33,8 @@ public class ControllerAmm {
         return this.model.getVolande(date);
     }
 
+    public void deleteGiornaliera(String date) {
+        this.model.deleteGiornaliera(date);
+    }
+
 }

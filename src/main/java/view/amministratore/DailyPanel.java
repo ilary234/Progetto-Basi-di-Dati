@@ -46,6 +46,10 @@ public class DailyPanel implements WorkPanel{
         var create = GenericButton.getGenericButton("Nuova +", BUTTON_SIZE, "Nuova Giornaliera");
         var delete = GenericButton.getGenericButton("Elimina", BUTTON_SIZE, "Elimina Giornaliera");
         var nuovaVolanda = GenericButton.getGenericButton("Nuova Volanda +", BUTTON_SIZE, "Nuova Volanda");
+        var actionListener = new ButtonListener();
+        create.addActionListener(actionListener);
+        delete.addActionListener(actionListener);
+        nuovaVolanda.addActionListener(actionListener);
         dailyButtons.add(create);
         dailyButtons.add(delete);
         buttonsPanel.add(dailyButtons, BorderLayout.WEST);
@@ -94,18 +98,15 @@ public class DailyPanel implements WorkPanel{
                 this.selected = dateButton;
                 GenericButton.setBackgroundVisible(this.selected, Color.LIGHT_GRAY, true);
             }
-            listPanel.add(dateButton); 
+            listPanel.add(dateButton);
         };
         
-        this.scrollList = new JScrollPane(listPanel);
+        this.scrollList.setViewportView(listPanel);
         this.scrollList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         this.scrollList.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         this.tableModel.setVolande(this.controller.getVolande(this.giornaliere.getFirst()));
-    }
-
-    private void updateGiornaliera() {
-        this.tableModel.fireTableDataChanged();
+        tableModel.fireTableDataChanged();
     }
 
     @Override
@@ -116,6 +117,29 @@ public class DailyPanel implements WorkPanel{
     @Override
     public String getName() {
         return PANEL_NAME;
+    }
+
+    private class ButtonListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            var button = (JButton) e.getSource();
+            switch (button.getActionCommand()) {
+                case "Nuova Giornaliera":
+                    break;
+                case "Elimina Giornaliera":
+                    var date = selected.getActionCommand();
+                    controller.deleteGiornaliera(date);
+                    createGiornaliere();
+                break;
+                case "Nuova Volanda":
+                break;
+            
+                default:
+                    break;
+            }
+        }
+
     }
 
     

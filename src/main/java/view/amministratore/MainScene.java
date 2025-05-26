@@ -21,8 +21,8 @@ public class MainScene implements Scene{
     private static final String SCENE_NAME = "Main";
     private static final int BUTTON_SIZE = 15;
     private static final int TITLE_SIZE = 25;
-    private static final int BACKGROUND_COLOR = 0x30A4CF;
-    private static final Color SELECTED_COLOR = new Color(0x3da9d1);
+    private static final int BACKGROUND_COLOR = 0x67A3E0;
+    private static final Color SELECTED_COLOR = new Color(0x99C2EA);
 
     private final ControllerAmm controller;
     private final CardLayout cardLayout;

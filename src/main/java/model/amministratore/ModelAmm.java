@@ -49,4 +49,13 @@ public class ModelAmm {
         return List.of();
     }
 
+    public void deleteGiornaliera(String date) {
+        try {
+            Giornaliera.DAO.removeDate(connection, this.dateFormat.parse(date));
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
 }
