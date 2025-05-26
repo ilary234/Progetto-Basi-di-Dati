@@ -7,7 +7,6 @@ import javax.swing.JButton;
 
 public class GenericButton{
 
-    private static final int COLOR_BUTTONS_PANEL = 0x30A4CF;
     private static final int FONT_SIZE = 15;
     private static final String FONT_FAMILY = "Roboto";
 
@@ -18,10 +17,12 @@ public class GenericButton{
      */
     static public JButton getGenericButton(final String text) { 
         final var button = new JButton(text);
-        button.setBackground(new Color(COLOR_BUTTONS_PANEL));
         button.setFont(new Font(FONT_FAMILY, Font.BOLD, FONT_SIZE));
-        button.setOpaque(true);
-        button.setContentAreaFilled(true);
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setFocusable(true);
+        button.setBorderPainted(false);
+
         return button;
     }
 
