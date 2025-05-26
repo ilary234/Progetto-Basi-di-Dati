@@ -48,7 +48,7 @@ create table `Autisti` (
 create table `Biglietti` (
      `NumeroBiglietto` integer not null auto_increment,
      `DataOraAcquisto` datetime not null,
-     `TipoPagamento` varchar(15) not null,
+     `TipoPagamento` varchar(20) not null,
      `Costo` float not null check (`Costo` > 0),
      `Acquirente` varchar(25) not null,
      `CodAnnuncio` integer not null,
@@ -85,7 +85,7 @@ create table `Committenti` (
      `Nominativo` varchar(25) not null,
      `Telefono` varchar(15) not null,
      `Tipo` enum('Singolo', 'Agenzia') not null,
-     `P_Iva` integer(11),
+     `P_Iva` char(11),
      `Città` varchar(15),
      `CAP` integer(5),
      `Provincia` char(2),
@@ -509,10 +509,10 @@ insert into Comunicazioni values (null, 'Festa di san Giovanni', 'A causa della 
 # Add info into "Committenti"                                            #
 # ---------------------------------------------------------------------- #
 insert into Committenti values (null, 'Chiarucci&co', '+392223334445', 'Singolo', null, null, null, null, null, null, null);
-insert into Committenti values (null, 'OMA', '+392229876545', 'Agenzia', 12345678901, 'Bertinolo', 47032, 'FC', 'A32BC65', 'chiarucci.alberto@gmail.com', null);
+insert into Committenti values (null, 'OMA', '+392229876545', 'Agenzia', '12345678901', 'Bertinoro', 47032, 'FC', 'A32BC65', 'chiarucci.alberto@gmail.com', null);
 insert into Committenti values (null, 'Piras&co', '+392211198745', 'Singolo', null, null, null, null, null, null, null);
 insert into Committenti values (null, 'Mariani&co', '+392324354658', 'Singolo', null, null, null, null, null, null, null);
-insert into Committenti values (null, 'CattognoViaggi', '+390998877665', 'Agenzia', 12342223301, 'Alghero', 07041, 'SS', 'G44UC65', 'cattogno.viaggi@gmail.com', 'cattognoViaggi@pec.com');
+insert into Committenti values (null, 'CattognoViaggi', '+390998877665', 'Agenzia', '12342223301', 'Alghero', 07041, 'SS', 'G44UC65', 'cattogno.viaggi@gmail.com', 'cattognoViaggi@pec.com');
 
 # ---------------------------------------------------------------------- #
 # Add info into "Assicurazioni"                                          #
