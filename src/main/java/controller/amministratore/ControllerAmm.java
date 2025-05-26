@@ -2,8 +2,9 @@ package controller.amministratore;
 
 import java.util.List;
 
+import model.Volanda;
 import model.amministratore.ModelAmm;
-import view.amministratore.DailyScene;
+import view.amministratore.MainScene;
 import view.api.View;
 
 public class ControllerAmm {
@@ -21,11 +22,15 @@ public class ControllerAmm {
     }
 
     public void enter() {
-        this.mainView.changeScene(new DailyScene(this));
+        this.mainView.changeScene(new MainScene(this));
     }
 
     public List<String> getGiornaliere() {
         return this.model.getGiornaliere();
+    }
+
+    public List<Volanda> getVolande(String date) {
+        return this.model.getVolande(date);
     }
 
 }
