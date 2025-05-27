@@ -37,4 +37,8 @@ public class ControllerAmm {
         this.model.deleteGiornaliera(date);
     }
 
+    public void deleteVolanda(String day, int numeroVolanda) {
+        this.model.deleteVolanda(day, numeroVolanda);
+    }
+
 }

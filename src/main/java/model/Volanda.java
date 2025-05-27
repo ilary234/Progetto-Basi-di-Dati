@@ -115,6 +115,16 @@ public class Volanda {
             }
             return volande;
         }
+
+        public static void deleteVolanda(Connection connection, Date date, int numeroVolanda) {
+            try (
+                var statement1 = DAOUtils.prepare(connection, Queries.REMOVE_VOLANDA, date, numeroVolanda);
+            ) {
+                statement1.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
     }
 
 }

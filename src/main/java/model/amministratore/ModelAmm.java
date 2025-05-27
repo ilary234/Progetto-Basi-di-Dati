@@ -51,9 +51,16 @@ public class ModelAmm {
 
     public void deleteGiornaliera(String date) {
         try {
-            Giornaliera.DAO.removeDate(connection, this.dateFormat.parse(date));
+            Giornaliera.DAO.deleteDate(connection, this.dateFormat.parse(date));
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteVolanda(String date, int numeroVolanda) {
+        try {
+            Volanda.DAO.deleteVolanda(connection, this.dateFormat.parse(date), numeroVolanda);
+        } catch (ParseException e) {
             e.printStackTrace();
         }
     }

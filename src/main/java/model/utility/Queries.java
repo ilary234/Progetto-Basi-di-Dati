@@ -8,9 +8,23 @@ public final class Queries {
             where Data = ?
         """;
 
+    public static final String REMOVE_VOLANDA = 
+        """
+            delete from volande
+            where Data = ?
+            and NumeroVolanda = ?
+        """;
+
     public static final String GET_VOLANDE = 
         """
             select * 
+            from VolandeRelazioni 
+            where Data = ?
+        """;
+
+    public static final String FIND_VOLANDE = 
+        """
+            select NumeroVolanda 
             from VolandeRelazioni 
             where Data = ?
         """;
@@ -19,6 +33,7 @@ public final class Queries {
         """
             select Data
             from giornaliere
+            order by Data
         """;
 
     public static final String FIND_IMPIEGATO =

@@ -21,7 +21,7 @@ public class AuthenticationScene implements Scene {
     private static final String SCENE_NAME = "Authentication";
     private static final int TEXT_SIZE = 15;
     private static final int TITLE_SIZE = 25;
-    private static final int COLOR_BUTTONS_PANEL = 0x30A4CF;
+    private static final int COLOR_BUTTONS_PANEL = 0x67A3E0;
 
     private final JPanel mainPanel;
     

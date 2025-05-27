@@ -43,17 +43,22 @@ public class DailyPanel implements WorkPanel{
 
         var buttonsPanel = new JPanel(new BorderLayout());
         var dailyButtons = new JPanel(new GridLayout(1, 2));
+        var volandeButtons = new JPanel(new GridLayout(1, 2));
         var create = GenericButton.getGenericButton("Nuova +", BUTTON_SIZE, "Nuova Giornaliera");
         var delete = GenericButton.getGenericButton("Elimina", BUTTON_SIZE, "Elimina Giornaliera");
-        var nuovaVolanda = GenericButton.getGenericButton("Nuova Volanda +", BUTTON_SIZE, "Nuova Volanda");
+        var createVolanda = GenericButton.getGenericButton("Nuova Volanda +", BUTTON_SIZE, "Nuova Volanda");
+        var deleteVolanda = GenericButton.getGenericButton("Elimina Volanda", BUTTON_SIZE, "Elimina Volanda");
         var actionListener = new ButtonListener();
         create.addActionListener(actionListener);
         delete.addActionListener(actionListener);
-        nuovaVolanda.addActionListener(actionListener);
+        createVolanda.addActionListener(actionListener);
+        deleteVolanda.addActionListener(actionListener);
         dailyButtons.add(create);
         dailyButtons.add(delete);
+        volandeButtons.add(createVolanda);
+        volandeButtons.add(deleteVolanda);
         buttonsPanel.add(dailyButtons, BorderLayout.WEST);
-        buttonsPanel.add(nuovaVolanda, BorderLayout.EAST);
+        buttonsPanel.add(volandeButtons, BorderLayout.EAST);
 
         this.tableModel = new TableModel();
         this.volande = new JTable(tableModel);
@@ -131,10 +136,15 @@ public class DailyPanel implements WorkPanel{
                     var date = selected.getActionCommand();
                     controller.deleteGiornaliera(date);
                     createGiornaliere();
-                break;
+                    break;
                 case "Nuova Volanda":
                 break;
-            
+                case "Elimina Volanda":
+                    var day = selected.getActionCommand();
+                    var numeroVolanda = volande.getSelectedRow() + 1;
+                    controller.deleteVolanda(day, numeroVolanda);
+                    tableModel.fireTableDataChanged();
+                break;
                 default:
                     break;
             }
