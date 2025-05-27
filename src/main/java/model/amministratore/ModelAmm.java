@@ -4,13 +4,18 @@ import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
+import model.Autista;
+import model.Committente;
 import model.Giornaliera;
 import model.Impiegato;
+import model.Mezzo;
+import model.Servizio;
 import model.Volanda;
 
 public class ModelAmm {
@@ -63,6 +68,35 @@ public class ModelAmm {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public void insertGiornaliera(Date data) {
+        Giornaliera.DAO.insertGiornaliera(connection, dateFormat.format(data), impiegato.get().getCodImpiegato());
+    }
+
+    public List<Integer> getServiziCodes() {
+        return Servizio.DAO.getCodes(connection);
+    }
+
+    public void insertVolanda(String date, int codServizio, String note, String fornitore, float prezzo,
+            int km) {
+        try {
+            Volanda.DAO.insertVolanda(connection, this.dateFormat.parse(date), codServizio, note, fornitore, prezzo, km);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> getAutistiNames() {
+        return Autista.DAO.getAutistiNames(connection);
+    }
+
+    public List<Integer> getMezziNumbers() {
+        return Mezzo.DAO.getMezziNumbers(connection);
+    }
+
+    public List<String> getCommittentiNames() {
+        return Committente.DAO.getCommittentiNames(connection);
     }
 
 }

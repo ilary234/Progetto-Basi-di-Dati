@@ -43,20 +43,23 @@ public class DailyPanel implements WorkPanel{
 
         var buttonsPanel = new JPanel(new BorderLayout());
         var dailyButtons = new JPanel(new GridLayout(1, 2));
-        var volandeButtons = new JPanel(new GridLayout(1, 2));
+        var volandeButtons = new JPanel(new GridLayout(1, 3));
         var create = GenericButton.getGenericButton("Nuova +", BUTTON_SIZE, "Nuova Giornaliera");
         var delete = GenericButton.getGenericButton("Elimina", BUTTON_SIZE, "Elimina Giornaliera");
         var createVolanda = GenericButton.getGenericButton("Nuova Volanda +", BUTTON_SIZE, "Nuova Volanda");
-        var deleteVolanda = GenericButton.getGenericButton("Elimina Volanda", BUTTON_SIZE, "Elimina Volanda");
+        var deleteVolanda = GenericButton.getGenericButton("Elimina", BUTTON_SIZE, "Elimina Volanda");
+        var changeVolanda = GenericButton.getGenericButton("Cambia", BUTTON_SIZE, "Cambia Volanda");
         var actionListener = new ButtonListener();
         create.addActionListener(actionListener);
         delete.addActionListener(actionListener);
         createVolanda.addActionListener(actionListener);
         deleteVolanda.addActionListener(actionListener);
+        changeVolanda.addActionListener(actionListener);
         dailyButtons.add(create);
         dailyButtons.add(delete);
         volandeButtons.add(createVolanda);
         volandeButtons.add(deleteVolanda);
+        volandeButtons.add(changeVolanda);
         buttonsPanel.add(dailyButtons, BorderLayout.WEST);
         buttonsPanel.add(volandeButtons, BorderLayout.EAST);
 
@@ -72,6 +75,15 @@ public class DailyPanel implements WorkPanel{
         this.mainPanel.add(buttonsPanel, BorderLayout.NORTH);
         this.mainPanel.add(scrollList, BorderLayout.WEST);
         this.mainPanel.add(scrollTable, BorderLayout.CENTER);
+
+        changeVolanda.setEnabled(false);
+        deleteVolanda.setEnabled(false);
+
+        this.volande.getSelectionModel().addListSelectionListener(e -> {
+            boolean selected = this.volande.getSelectedRow() != -1;
+            changeVolanda.setEnabled(selected);
+            deleteVolanda.setEnabled(selected);
+        });
 
 
     }
@@ -110,7 +122,18 @@ public class DailyPanel implements WorkPanel{
         this.scrollList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         this.scrollList.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        this.tableModel.setVolande(this.controller.getVolande(this.giornaliere.getFirst()));
+        this.updateGiornaliera();
+    }
+
+    private void updateGiornaliera() {
+        this.tableModel.setVolande(this.controller.getVolande(this.selected.getActionCommand()));
+        tableModel.fireTableDataChanged();
+    }
+
+    public void addVolanda(int codice, String note, String fornitore, float prezzo, int km) {
+        this.controller.insertVolanda(selected.getActionCommand(), codice,
+                        note, fornitore, prezzo, km);
+        this.tableModel.setVolande(this.controller.getVolande(this.selected.getActionCommand()));
         tableModel.fireTableDataChanged();
     }
 
@@ -131,6 +154,8 @@ public class DailyPanel implements WorkPanel{
             var button = (JButton) e.getSource();
             switch (button.getActionCommand()) {
                 case "Nuova Giornaliera":
+                    new DailyDialog(controller);
+                    createGiornaliere();
                     break;
                 case "Elimina Giornaliera":
                     var date = selected.getActionCommand();
@@ -138,13 +163,17 @@ public class DailyPanel implements WorkPanel{
                     createGiornaliere();
                     break;
                 case "Nuova Volanda":
-                break;
+                    new NewVolandaDialog(controller, DailyPanel.this);
+                    break;
+                case "Cambia Volanda":
+                    new ChangeDialog(controller, DailyPanel.this);
+                    break;
                 case "Elimina Volanda":
                     var day = selected.getActionCommand();
                     var numeroVolanda = volande.getSelectedRow() + 1;
                     controller.deleteVolanda(day, numeroVolanda);
-                    tableModel.fireTableDataChanged();
-                break;
+                    updateGiornaliera();
+                    break;
                 default:
                     break;
             }
@@ -219,7 +248,6 @@ public class DailyPanel implements WorkPanel{
                 textArea.setBackground(table.getBackground());
                 textArea.setForeground(table.getForeground());
             }
-            // Calcola l'altezza preferita
             int colWidth = table.getColumnModel().getColumn(column).getWidth();
             textArea.setSize(colWidth, Short.MAX_VALUE);
             int maxHeight = textArea.getPreferredSize().height;
