@@ -333,7 +333,8 @@ alter table `Collegamenti` add constraint `Fk_CollegamentiArrivo`
 
 alter table `Commissioni` add constraint `Fk_Commissioni`
      foreign key (`Data`, `NumeroVolanda`)
-     references `Volande` (`Data`, `NumeroVolanda`);
+     references `Volande` (`Data`, `NumeroVolanda`)
+     on delete cascade;
 
 alter table `Commissioni` add constraint `Fk_CommissioniCommittente`
      foreign key (`CodCommittente`)
@@ -357,7 +358,8 @@ alter table `Giornaliere` add constraint `Fk_GiornaliereImpiegato`
 
 alter table `Guida` add constraint `FKDataEVolanda`
      foreign key (`Data`,`NumeroVolanda`)
-     references `Volande` (`Data`,`NumeroVolanda`);
+     references `Volande` (`Data`,`NumeroVolanda`)
+     on delete cascade;
 
 alter table `Guida` add constraint `Fk_GuidaAutista`
      foreign key (`Autista`)
@@ -417,7 +419,8 @@ alter table `Tipologia` add constraint `Fk_TipologiaNome`
 
 alter table `VeicoloVolanda` add constraint `Fk_VeicoloVolandaData`
      foreign key (`Data`, `NumeroVolanda`)
-     references `Volande` (`Data`, `NumeroVolanda`);
+     references `Volande` (`Data`, `NumeroVolanda`)
+     on delete cascade;
 
 alter table `VeicoloVolanda` add constraint `Fk_VeicoloVolandaMezzo`
      foreign key (`NumeroMezzo`)
