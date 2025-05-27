@@ -333,7 +333,8 @@ alter table `Collegamenti` add constraint `Fk_CollegamentiArrivo`
 
 alter table `Commissioni` add constraint `Fk_Commissioni`
      foreign key (`Data`, `NumeroVolanda`)
-     references `Volande` (`Data`, `NumeroVolanda`);
+     references `Volande` (`Data`, `NumeroVolanda`)
+     on delete cascade;
 
 alter table `Commissioni` add constraint `Fk_CommissioniCommittente`
      foreign key (`CodCommittente`)
@@ -357,7 +358,8 @@ alter table `Giornaliere` add constraint `Fk_GiornaliereImpiegato`
 
 alter table `Guida` add constraint `FKDataEVolanda`
      foreign key (`Data`,`NumeroVolanda`)
-     references `Volande` (`Data`,`NumeroVolanda`);
+     references `Volande` (`Data`,`NumeroVolanda`)
+     on delete cascade;
 
 alter table `Guida` add constraint `Fk_GuidaAutista`
      foreign key (`Autista`)
@@ -417,7 +419,8 @@ alter table `Tipologia` add constraint `Fk_TipologiaNome`
 
 alter table `VeicoloVolanda` add constraint `Fk_VeicoloVolandaData`
      foreign key (`Data`, `NumeroVolanda`)
-     references `Volande` (`Data`, `NumeroVolanda`);
+     references `Volande` (`Data`, `NumeroVolanda`)
+     on delete cascade;
 
 alter table `VeicoloVolanda` add constraint `Fk_VeicoloVolandaMezzo`
      foreign key (`NumeroMezzo`)
@@ -444,8 +447,17 @@ check( (Tipo = 'Agenzia' and P_Iva is not null and Città is not null and CAP is
 		or (Tipo = 'Singolo' and P_Iva is null and Città is null and CAP is null and Provincia is null and SD is null and Email is null and Pec is null));
 
 
--- Index Section
--- _____________ 
+# ---------------------------------------------------------------------- #
+# Views                                                                  #
+# ---------------------------------------------------------------------- #
+create view VolandeRelazioni as
+select v.*, NumeroMezzo, Cognome, Nome, Nominativo
+from volande v left join veicolovolanda vv on (v.Data = vv.Data and v.NumeroVolanda = vv.NumeroVolanda) 
+	left join (select g.*, Nome, Cognome from guida g, autisti a where a.CF = g.Autista) as a 
+		on (v.Data = a.Data and v.NumeroVolanda = a.NumeroVolanda) 
+	left join (select c.*, Nominativo from commissioni c, committenti cc where c.CodCommittente = cc.CodCommittente) as c 
+		on (v.Data = c.Data and v.NumeroVolanda = c.NumeroVolanda);
+
 # ---------------------------------------------------------------------- #
 # Add info into "Patenti"                                                #
 # ---------------------------------------------------------------------- #
@@ -942,25 +954,18 @@ INSERT INTO `VeicoloVolanda` VALUES ('2025-07-09', 3, 48);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-09', 2, 18);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-10', 1, 25);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-10', 2, 18);
-INSERT INTO `VeicoloVolanda` VALUES ('2025-07-10', 3, 48);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-11', 1, 25);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-11', 2, 48);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-11', 3, 52);
-INSERT INTO `VeicoloVolanda` VALUES ('2025-07-11', 4, 28);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-11', 5, 18);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-12', 1, 25);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-12', 2, 48);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-12', 3, 50);
-INSERT INTO `VeicoloVolanda` VALUES ('2025-07-13', 1, 25);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-13', 2, 48);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-13', 3, 52);
-INSERT INTO `VeicoloVolanda` VALUES ('2025-07-14', 1, 25);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-14', 2, 48);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-14', 3, 18);
 INSERT INTO `VeicoloVolanda` VALUES ('2025-07-14', 4, 32);
-INSERT INTO `VeicoloVolanda` VALUES ('2025-10-18', 1, 28);
-INSERT INTO `VeicoloVolanda` VALUES ('2025-10-18', 2, 50);
-INSERT INTO `VeicoloVolanda` VALUES ('2025-10-18', 3, 32);
 
 # ---------------------------------------------------------------------- #
 # Add info into "Commissioni"                                            #

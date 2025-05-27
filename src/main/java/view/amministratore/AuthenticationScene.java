@@ -21,7 +21,7 @@ public class AuthenticationScene implements Scene {
     private static final String SCENE_NAME = "Authentication";
     private static final int TEXT_SIZE = 15;
     private static final int TITLE_SIZE = 25;
-    private static final int COLOR_BUTTONS_PANEL = 0x30A4CF;
+    private static final int COLOR_BUTTONS_PANEL = 0x67A3E0;
 
     private final JPanel mainPanel;
     
@@ -35,7 +35,7 @@ public class AuthenticationScene implements Scene {
         password.setHorizontalAlignment(JLabel.LEFT);
         var insertCodice = new JTextField(50);
         var insertPassword = new JPasswordField(50);
-        var accedi = GenericButton.getGenericButton("ACCEDI");
+        var accedi = GenericButton.getGenericButton("ACCEDI", TEXT_SIZE, "ACCEDI");
         accedi.setBackground(new Color(COLOR_BUTTONS_PANEL));
         accedi.setContentAreaFilled(true);
         accedi.addActionListener(new ActionListener() {

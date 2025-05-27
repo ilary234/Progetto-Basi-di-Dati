@@ -2,18 +2,46 @@ package model.utility;
 
 public final class Queries {
 
+    public static final String REMOVE_DATE = 
+        """
+            delete from giornaliere
+            where Data = ?
+        """;
+
+    public static final String REMOVE_VOLANDA = 
+        """
+            delete from volande
+            where Data = ?
+            and NumeroVolanda = ?
+        """;
+
+    public static final String GET_VOLANDE = 
+        """
+            select * 
+            from VolandeRelazioni 
+            where Data = ?
+        """;
+
+    public static final String FIND_VOLANDE = 
+        """
+            select NumeroVolanda 
+            from VolandeRelazioni 
+            where Data = ?
+        """;
+
     public static final String GET_DATES =
         """
             select Data
             from giornaliere
+            order by Data
         """;
 
     public static final String FIND_IMPIEGATO =
         """
             select *
-            from impiegati as i
-            where i.CodImpiegato = ?
-            and i.Password = ?
+            from impiegati
+            where CodImpiegato = ?
+            and Password = ?
         """;
 
     public static final String GET_TITLES =

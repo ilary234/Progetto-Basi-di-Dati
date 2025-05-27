@@ -12,8 +12,8 @@ import model.utility.Queries;
 
 public class Giornaliera {
 
-    private final Date data; //date not null,
-    private final int codImp; //integer not null,
+    private final Date data;
+    private final int codImp;
     private final List<Volanda> volande;
 
     public Giornaliera(Date data, int codImp, List<Volanda> volande) {
@@ -38,6 +38,22 @@ public class Giornaliera {
                 throw new DAOException(e);
             }
             return dates;
+        }
+
+        public static void deleteDate(Connection connection, Date date) {
+            try (
+                var statement1 = DAOUtils.prepare(connection, Queries.REMOVE_DATE, date);
+                var statement2 = DAOUtils.prepare(connection, Queries.FIND_VOLANDE, date);
+                var resultSet = statement2.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var numeroVolanda = resultSet.getInt("NumeroVolanda");
+                    Volanda.DAO.deleteVolanda(connection, date, numeroVolanda);
+                }
+                statement1.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
         }
     }
 
