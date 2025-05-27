@@ -15,4 +15,10 @@ public final class Queries {
             where i.CodImpiegato = ?
             and i.Password = ?
         """;
+
+    public static final String GET_TITLES =
+        """
+            select Titolo
+            from annunciservizi
+        """;
 }
