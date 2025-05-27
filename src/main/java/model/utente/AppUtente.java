@@ -1,21 +1,23 @@
 package model.utente;
 
 import java.sql.SQLException;
-import model.utility.DAOException;
-import model.utility.DAOUtils;
 
-public class AppUser {
+import controller.utente.ControllerUtente;
+import model.utility.DAOUtils;
+import view.utente.ViewUtente;
+
+public class AppUtente {
 
     public static void main(String[] args) throws SQLException {
         var connection = DAOUtils.localMySQLConnection("AgenziaBus", "root", "");
-        var model = new ModelUser(connection);
-        /*var view = new View(() -> {
+        var model = new ModelUtente(connection);
+        var view = new ViewUtente(() -> {
             try {
                 connection.close();
             } catch (Exception ignored) {}
-        });*/
-        //var controller = new Controller(model, view);
-        //view.setController(controller);
+        });
+        var controller = new ControllerUtente(view, model);
+        view.setController(controller);
         //controller.userRequestedInitialPage();
     }
 

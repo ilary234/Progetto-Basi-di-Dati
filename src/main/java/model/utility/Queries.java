@@ -81,4 +81,10 @@ public final class Queries {
             where CodImpiegato = ?
             and Password = ?
         """;
+
+    public static final String GET_TITLES =
+        """
+            select Titolo
+            from annunciservizi
+        """;
 }

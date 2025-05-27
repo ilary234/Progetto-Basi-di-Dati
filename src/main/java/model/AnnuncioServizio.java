@@ -1,10 +1,17 @@
 package model;
 
+import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import model.utility.DAOException;
+import model.utility.DAOUtils;
+import model.utility.Queries;
 
 public class AnnuncioServizio extends Comunicazione {
 
@@ -22,6 +29,25 @@ public class AnnuncioServizio extends Comunicazione {
         this.prezzoBase = Objects.requireNonNull(prezzoBase);
         this.visibile = Objects.requireNonNull(visibile);
         this.bigliettiDisponibili = Objects.requireNonNull(bigliettiDisponibili);
+    }
+
+    public static final class DAO {
+
+        public static List<String> titlesList(Connection connection) {
+            List<String> annunci = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_TITLES);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var titolo = resultSet.getString("Titolo");
+                    annunci.add(titolo);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return annunci;
+        }
     }
 
 }
