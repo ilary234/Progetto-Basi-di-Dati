@@ -1,5 +1,7 @@
 package view.api;
 
+import javax.swing.JFrame;
+
 public interface View {
 
     /**
@@ -19,5 +21,11 @@ public interface View {
      * @return the height of the screen
      */
     int getScreenHeight();
+
+    /**
+     * Gets the main frame.
+     * @return the main frame
+     */
+    JFrame getFrame();
 
 }

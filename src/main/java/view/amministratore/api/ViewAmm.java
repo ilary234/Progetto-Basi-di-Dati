@@ -33,7 +33,7 @@ public class ViewAmm implements View{
      * @param visible if the window should be visible
      */
     public ViewAmm(final Runnable onClose) {
-        this.frame = new JFrame("Amministrazione");
+        this.frame = new JFrame();
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Set the size of the frame
@@ -81,6 +81,10 @@ public class ViewAmm implements View{
     @Override
     public int getScreenHeight() {
         return this.screenSize.height;
+    }
+
+    public JFrame getFrame() {
+        return this.frame;
     }
 
     public void setController(final ControllerAmm controller) {

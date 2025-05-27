@@ -1,8 +1,13 @@
 package model;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import model.utility.DAOException;
+import model.utility.DAOUtils;
+import model.utility.Queries;
 
 public class Servizio {
 
@@ -24,6 +29,23 @@ public class Servizio {
         this.corse = new ArrayList<>(corse);
     }
 
-    
+    public static final class DAO {
+
+        public static List<Integer> getCodes(Connection connection) {
+            List<Integer> codes = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_SERVIZI_CODES);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var codServizio = resultSet.getInt("CodServizio");
+                    codes.add(codServizio);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return codes;
+        }
+    }
 
 }

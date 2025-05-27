@@ -125,6 +125,17 @@ public class Volanda {
                 throw new DAOException(e);
             }
         }
+
+        public static void insertVolanda(Connection connection, Date date, int codServizio, String note,
+                String fornitore, float prezzo, int km) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.INSERT_VOLANDA, date, null, codServizio, note, fornitore, prezzo, km);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
     }
 
 }
