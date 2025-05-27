@@ -55,6 +55,16 @@ public class Giornaliera {
                 throw new DAOException(e);
             }
         }
+
+        public static void insertGiornaliera(Connection connection, String date, int codImp) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.INSERT_DATE, date, codImp);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
     }
 
 }
