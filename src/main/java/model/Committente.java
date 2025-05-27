@@ -1,6 +1,13 @@
 package model;
 
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import model.utility.DAOException;
+import model.utility.DAOUtils;
+import model.utility.Queries;
 
 public class Committente {
 
@@ -29,6 +36,25 @@ public class Committente {
         SD = sD;
         this.email = email;
         this.pec = pec;
+    }
+
+    public static final class DAO {
+
+        public static List<String> getCommittentiNames(Connection connection) {
+            List<String> committenti = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_COMMITTENTI_NAMES);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var nominativo = resultSet.getString("Nominativo");
+                    committenti.add(nominativo);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return committenti;
+        }
     }
 
 }
