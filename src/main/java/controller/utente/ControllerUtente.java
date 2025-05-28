@@ -1,6 +1,7 @@
 package controller.utente;
 
 import java.util.List;
+import java.util.Map;
 
 import model.utente.ModelUtente;
 import view.api.View;
@@ -17,5 +18,9 @@ public class ControllerUtente {
 
     public List<String> getTitoliAnnunci() {
         return this.model.getTitoliAnnunci();
+    }
+
+    public Map<Integer, String> getLinee() {
+        return this.model.getLinee();
     }
 }

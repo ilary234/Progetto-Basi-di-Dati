@@ -1,0 +1,98 @@
+package view.utente;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.Map;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import controller.utente.ControllerUtente;
+import view.amministratore.api.WorkPanel;
+import view.api.GenericButton;
+import view.api.GenericLabel;
+import view.api.WrapLayout;
+
+public class LineePanel implements WorkPanel {
+
+    private static final String PANEL_NAME = "Linee";
+    private static final int TEXT_SIZE = 15;
+    private final JPanel mainPanel = new JPanel(new BorderLayout());
+    private final JPanel titlesPanel = new JPanel();
+    private final ControllerUtente controller;
+    //private final List<String> linee;
+    //private final List<Pair<Integer, String>> linee;
+
+    public LineePanel(ControllerUtente controller) {
+        
+        this.controller = controller;
+        //this.linee = new ArrayList<>();
+
+        this.titlesPanel.setLayout(new WrapLayout(FlowLayout.LEFT, 20, 20));
+        this.titlesPanel.setOpaque(false);
+
+        updateLinee();
+
+        JPanel containerPanel = new JPanel(new BorderLayout());
+        containerPanel.add(titlesPanel, BorderLayout.CENTER);
+        
+        JScrollPane annunciScrollPane = new JScrollPane(titlesPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        annunciScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        annunciScrollPane.setBorder(null);
+        annunciScrollPane.getViewport().setBackground(Color.WHITE); //si può omettere
+
+        annunciScrollPane.getViewport().addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int width = annunciScrollPane.getViewport().getWidth();
+                titlesPanel.setPreferredSize(new Dimension(width, titlesPanel.getPreferredSize().height));
+                titlesPanel.revalidate();
+                titlesPanel.repaint();
+            }
+        });
+
+        annunciScrollPane.setPreferredSize(new Dimension(Short.MAX_VALUE, 400));
+        annunciScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        mainPanel.add(annunciScrollPane, BorderLayout.CENTER);
+    }
+
+    public void updateLinee() {
+        this.titlesPanel.removeAll();
+        Map<Integer, String> linee = controller.getLinee();
+
+        linee.entrySet().forEach(linea -> {
+            JPanel titlePanel = new JPanel();
+            titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+            JButton button = GenericButton.getGenericButton("LINEA", TEXT_SIZE, "LINEA");
+            JLabel codiceLabel = GenericLabel.getGenericLabel("Codice: " + linea.getKey(), TEXT_SIZE);
+            JLabel categoriaLabel = GenericLabel.getGenericLabel("Categoria: " + linea.getValue(), TEXT_SIZE);
+            titlePanel.add(button);
+            titlePanel.add(codiceLabel);
+            titlePanel.add(categoriaLabel);
+            titlesPanel.add(titlePanel);
+        });
+
+        this.titlesPanel.revalidate();
+        this.titlesPanel.repaint();
+    }
+
+    @Override
+    public JPanel getPanel() {
+        return this.mainPanel;
+    }
+
+    @Override
+    public String getName() {
+        return PANEL_NAME;
+    }
+}

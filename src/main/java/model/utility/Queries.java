@@ -46,7 +46,13 @@ public final class Queries {
 
     public static final String GET_TITLES =
         """
-            select Titolo
-            from annunciservizi
+            SELECT Titolo
+            FROM annunciservizi
+        """;
+
+    public static final String GET_LINES = 
+        """
+            SELECT *
+            FROM CategorieServizi
         """;
 }

@@ -83,7 +83,7 @@ public class ViewUtente implements View{
 
     public void setController(final ControllerUtente controller) {
         this.controller = controller;
-        this.changeScene(new HomeScene(this.controller));
+        this.changeScene(new UserScene(this.controller));
         this.frame.setLocationByPlatform(true);
         this.frame.setVisible(true);
     }
