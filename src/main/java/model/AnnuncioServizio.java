@@ -5,8 +5,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 import model.utility.DAOException;
@@ -47,6 +49,23 @@ public class AnnuncioServizio extends Comunicazione {
                 throw new DAOException(e);
             }
             return annunci;
+        }
+
+        public static Map<Integer, String> getLines(Connection connection) {
+            Map<Integer, String> result = new HashMap<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_LINES);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var codice = resultSet.getInt("CodServizio");
+                    var categoria = resultSet.getString("NomeLinea");
+                    result.put(codice, categoria);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return result;
         }
     }
 

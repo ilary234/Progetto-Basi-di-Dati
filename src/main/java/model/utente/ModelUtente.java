@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 import model.AnnuncioServizio;
@@ -22,8 +23,11 @@ public class ModelUtente {
     }
 
     public List<String> getTitoliAnnunci() {
-        var  titles = AnnuncioServizio.DAO.titlesList(connection);
-        return titles;
+        return AnnuncioServizio.DAO.titlesList(connection);
+    }
+
+    public Map<Integer, String> getLinee() {
+        return AnnuncioServizio.DAO.getLines(connection);
     }
 
 }
