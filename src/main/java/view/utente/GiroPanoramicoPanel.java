@@ -21,22 +21,22 @@ import view.api.GenericButton;
 import view.api.GenericLabel;
 import view.api.WrapLayout;
 
-public class LineePanel implements WorkPanel {
-
-    private static final String PANEL_NAME = "Linee";
+public class GiroPanoramicoPanel implements WorkPanel {
+    
+    private static final String PANEL_NAME = "Giro Panoramico";
     private static final int TEXT_SIZE = 15;
     private final JPanel mainPanel = new JPanel(new BorderLayout());
     private final JPanel titlesPanel = new JPanel();
     private final ControllerUtente controller;
 
-    public LineePanel(ControllerUtente controller) {
+    public GiroPanoramicoPanel(ControllerUtente controller) {
         
         this.controller = controller;
 
         this.titlesPanel.setLayout(new WrapLayout(FlowLayout.LEFT, 20, 20));
         this.titlesPanel.setOpaque(false);
 
-        updateLinee();
+        updateGP();
 
         JPanel containerPanel = new JPanel(new BorderLayout());
         containerPanel.add(titlesPanel, BorderLayout.CENTER);
@@ -63,18 +63,18 @@ public class LineePanel implements WorkPanel {
         mainPanel.add(annunciScrollPane, BorderLayout.CENTER);
     }
 
-    public void updateLinee() {
+    public void updateGP() {
         this.titlesPanel.removeAll();
-        Map<Integer, String> linee = controller.getLinee();
+        Map<Integer, String> linee = controller.getGP();
 
-        linee.entrySet().forEach(linea -> {
+        linee.entrySet().forEach(gp -> {
             JPanel titlePanel = new JPanel();
             titlePanel.setBackground(Color.WHITE);
             titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
-            JButton button = GenericButton.getGenericButton("LINEA", TEXT_SIZE, "LINEA");
-            JLabel codiceLabel = GenericLabel.getGenericLabel(String.valueOf(linea.getKey()), TEXT_SIZE);
+            JButton button = GenericButton.getGenericButton("GP", TEXT_SIZE, "GP");
+            JLabel codiceLabel = GenericLabel.getGenericLabel(String.valueOf(gp.getKey()), TEXT_SIZE);
             codiceLabel.setVisible(false);
-            JLabel categoriaLabel = GenericLabel.getGenericLabel(linea.getValue(), TEXT_SIZE);
+            JLabel categoriaLabel = GenericLabel.getGenericLabel(gp.getValue(), TEXT_SIZE);
             titlePanel.add(button);
             titlePanel.add(codiceLabel);
             titlePanel.add(categoriaLabel);
@@ -94,4 +94,5 @@ public class LineePanel implements WorkPanel {
     public String getName() {
         return PANEL_NAME;
     }
+    
 }

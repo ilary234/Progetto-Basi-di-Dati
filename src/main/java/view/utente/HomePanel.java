@@ -74,6 +74,7 @@ public class HomePanel implements WorkPanel{
 
         this.titoliAnnunci.forEach(titolo -> {
             JPanel titlePanel = new JPanel();
+            titlePanel.setBackground(Color.WHITE);
             titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
             JButton button = GenericButton.getGenericButton("ANNUNCIO", TEXT_SIZE, "ANNUNCIO");
             JLabel label = GenericLabel.getGenericLabel(titolo, TEXT_SIZE);

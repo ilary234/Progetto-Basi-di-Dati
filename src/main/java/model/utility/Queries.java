@@ -55,4 +55,29 @@ public final class Queries {
             SELECT *
             FROM CategorieServizi
         """;
+
+    public static final String GET_GP = 
+        """
+            SELECT *
+            FROM ClassiServizi
+            WHERE NomeTransfer = 'Giro Panoramico'
+        """;
+    
+    public static final String GET_CONCERTS = 
+        """
+            SELECT CodServizio, Titolo
+            FROM AnnunciServizi
+            WHERE CodServizio IN (SELECT CodServizio
+                                  FROM ClassiServizi
+                                  WHERE NomeTransfer = 'Concerto')
+        """;
+
+    public static final String GET_TRIPS = 
+        """
+            SELECT CodServizio, Titolo
+            FROM AnnunciServizi
+            WHERE CodServizio IN (SELECT CodServizio
+                                  FROM ClassiServizi
+                                  WHERE NomeTransfer = 'Escursione')
+        """;
 }

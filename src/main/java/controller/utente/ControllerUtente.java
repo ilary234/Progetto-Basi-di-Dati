@@ -23,4 +23,16 @@ public class ControllerUtente {
     public Map<Integer, String> getLinee() {
         return this.model.getLinee();
     }
+
+    public Map<Integer, String> getGP() {
+        return this.model.getGP();
+    }
+
+    public Map<Integer, String> getConcerti() {
+        return this.model.getConcerti();
+    }
+
+    public Map<Integer, String> getEscursioni() {
+        return this.model.getEscursioni();
+    }
 }
