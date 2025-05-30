@@ -55,6 +55,45 @@ public final class Queries {
             order by CodServizio
         """;
 
+    public static final String GET_SERVIZI = 
+        """
+            select s.*, NomeLinea as Categoria
+            from Servizi s, CategorieServizi c
+            where s.CodServizio = c.CodServizio
+            union
+            select s.*, NomeTransfer as Categoria
+            from Servizi s, Classiservizi c
+            where s.CodServizio = c.CodServizio
+            order by CodServizio;
+        """;
+
+    public static final String GET_CATEGORIE =
+        """
+            select NomeLinea as Categoria
+            from Categorieservizi
+            union
+            select NomeTransfer as Categoria
+            from Classiservizi;
+        """;
+
+    public static final String INSERT_SERVIZIO = 
+        """
+            insert into servizi
+            values (?, ?, ?, ?, ?)
+        """;
+
+    public static final String INSERT_CATEGORIA = 
+        """
+            insert into CategorieServizi
+            values (?, ?)
+        """;
+
+    public static final String INSERT_CLASSE = 
+        """
+            insert into ClassiServizi
+            values (?, ?)
+        """;
+
     public static final String GET_AUTISTI_NAMES = 
         """
             select CF, Nome, Cognome

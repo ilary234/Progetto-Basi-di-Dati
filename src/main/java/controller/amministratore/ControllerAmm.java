@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
+import model.Servizio;
 import model.Volanda;
 import model.amministratore.ModelAmm;
 import view.amministratore.MainScene;
@@ -77,6 +78,18 @@ public class ControllerAmm {
     public void updateVolanda(String date, int numeroVolanda, String autista, int resAutista, String mezzo,
             int resMezzo, int codCommittente, int resCommittente) {
         this.model.updateVolanda(date, numeroVolanda, autista, resAutista, mezzo, resMezzo, codCommittente, resCommittente);
+    }
+
+    public List<Servizio> getServizi() {
+        return this.model.getServizi();
+    }
+
+    public List<String> getCategorie() {
+        return this.model.getCategorie();
+    }
+
+    public void addServizio(int codice, String partenza, String destinazione, String orario, int biglietti, String categoria) {
+        this.model.addServizio(codice,  partenza, destinazione, orario, biglietti, categoria);
     }
 
 }

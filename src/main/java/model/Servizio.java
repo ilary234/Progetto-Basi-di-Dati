@@ -11,11 +11,11 @@ import model.utility.Queries;
 
 public class Servizio {
 
-    private final int codServizio; //integer not null auto_increment, 
-    private final String partenza; //varchar(20) not null,
-    private final String destinazione; //varchar(20) not null,
-    private final String orarioPartenza; //char(5) not null,
-    private int bigliettiVenduti; //smallint not null,
+    private final int codServizio;
+    private final String partenza;
+    private final String destinazione;
+    private final String orarioPartenza;
+    private int bigliettiVenduti;
     private final String categoriaServizio; 
     private final List<Corse> corse;
 
@@ -39,6 +39,25 @@ public class Servizio {
         return categoriaServizio;
     }
 
+    public String getPartenza() {
+        return partenza;
+    }
+
+
+    public String getDestinazione() {
+        return destinazione;
+    }
+
+
+    public String getOrarioPartenza() {
+        return orarioPartenza;
+    }
+
+
+    public int getBigliettiVenduti() {
+        return bigliettiVenduti;
+    }
+
     public static final class DAO {
 
         public static List<Integer> getCodes(Connection connection) {
@@ -55,6 +74,73 @@ public class Servizio {
                 throw new DAOException(e);
             }
             return codes;
+        }
+
+        public static List<Servizio> getServizi(Connection connection) {
+            List<Servizio> servizi = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_SERVIZI);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var codServizio = resultSet.getInt("CodServizio");
+                    var partenza = resultSet.getString("Partenza");
+                    var destinazione = resultSet.getString("Destinazione");
+                    var orario = resultSet.getString("OrarioPartenza");
+                    var bigliettiVenduti = resultSet.getInt("NumeroBigliettiVenduti");
+                    var categoria = resultSet.getString("Categoria");
+
+                    var servizio = new Servizio(codServizio, partenza, destinazione, orario, bigliettiVenduti, List.of(), categoria);
+                    servizi.add(servizio);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return servizi;
+        }
+
+        public static List<String> getCAtegorie(Connection connection) {
+            List<String> categorie = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_CATEGORIE);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var categoria = resultSet.getString("Categoria");
+                    categorie.add(categoria);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return categorie;
+        }
+
+        public static void addServizio(Connection connection, String partenza, String destinazione,
+                String orario, int biglietti) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.INSERT_SERVIZIO, null, partenza, destinazione, orario, biglietti);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+
+        public static void addCategoriaServizio(Connection connection, int codice, String categoria) {
+            var linee = AnnuncioServizio.DAO.getLines(connection).values();
+            var query = "";
+            if (linee.contains(categoria)) {
+                query = Queries.INSERT_CATEGORIA;
+            } else {
+                query = Queries.INSERT_CLASSE;
+            }
+            try (
+                var statement = DAOUtils.prepare(connection, query, codice, categoria);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
         }
     }
 

@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import controller.amministratore.ControllerAmm;
 import view.amministratore.api.WorkPanel;
 import view.amministratore.giornaliere.DailyPanel;
+import view.amministratore.servizi.ServicePanel;
 import view.api.GenericButton;
 import view.api.GenericLabel;
 import view.api.Scene;
@@ -101,7 +102,7 @@ public class MainScene implements Scene{
             GenericButton.setBackgroundVisible(selected, SELECTED_COLOR, true);
             changeWorkPanel(switch(selected.getActionCommand()){
                 case "Giornaliere" -> new DailyPanel(controller);
-                case "Servizi" -> new ServicePanel();
+                case "Servizi" -> new ServicePanel(controller);
                 case "Dipendenti" -> new EmployeePanel();
                 case "Mezzi" -> new TransportPanel();
                 case "Biglietti" -> new TicketPanel();

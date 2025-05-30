@@ -116,4 +116,18 @@ public class ModelAmm {
         }        
     }
 
+    public List<Servizio> getServizi() {
+        return Servizio.DAO.getServizi(connection);
+    }
+
+    public List<String> getCategorie() {
+        return Servizio.DAO.getCAtegorie(connection);
+    }
+
+    public void addServizio(int codice, String partenza, String destinazione, String orario, int biglietti,
+            String categoria) {
+        Servizio.DAO.addServizio(connection, partenza, destinazione, orario, biglietti);
+        Servizio.DAO.addCategoriaServizio(connection, codice, categoria);
+    }
+
 }
