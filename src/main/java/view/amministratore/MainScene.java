@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 
 import controller.amministratore.ControllerAmm;
 import view.amministratore.api.WorkPanel;
+import view.amministratore.giornaliere.DailyPanel;
 import view.api.GenericButton;
 import view.api.GenericLabel;
 import view.api.Scene;

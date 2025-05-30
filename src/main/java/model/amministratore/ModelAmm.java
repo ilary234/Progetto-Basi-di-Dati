@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -78,10 +79,10 @@ public class ModelAmm {
         return Servizio.DAO.getCodes(connection);
     }
 
-    public void insertVolanda(String date, int codServizio, String note, String fornitore, float prezzo,
+    public void insertVolanda(String date, int numeroVolanda, int codServizio, String note, String fornitore, float prezzo,
             int km) {
         try {
-            Volanda.DAO.insertVolanda(connection, this.dateFormat.parse(date), codServizio, note, fornitore, prezzo, km);
+            Volanda.DAO.insertVolanda(connection, this.dateFormat.parse(date), numeroVolanda, codServizio, note, fornitore, prezzo, km);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -95,8 +96,24 @@ public class ModelAmm {
         return Mezzo.DAO.getMezziNumbers(connection);
     }
 
-    public List<String> getCommittentiNames() {
+    public Map<Integer, String> getCommittentiNames() {
         return Committente.DAO.getCommittentiNames(connection);
+    }
+
+    public void updateVolanda(String date, int numeroVolanda, String autista, int resAutista, String mezzo,
+            int resMezzo, int codCommittente, int resCommittente) {
+            
+        if (resAutista != 0) {
+            var cf = autista.split(",")[1].trim();
+            Volanda.DAO.updateAutista(connection, date, numeroVolanda, cf, resAutista);
+        }
+        if (resMezzo != 0) {
+            var numMezzo = mezzo.isBlank()? 0 : Integer.parseInt(mezzo);
+            Volanda.DAO.updateMezzo(connection, date, numeroVolanda, numMezzo, resMezzo);
+        }
+        if (resCommittente != 0) {
+            Volanda.DAO.updateCommittente(connection, date, numeroVolanda, codCommittente, resCommittente);
+        }        
     }
 
 }

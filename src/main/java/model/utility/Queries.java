@@ -70,8 +70,71 @@ public final class Queries {
 
     public static final String GET_COMMITTENTI_NAMES = 
         """
-            select Nominativo
+            select CodCommittente, Nominativo
             from Committenti
+        """;
+    
+    public static final String UPDATE_GUIDA = 
+        """
+            update guida
+            set Autista = ?
+            where Data = ?
+            and NumeroVolanda = ?
+        """;
+
+    public static final String DELETE_GUIDA = 
+        """
+            delete from guida
+            where Data = ?
+            and NumeroVolanda = ?
+        """;
+
+    public static final String INSERT_GUIDA = 
+        """
+            insert into guida
+            values (?, ?, ?)
+        """;
+    
+    public static final String UPDATE_VEICOLOVOLANDA = 
+        """
+            update veicoloVolanda
+            set NumeroMezzo = ?
+            where Data = ?
+            and NumeroVolanda = ?
+        """;
+
+    public static final String INSERT_VEICOLOVOLANDA = 
+        """
+            insert into veicoloVolanda
+            values (?, ?, ?)
+        """;
+
+    public static final String DELETE_VEICOLOVOLANDA = 
+        """
+            delete from veicoloVolanda
+            where Data = ?
+            and NumeroVolanda = ?
+        """;
+
+    public static final String UPDATE_COMMITTENTE = 
+        """
+            update commissioni
+            set CodCommittente = ?
+            where Data = ?
+            and NumeroVolanda = ?
+        """;
+
+    public static final String INSERT_COMMITTENTE = 
+        """
+            insert into commissioni
+            values (?, ?, ?)
+        """;
+
+    public static final String DELETE_COMMITTENTE = 
+        """
+            delete from commissioni
+            where Data = ?
+            and NumeroVolanda = ?
         """;
 
     public static final String FIND_IMPIEGATO =

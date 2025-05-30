@@ -126,16 +126,62 @@ public class Volanda {
             }
         }
 
-        public static void insertVolanda(Connection connection, Date date, int codServizio, String note,
+        public static void insertVolanda(Connection connection, Date date, int numVolanda, int codServizio, String note,
                 String fornitore, float prezzo, int km) {
             try (
-                var statement = DAOUtils.prepare(connection, Queries.INSERT_VOLANDA, date, null, codServizio, note, fornitore, prezzo, km);
+                var statement = DAOUtils.prepare(connection, Queries.INSERT_VOLANDA, date, numVolanda, codServizio, note, fornitore, prezzo, km);
             ) {
                 statement.executeUpdate();
             } catch (Exception e) {
                 throw new DAOException(e);
             }
         }
+
+        public static void updateAutista(Connection connection, String date, int numeroVolanda, String autista,
+                int resAutista) {
+            try (
+                var statement = switch (resAutista) {
+                case 1 -> DAOUtils.prepare(connection, Queries.UPDATE_GUIDA, autista, date, numeroVolanda);
+                case 2 ->  DAOUtils.prepare(connection, Queries.INSERT_GUIDA, date, numeroVolanda, autista);
+                default ->  DAOUtils.prepare(connection, Queries.DELETE_GUIDA, date, numeroVolanda);
+                };
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+
+        public static void updateMezzo(Connection connection, String date, int numeroVolanda, int mezzo,
+                int resMezzo) {
+            try (
+                var statement = switch (resMezzo) {
+                case 1 -> DAOUtils.prepare(connection, Queries.UPDATE_VEICOLOVOLANDA, mezzo, date, numeroVolanda);
+                case 2 ->  DAOUtils.prepare(connection, Queries.INSERT_VEICOLOVOLANDA, date, numeroVolanda, mezzo);
+                default ->  DAOUtils.prepare(connection, Queries.DELETE_VEICOLOVOLANDA, date, numeroVolanda);
+                };
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+
+        public static void updateCommittente(Connection connection, String date, int numeroVolanda, int codCommittente,
+                int resCommittente) {
+            try (
+                var statement = switch (resCommittente) {
+                case 1 -> DAOUtils.prepare(connection, Queries.UPDATE_COMMITTENTE, codCommittente, date, numeroVolanda);
+                case 2 ->  DAOUtils.prepare(connection, Queries.INSERT_COMMITTENTE, date, numeroVolanda, codCommittente);
+                default ->  DAOUtils.prepare(connection, Queries.DELETE_COMMITTENTE, date, numeroVolanda);
+                };
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+
     }
 
 }

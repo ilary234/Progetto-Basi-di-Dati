@@ -87,4 +87,10 @@ public class ViewUtente implements View{
         this.frame.setLocationByPlatform(true);
         this.frame.setVisible(true);
     }
+
+    @Override
+    public JFrame getFrame() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getFrame'");
+    }
 }

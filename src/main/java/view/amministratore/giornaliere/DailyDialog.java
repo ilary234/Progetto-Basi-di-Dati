@@ -1,4 +1,4 @@
-package view.amministratore;
+package view.amministratore.giornaliere;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;

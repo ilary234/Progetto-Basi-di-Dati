@@ -2,6 +2,7 @@ package controller.amministratore;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JFrame;
 
@@ -56,9 +57,9 @@ public class ControllerAmm {
         return this.model.getServiziCodes();
     }
 
-    public void insertVolanda(String date, int codServizio, String note, String fornitore, float prezzo,
+    public void insertVolanda(String date, int numeroVolanda, int codServizio, String note, String fornitore, float prezzo,
             int km) {
-        this.model.insertVolanda(date, codServizio, note, fornitore, prezzo, km);
+        this.model.insertVolanda(date, numeroVolanda, codServizio, note, fornitore, prezzo, km);
     }
 
     public List<String> getAutistiNames() {
@@ -69,8 +70,13 @@ public class ControllerAmm {
         return this.model.getMezziNumbers();
     }
 
-    public List<String> getCommittentiNames() {
+    public Map<Integer, String> getCommittentiNames() {
         return this.model.getCommittentiNames();
+    }
+
+    public void updateVolanda(String date, int numeroVolanda, String autista, int resAutista, String mezzo,
+            int resMezzo, int codCommittente, int resCommittente) {
+        this.model.updateVolanda(date, numeroVolanda, autista, resAutista, mezzo, resMezzo, codCommittente, resCommittente);
     }
 
 }

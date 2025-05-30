@@ -1,4 +1,4 @@
-package view.amministratore;
+package view.amministratore.giornaliere;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -130,11 +130,17 @@ public class DailyPanel implements WorkPanel{
         tableModel.fireTableDataChanged();
     }
 
+    public void updateVolanda(String autista, int resAutista, String mezzo, int resMezzo, int codCommittente,
+            int resCommittente) {
+        this.controller.updateVolanda(selected.getActionCommand(), (int) volande.getValueAt(volande.getSelectedRow(), 0),
+                        autista, resAutista, mezzo, resMezzo, codCommittente, resCommittente);
+        this.updateGiornaliera();
+    }
+
     public void addVolanda(int codice, String note, String fornitore, float prezzo, int km) {
-        this.controller.insertVolanda(selected.getActionCommand(), codice,
-                        note, fornitore, prezzo, km);
-        this.tableModel.setVolande(this.controller.getVolande(this.selected.getActionCommand()));
-        tableModel.fireTableDataChanged();
+        var numVolanda = volande.getRowCount() > 0 ? (int) volande.getValueAt(volande.getRowCount() - 1, 0) + 1 : 1;
+        this.controller.insertVolanda(selected.getActionCommand(), numVolanda, codice, note, fornitore, prezzo, km);
+        this.updateGiornaliera();
     }
 
     @Override
@@ -166,7 +172,11 @@ public class DailyPanel implements WorkPanel{
                     new NewVolandaDialog(controller, DailyPanel.this);
                     break;
                 case "Cambia Volanda":
-                    new ChangeDialog(controller, DailyPanel.this);
+                    var autista = volande.getValueAt(volande.getSelectedRow(), 6).toString();
+                    var mezzo = volande.getValueAt(volande.getSelectedRow(), 7).toString();
+                    var c = volande.getValueAt(volande.getSelectedRow(), 8);
+                    var commmittente = c == null ? "" : c.toString();
+                    new ChangeDialog(controller, DailyPanel.this, autista, mezzo, commmittente);
                     break;
                 case "Elimina Volanda":
                     var day = selected.getActionCommand();
@@ -223,9 +233,8 @@ public class DailyPanel implements WorkPanel{
                 case 4 -> volanda.getPrezzo();
                 case 5 -> volanda.getKm();
                 case 6 -> volanda.getAutista();
-                case 7 -> volanda.getMezzo();
+                case 7 -> volanda.getMezzo() == 0 ? "" : String.valueOf(volanda.getMezzo());
                 case 8 -> volanda.getCommittente();
-                case 9 -> null;
                 default -> null;
             };
         }
