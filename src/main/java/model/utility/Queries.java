@@ -80,4 +80,40 @@ public final class Queries {
                                   FROM ClassiServizi
                                   WHERE NomeTransfer = 'Escursione')
         """;
+
+    public static final String FIND_SERVIZIO =
+        """
+            SELECT CodAnnuncio, Titolo, Descrizione, PrezzoBase
+            FROM AnnunciServizi
+            WHERE CodServizio = ?
+        """;
+
+    public static final String AVG_RATING =
+        """
+            SELECT AVG(Valutazione) AS MediaValutazioni
+            FROM Recensioni
+            WHERE CodAnnuncio = ?;
+        """;
+
+    public static final String GET_REVIEWS =
+        """
+            SELECT Utente, Valutazione, Commento, Data
+            FROM Recensioni
+            WHERE CodAnnuncio = ?;
+        """;
+    
+    public static final String FIND_UTENTE =
+        """
+            SELECT COUNT(*)
+            FROM Utenti
+            WHERE Username = ?
+            and Password = ?
+        """;
+    
+    public static final String INSERT_REVIEW =
+        """
+            INSERT INTO Recensioni (Utente, CodAnnuncio, Valutazione, Commento, Data)
+            VALUES (?, ?, ?, ?, ?);
+        """;
+
 }

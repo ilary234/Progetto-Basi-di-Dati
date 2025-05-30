@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -71,6 +72,8 @@ public class GiroPanoramicoPanel implements WorkPanel {
             JPanel titlePanel = new JPanel();
             titlePanel.setBackground(Color.WHITE);
             titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+            //ImageIcon icon = new ImageIcon(getClass().getResource("img/giusto.png"));
+            //JButton button = GenericButton.getGenericButton(icon, TEXT_SIZE, "GP");
             JButton button = GenericButton.getGenericButton("GP", TEXT_SIZE, "GP");
             JLabel codiceLabel = GenericLabel.getGenericLabel(String.valueOf(gp.getKey()), TEXT_SIZE);
             codiceLabel.setVisible(false);
