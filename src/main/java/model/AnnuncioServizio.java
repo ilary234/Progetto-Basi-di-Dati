@@ -67,6 +67,57 @@ public class AnnuncioServizio extends Comunicazione {
             }
             return result;
         }
+
+        public static Map<Integer, String> getGP(Connection connection) {
+            Map<Integer, String> result = new HashMap<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_GP);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var codice = resultSet.getInt("CodServizio");
+                    var categoria = resultSet.getString("NomeTransfer");
+                    result.put(codice, categoria);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return result;
+        }
+
+        public static Map<Integer, String> getConcerti(Connection connection) {
+            Map<Integer, String> result = new HashMap<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_CONCERTS);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var codice = resultSet.getInt("CodServizio");
+                    var titolo = resultSet.getString("Titolo");
+                    result.put(codice, titolo);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return result;
+        }
+
+        public static Map<Integer, String> getEscursioni(Connection connection) {
+            Map<Integer, String> result = new HashMap<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_TRIPS);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var codice = resultSet.getInt("CodServizio");
+                    var titolo = resultSet.getString("Titolo");
+                    result.put(codice, titolo);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return result;
+        }
     }
 
 }

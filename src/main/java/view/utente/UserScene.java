@@ -39,11 +39,13 @@ public class UserScene implements Scene {
         this.mainPanel = new JPanel(new BorderLayout());
 
         JPanel titlePanel = new JPanel(new GridBagLayout());
+        titlePanel.setBackground(Color.WHITE);
         JLabel title = GenericLabel.getGenericLabel("MP Bus", TITLE_SIZE);
         title.setForeground(new Color(COLOR_BUTTONS_PANEL));
         titlePanel.add(title);
 
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonsPanel.setBackground(Color.WHITE);
         //buttonsPanel.setBackground(new Color(COLOR_BUTTONS_PANEL)); se vuoi il pannello azzurro e non bianco
         var actionListener = new MenuActionListener();
 
@@ -55,14 +57,18 @@ public class UserScene implements Scene {
         escursioniButton.setForeground(new Color(COLOR_BUTTONS_PANEL));
         JButton concertiButton = GenericButton.getGenericButton("Concerti", TEXT_SIZE, "Concerti");
         concertiButton.setForeground(new Color(COLOR_BUTTONS_PANEL));
+        JButton giroPanoramicoButton = GenericButton.getGenericButton("Giro Panoramico", TEXT_SIZE, "Giro Panoramico");
+        giroPanoramicoButton.setForeground(new Color(COLOR_BUTTONS_PANEL));
 
         homeButton.addActionListener(actionListener);
         lineeButton.addActionListener(actionListener);
         escursioniButton.addActionListener(actionListener);
         concertiButton.addActionListener(actionListener);
+        giroPanoramicoButton.addActionListener(actionListener);
 
         buttonsPanel.add(homeButton);
         buttonsPanel.add(lineeButton);
+        buttonsPanel.add(giroPanoramicoButton);
         buttonsPanel.add(escursioniButton);
         buttonsPanel.add(concertiButton);
 
@@ -107,8 +113,9 @@ public class UserScene implements Scene {
             changeWorkPanel(switch(selected.getActionCommand()){
                 case "Home" -> new HomePanel(controller);
                 case "Linee" -> new LineePanel(controller);
-                case "Escursioni" -> new EscursioniPanel();
-                case "Concerti" -> new ConcertiPanel();
+                case "Escursioni" -> new EscursioniPanel(controller);
+                case "Concerti" -> new ConcertiPanel(controller);
+                case "Giro Panoramico" -> new GiroPanoramicoPanel(controller);
                 default -> new HomePanel(controller);
             });
         }

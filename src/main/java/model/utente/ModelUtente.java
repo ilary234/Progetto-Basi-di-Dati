@@ -30,4 +30,15 @@ public class ModelUtente {
         return AnnuncioServizio.DAO.getLines(connection);
     }
 
+    public Map<Integer, String> getGP() {
+        return AnnuncioServizio.DAO.getGP(connection);
+    }
+
+    public Map<Integer, String> getConcerti() {
+        return AnnuncioServizio.DAO.getConcerti(connection);
+    }
+
+    public Map<Integer, String> getEscursioni() {
+        return AnnuncioServizio.DAO.getEscursioni(connection);
+    }
 }
