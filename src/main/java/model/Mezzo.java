@@ -1,10 +1,17 @@
 package model;
 
+import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import model.utility.DAOException;
+import model.utility.DAOUtils;
+import model.utility.Queries;
 
 public class Mezzo {
 
@@ -57,6 +64,25 @@ public class Mezzo {
         this.dataInizioValidità = Objects.requireNonNull(dataInizioValidità);
         this.tipologiaAss = Objects.requireNonNull(tipologiaAss);
         this.durataMesi = Objects.requireNonNull(durataMesi);
+    }
+
+    public static final class DAO {
+
+        public static List<Integer> getMezziNumbers(Connection connection) {
+            List<Integer> mezzi = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_MEZZI_NUMBERS);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var number = resultSet.getInt("NumeroMezzo");
+                    mezzi.add(number);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return mezzi;
+        }
     }
 
 }

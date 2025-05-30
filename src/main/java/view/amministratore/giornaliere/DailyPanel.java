@@ -1,4 +1,4 @@
-package view.amministratore;
+package view.amministratore.giornaliere;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,10 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 
 import controller.amministratore.ControllerAmm;
 import model.Volanda;
+import view.amministratore.api.MultiLineRenderer;
 import view.amministratore.api.WorkPanel;
 import view.api.GenericButton;
 
@@ -43,20 +43,23 @@ public class DailyPanel implements WorkPanel{
 
         var buttonsPanel = new JPanel(new BorderLayout());
         var dailyButtons = new JPanel(new GridLayout(1, 2));
-        var volandeButtons = new JPanel(new GridLayout(1, 2));
+        var volandeButtons = new JPanel(new GridLayout(1, 3));
         var create = GenericButton.getGenericButton("Nuova +", BUTTON_SIZE, "Nuova Giornaliera");
         var delete = GenericButton.getGenericButton("Elimina", BUTTON_SIZE, "Elimina Giornaliera");
         var createVolanda = GenericButton.getGenericButton("Nuova Volanda +", BUTTON_SIZE, "Nuova Volanda");
-        var deleteVolanda = GenericButton.getGenericButton("Elimina Volanda", BUTTON_SIZE, "Elimina Volanda");
+        var deleteVolanda = GenericButton.getGenericButton("Elimina", BUTTON_SIZE, "Elimina Volanda");
+        var changeVolanda = GenericButton.getGenericButton("Cambia", BUTTON_SIZE, "Cambia Volanda");
         var actionListener = new ButtonListener();
         create.addActionListener(actionListener);
         delete.addActionListener(actionListener);
         createVolanda.addActionListener(actionListener);
         deleteVolanda.addActionListener(actionListener);
+        changeVolanda.addActionListener(actionListener);
         dailyButtons.add(create);
         dailyButtons.add(delete);
         volandeButtons.add(createVolanda);
         volandeButtons.add(deleteVolanda);
+        volandeButtons.add(changeVolanda);
         buttonsPanel.add(dailyButtons, BorderLayout.WEST);
         buttonsPanel.add(volandeButtons, BorderLayout.EAST);
 
@@ -72,6 +75,15 @@ public class DailyPanel implements WorkPanel{
         this.mainPanel.add(buttonsPanel, BorderLayout.NORTH);
         this.mainPanel.add(scrollList, BorderLayout.WEST);
         this.mainPanel.add(scrollTable, BorderLayout.CENTER);
+
+        changeVolanda.setEnabled(false);
+        deleteVolanda.setEnabled(false);
+
+        this.volande.getSelectionModel().addListSelectionListener(e -> {
+            boolean selected = this.volande.getSelectedRow() != -1;
+            changeVolanda.setEnabled(selected);
+            deleteVolanda.setEnabled(selected);
+        });
 
 
     }
@@ -110,8 +122,25 @@ public class DailyPanel implements WorkPanel{
         this.scrollList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         this.scrollList.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        this.tableModel.setVolande(this.controller.getVolande(this.giornaliere.getFirst()));
+        this.updateGiornaliera();
+    }
+
+    private void updateGiornaliera() {
+        this.tableModel.setVolande(this.controller.getVolande(this.selected.getActionCommand()));
         tableModel.fireTableDataChanged();
+    }
+
+    public void updateVolanda(String autista, int resAutista, String mezzo, int resMezzo, int codCommittente,
+            int resCommittente) {
+        this.controller.updateVolanda(selected.getActionCommand(), (int) volande.getValueAt(volande.getSelectedRow(), 0),
+                        autista, resAutista, mezzo, resMezzo, codCommittente, resCommittente);
+        this.updateGiornaliera();
+    }
+
+    public void addVolanda(int codice, String note, String fornitore, float prezzo, int km) {
+        var numVolanda = volande.getRowCount() > 0 ? (int) volande.getValueAt(volande.getRowCount() - 1, 0) + 1 : 1;
+        this.controller.insertVolanda(selected.getActionCommand(), numVolanda, codice, note, fornitore, prezzo, km);
+        this.updateGiornaliera();
     }
 
     @Override
@@ -131,6 +160,8 @@ public class DailyPanel implements WorkPanel{
             var button = (JButton) e.getSource();
             switch (button.getActionCommand()) {
                 case "Nuova Giornaliera":
+                    new DailyDialog(controller);
+                    createGiornaliere();
                     break;
                 case "Elimina Giornaliera":
                     var date = selected.getActionCommand();
@@ -138,13 +169,21 @@ public class DailyPanel implements WorkPanel{
                     createGiornaliere();
                     break;
                 case "Nuova Volanda":
-                break;
+                    new NewVolandaDialog(controller, DailyPanel.this);
+                    break;
+                case "Cambia Volanda":
+                    var autista = volande.getValueAt(volande.getSelectedRow(), 6).toString();
+                    var mezzo = volande.getValueAt(volande.getSelectedRow(), 7).toString();
+                    var c = volande.getValueAt(volande.getSelectedRow(), 8);
+                    var commmittente = c == null ? "" : c.toString();
+                    new ChangeDialog(controller, DailyPanel.this, autista, mezzo, commmittente);
+                    break;
                 case "Elimina Volanda":
                     var day = selected.getActionCommand();
                     var numeroVolanda = volande.getSelectedRow() + 1;
                     controller.deleteVolanda(day, numeroVolanda);
-                    tableModel.fireTableDataChanged();
-                break;
+                    updateGiornaliera();
+                    break;
                 default:
                     break;
             }
@@ -194,49 +233,12 @@ public class DailyPanel implements WorkPanel{
                 case 4 -> volanda.getPrezzo();
                 case 5 -> volanda.getKm();
                 case 6 -> volanda.getAutista();
-                case 7 -> volanda.getMezzo();
+                case 7 -> volanda.getMezzo() == 0 ? "" : String.valueOf(volanda.getMezzo());
                 case 8 -> volanda.getCommittente();
-                case 9 -> null;
                 default -> null;
             };
         }
 
-    }
-
-    private static class MultiLineRenderer extends DefaultTableCellRenderer{
-
-        @Override
-        public java.awt.Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            var textArea = new javax.swing.JTextArea();
-            textArea.setLineWrap(true);
-            textArea.setWrapStyleWord(true);
-            textArea.setText(value == null ? "" : value.toString());
-            textArea.setOpaque(true);
-            if (isSelected) {
-                textArea.setBackground(table.getSelectionBackground());
-                textArea.setForeground(table.getSelectionForeground());
-            } else {
-                textArea.setBackground(table.getBackground());
-                textArea.setForeground(table.getForeground());
-            }
-            // Calcola l'altezza preferita
-            int colWidth = table.getColumnModel().getColumn(column).getWidth();
-            textArea.setSize(colWidth, Short.MAX_VALUE);
-            int maxHeight = textArea.getPreferredSize().height;
-            for (int col = 0; col < table.getColumnCount(); col++) {
-                Object cellValue = table.getValueAt(row, col);
-                var tempArea = new javax.swing.JTextArea();
-                tempArea.setLineWrap(true);
-                tempArea.setWrapStyleWord(true);
-                tempArea.setText(cellValue == null ? "" : cellValue.toString());
-                tempArea.setSize(table.getColumnModel().getColumn(col).getWidth(), Short.MAX_VALUE);
-                maxHeight = Math.max(maxHeight, tempArea.getPreferredSize().height);
-            }
-            if (table.getRowHeight(row) != maxHeight) {
-                table.setRowHeight(row, maxHeight);
-            }
-            return textArea;
-        }
     }
 
 

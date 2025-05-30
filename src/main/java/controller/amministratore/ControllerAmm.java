@@ -1,7 +1,12 @@
 package controller.amministratore;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import javax.swing.JFrame;
+
+import model.Servizio;
 import model.Volanda;
 import model.amministratore.ModelAmm;
 import view.amministratore.MainScene;
@@ -15,6 +20,10 @@ public class ControllerAmm {
     public ControllerAmm(View mainView, ModelAmm model) {
         this.mainView = mainView;
         this.model = model;
+    }
+
+    public JFrame getFrame() {
+        return this.mainView.getFrame();
     }
 
     public boolean checkImpiegato(String cod, char[] pass) {
@@ -39,6 +48,48 @@ public class ControllerAmm {
 
     public void deleteVolanda(String day, int numeroVolanda) {
         this.model.deleteVolanda(day, numeroVolanda);
+    }
+
+    public void insertGiornaliera(Date data) {
+        this.model.insertGiornaliera(data);
+    }
+
+    public List<Integer> getServiziCodes() {
+        return this.model.getServiziCodes();
+    }
+
+    public void insertVolanda(String date, int numeroVolanda, int codServizio, String note, String fornitore, float prezzo,
+            int km) {
+        this.model.insertVolanda(date, numeroVolanda, codServizio, note, fornitore, prezzo, km);
+    }
+
+    public List<String> getAutistiNames() {
+        return this.model.getAutistiNames();
+    }
+
+    public List<Integer> getMezziNumbers() {
+        return this.model.getMezziNumbers();
+    }
+
+    public Map<Integer, String> getCommittentiNames() {
+        return this.model.getCommittentiNames();
+    }
+
+    public void updateVolanda(String date, int numeroVolanda, String autista, int resAutista, String mezzo,
+            int resMezzo, int codCommittente, int resCommittente) {
+        this.model.updateVolanda(date, numeroVolanda, autista, resAutista, mezzo, resMezzo, codCommittente, resCommittente);
+    }
+
+    public List<Servizio> getServizi() {
+        return this.model.getServizi();
+    }
+
+    public List<String> getCategorie() {
+        return this.model.getCategorie();
+    }
+
+    public void addServizio(int codice, String partenza, String destinazione, String orario, int biglietti, String categoria) {
+        this.model.addServizio(codice,  partenza, destinazione, orario, biglietti, categoria);
     }
 
 }

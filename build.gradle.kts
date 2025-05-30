@@ -8,6 +8,7 @@ repositories {
 
 dependencies {
     implementation("com.mysql:mysql-connector-j:9.3.0")
+    implementation("com.toedter:jcalendar:1.4")
     testImplementation("org.assertj:assertj-core:3.27.3")
     testImplementation(libs.junit)
 }

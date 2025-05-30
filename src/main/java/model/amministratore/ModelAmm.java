@@ -4,13 +4,19 @@ import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import model.Autista;
+import model.Committente;
 import model.Giornaliera;
 import model.Impiegato;
+import model.Mezzo;
+import model.Servizio;
 import model.Volanda;
 
 public class ModelAmm {
@@ -63,6 +69,65 @@ public class ModelAmm {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public void insertGiornaliera(Date data) {
+        Giornaliera.DAO.insertGiornaliera(connection, dateFormat.format(data), impiegato.get().getCodImpiegato());
+    }
+
+    public List<Integer> getServiziCodes() {
+        return Servizio.DAO.getCodes(connection);
+    }
+
+    public void insertVolanda(String date, int numeroVolanda, int codServizio, String note, String fornitore, float prezzo,
+            int km) {
+        try {
+            Volanda.DAO.insertVolanda(connection, this.dateFormat.parse(date), numeroVolanda, codServizio, note, fornitore, prezzo, km);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> getAutistiNames() {
+        return Autista.DAO.getAutistiNames(connection);
+    }
+
+    public List<Integer> getMezziNumbers() {
+        return Mezzo.DAO.getMezziNumbers(connection);
+    }
+
+    public Map<Integer, String> getCommittentiNames() {
+        return Committente.DAO.getCommittentiNames(connection);
+    }
+
+    public void updateVolanda(String date, int numeroVolanda, String autista, int resAutista, String mezzo,
+            int resMezzo, int codCommittente, int resCommittente) {
+            
+        if (resAutista != 0) {
+            var cf = autista.split(",")[1].trim();
+            Volanda.DAO.updateAutista(connection, date, numeroVolanda, cf, resAutista);
+        }
+        if (resMezzo != 0) {
+            var numMezzo = mezzo.isBlank()? 0 : Integer.parseInt(mezzo);
+            Volanda.DAO.updateMezzo(connection, date, numeroVolanda, numMezzo, resMezzo);
+        }
+        if (resCommittente != 0) {
+            Volanda.DAO.updateCommittente(connection, date, numeroVolanda, codCommittente, resCommittente);
+        }        
+    }
+
+    public List<Servizio> getServizi() {
+        return Servizio.DAO.getServizi(connection);
+    }
+
+    public List<String> getCategorie() {
+        return Servizio.DAO.getCAtegorie(connection);
+    }
+
+    public void addServizio(int codice, String partenza, String destinazione, String orario, int biglietti,
+            String categoria) {
+        Servizio.DAO.addServizio(connection, partenza, destinazione, orario, biglietti);
+        Servizio.DAO.addCategoriaServizio(connection, codice, categoria);
     }
 
 }

@@ -11,8 +11,8 @@ import model.utility.Queries;
 
 public class Impiegato extends Dipendente {
 
-    private final int codImpiegato; //integer not null auto_increment,
-    private String password; //varchar(50) not null,
+    private final int codImpiegato;
+    private String password;
 
     public Impiegato(String cF, String nome, String cognome, Date dataNascita, String luogoNascita, String residenza,
             String telefono, int codImpiegato, String password) {
@@ -21,6 +21,12 @@ public class Impiegato extends Dipendente {
         this.codImpiegato = Objects.requireNonNull(codImpiegato);
         this.password = Objects.requireNonNull(password);
     }
+    
+
+    public int getCodImpiegato() {
+        return codImpiegato;
+    }
+
 
     public static final class DAO {
 

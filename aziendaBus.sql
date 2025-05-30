@@ -450,7 +450,7 @@ check( (Tipo = 'Agenzia' and P_Iva is not null and Città is not null and CAP is
 # ---------------------------------------------------------------------- #
 # Views                                                                  #
 # ---------------------------------------------------------------------- #
-create view VolandeRelazioni as
+create view VolandeRelazioni (Data, NumeroVolanda, CodServizio, Note, Fornitore, Prezzo, Km, Mezzo, Cognome, Nome, Committente) as
 select v.*, NumeroMezzo, Cognome, Nome, Nominativo
 from volande v left join veicolovolanda vv on (v.Data = vv.Data and v.NumeroVolanda = vv.NumeroVolanda) 
 	left join (select g.*, Nome, Cognome from guida g, autisti a where a.CF = g.Autista) as a 
