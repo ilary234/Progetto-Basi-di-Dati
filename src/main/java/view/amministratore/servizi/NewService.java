@@ -12,8 +12,10 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.AbstractDocument;
 
 import controller.amministratore.ControllerAmm;
+import view.amministratore.api.MaxLenghtDocumentFilter;
 import view.api.GenericButton;
 import view.api.GenericLabel;
 
@@ -36,6 +38,8 @@ public class NewService extends JDialog{
         var categoriaBox = new JComboBox<>(controller.getCategorie().toArray());
         var partenzaText = new JTextField();
         var destinazioneText = new JTextField();
+        ((AbstractDocument) partenzaText.getDocument()).setDocumentFilter(new MaxLenghtDocumentFilter(20));
+        ((AbstractDocument) destinazioneText.getDocument()).setDocumentFilter(new MaxLenghtDocumentFilter(20));
 
         var orarioPanel = new JPanel();
         String[] ore = new String[25];

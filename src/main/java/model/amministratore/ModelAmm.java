@@ -121,13 +121,32 @@ public class ModelAmm {
     }
 
     public List<String> getCategorie() {
-        return Servizio.DAO.getCAtegorie(connection);
+        return Servizio.DAO.getCategorie(connection);
     }
 
     public void addServizio(int codice, String partenza, String destinazione, String orario, int biglietti,
             String categoria) {
         Servizio.DAO.addServizio(connection, partenza, destinazione, orario, biglietti);
         Servizio.DAO.addCategoriaServizio(connection, codice, categoria);
+    }
+
+    public List<Mezzo> getMezzi() {
+        return Mezzo.DAO.getMezzi(connection);
+    }
+
+    public List<String> getMezziTypes() {
+        return Mezzo.getMezziTypes();
+    }
+
+    public void addMezzo(String numero, String targa, int euro, int immatricolazione, Date dataRevisione, String PAX,
+            String kmTotali, boolean CDPD, String tipo, String carrozzeria, String modello, String telaio,
+            String licenzaEuropea, String assicurazione) {
+        Mezzo.DAO.addMezzo(connection, numero, targa, euro, immatricolazione, dateFormat.format(dataRevisione), PAX, 
+                    kmTotali, CDPD, tipo, carrozzeria, modello, telaio, licenzaEuropea, assicurazione);
+    }
+
+    public void addAssicurazione(String numero, Date dataInizioValidità, String tipologia, String durata) {
+        Mezzo.DAO.addAssicurazione(connection, numero, dateFormat.format(dataInizioValidità), tipologia, durata);
     }
 
 }

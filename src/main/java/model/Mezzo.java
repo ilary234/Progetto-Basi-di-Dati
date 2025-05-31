@@ -1,12 +1,9 @@
 package model;
 
 import java.sql.Connection;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import model.utility.DAOException;
@@ -19,51 +16,90 @@ public class Mezzo {
     private final String targa; //char(7) not null,
     private final int euro; //integer not null,
     private final int annoImmatricolazione; //smallint not null,
-    private final SimpleDateFormat dateFormat;
     private final Date dataRevisione; //date not null, 
     private final int PAX; //smallint not null,
     private int kmTotali; //integer not null,
     private boolean CDPD; //boolean not null,
-    private final String tipo; //enum('Pullman', 'Vettura') not null, 
     private final String carrozzeria; //varchar(20),
     private final String modello; //varchar(50),
     private final String telaio; //varchar(50),
     private final String numeroLicenzaEuropea; //char(10),
 
     private String assicurazione; //varchar(20) not null,
-    private Date dataInizioValidità; //date not null,
-    private String tipologiaAss; //varchar(20) not null,
-    private int durataMesi; //smallint not null,
 
     public Mezzo(int numeroMezzo, String targa, String assicurazione, int euro, int annoImmatricolazione,
-            Date dataRevisione, int pAX, int kmTotali, boolean cDPD, String tipo,
-            String carrozzeria, String modello, String telaio, String numeroLicenzaEuropea,
-            Date dataInizioValidità, String tipologiaAss, int durataMesi) {
+            Date dataRevisione, int pAX, int kmTotali, boolean cDPD, String carrozzeria, 
+            String modello, String telaio, String numeroLicenzaEuropea) {
                 
         this.numeroMezzo = Objects.requireNonNull(numeroMezzo);
         this.targa = Objects.requireNonNull(targa);
         this.euro = Objects.requireNonNull(euro);
         this.annoImmatricolazione = Objects.requireNonNull(annoImmatricolazione);
-        this.dateFormat = (SimpleDateFormat)SimpleDateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALY);
-        this.dateFormat.applyPattern("yyyy.MM.dd");
         this.dataRevisione = Objects.requireNonNull(dataRevisione);
         this.PAX = Objects.requireNonNull(pAX);
         this.kmTotali = Objects.requireNonNull(kmTotali);
         this.CDPD = Objects.requireNonNull(cDPD);
-        this.tipo = tipo;
         this.carrozzeria = carrozzeria;
         this.modello = modello;
         this.telaio = telaio;
         this.numeroLicenzaEuropea = numeroLicenzaEuropea;
-
-        this.setAssicurazione(assicurazione, dataInizioValidità, tipologiaAss, durataMesi);
+        this.assicurazione = Objects.requireNonNull(assicurazione);
     }
 
-    public void setAssicurazione(String assicurazione, Date dataInizioValidità, String tipologiaAss, int durataMesi) {
-        this.assicurazione = Objects.requireNonNull(assicurazione);
-        this.dataInizioValidità = Objects.requireNonNull(dataInizioValidità);
-        this.tipologiaAss = Objects.requireNonNull(tipologiaAss);
-        this.durataMesi = Objects.requireNonNull(durataMesi);
+    public int getNumeroMezzo() {
+        return numeroMezzo;
+    }
+
+    public String getTarga() {
+        return targa;
+    }
+
+    public int getEuro() {
+        return euro;
+    }
+
+    public int getAnnoImmatricolazione() {
+        return annoImmatricolazione;
+    }
+
+    public Date getDataRevisione() {
+        return dataRevisione;
+    }
+
+    public int getPAX() {
+        return PAX;
+    }
+
+    public int getKmTotali() {
+        return kmTotali;
+    }
+
+    public boolean isCDPD() {
+        return CDPD;
+    }
+
+    public String getCarrozzeria() {
+        return carrozzeria;
+    }
+
+    public String getModello() {
+        return modello;
+    }
+
+    public String getTelaio() {
+        return telaio;
+    }
+
+    public String getNumeroLicenzaEuropea() {
+        return numeroLicenzaEuropea;
+    }
+
+    public String getAssicurazione() {
+        return assicurazione;
+    }
+
+    public static List<String> getMezziTypes() {
+        return List.of("Pullman", "Vettura");
     }
 
     public static final class DAO {
@@ -82,6 +118,62 @@ public class Mezzo {
                 throw new DAOException(e);
             }
             return mezzi;
+        }
+
+        public static List<Mezzo> getMezzi(Connection connection) {
+            List<Mezzo> mezzi = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_MEZZI);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var number = resultSet.getInt("NumeroMezzo");
+                    var targa = resultSet.getString("Targa");
+                    var euro = resultSet.getInt("Euro");
+                    var annoImmatricolazione = resultSet.getInt("AnnoImmatricolazione");
+                    var dataRevisione = resultSet.getDate("DataRevisione");
+                    var PAX = resultSet.getInt("PAX");
+                    var kmTotali = resultSet.getInt("KmTotali");
+                    var CDPD = resultSet.getBoolean("CDPD");
+                    var carrozzeria = resultSet.getString("Carrozzeria");
+                    var modello = resultSet.getString("Modello");
+                    var telaio = resultSet.getString("Telaio");
+                    var licenzaEuropea = resultSet.getString("NumeroLicenzaEuropea");
+                    var assicurazione = resultSet.getString("Assicurazione");
+
+                    var mezzo = new Mezzo(number, targa, assicurazione, euro, annoImmatricolazione, dataRevisione, 
+                        PAX, kmTotali, CDPD, carrozzeria, modello, telaio, licenzaEuropea);
+
+                    mezzi.add(mezzo);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return mezzi;
+        }
+
+        public static void addMezzo(Connection connection, String numero, String targa, int euro, int immatricolazione,
+                String data, String PAX, String kmTotali, boolean CDPD, String tipo, String carrozzeria,
+                String modello, String telaio, String licenzaEuropea, String assicurazione) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.INSERT_MEZZO, numero, targa, assicurazione, euro, immatricolazione, data,
+                     PAX, kmTotali, CDPD, tipo, carrozzeria, modello, telaio, licenzaEuropea);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+
+        public static void addAssicurazione(Connection connection, String numero, String data, String tipologia,
+                String durata) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.INSERT_ASSICURAZIONE, numero, data, tipologia, durata);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
         }
     }
 

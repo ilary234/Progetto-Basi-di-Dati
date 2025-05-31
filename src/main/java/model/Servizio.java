@@ -99,7 +99,7 @@ public class Servizio {
             return servizi;
         }
 
-        public static List<String> getCAtegorie(Connection connection) {
+        public static List<String> getCategorie(Connection connection) {
             List<String> categorie = new ArrayList<>();
             try (
                 var statement = DAOUtils.prepare(connection, Queries.GET_CATEGORIE);

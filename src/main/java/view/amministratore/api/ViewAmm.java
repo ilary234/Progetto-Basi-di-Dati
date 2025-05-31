@@ -17,7 +17,7 @@ import view.api.View;
 
 public class ViewAmm implements View{
 
-    private static final double FRAME_SIZE_FACTOR = 0.6;
+    private static final double FRAME_SIZE_FACTOR = 0.7;
 
     private final JFrame frame;
     private final Dimension screenSize;

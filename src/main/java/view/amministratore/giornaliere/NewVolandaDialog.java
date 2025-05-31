@@ -14,8 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.AbstractDocument;
 
 import controller.amministratore.ControllerAmm;
+import view.amministratore.api.MaxLenghtDocumentFilter;
 import view.api.GenericButton;
 import view.api.GenericLabel;
 
@@ -39,6 +41,8 @@ public class NewVolandaDialog extends JDialog{
         var prezzoText = new JTextField();
         var kmText = new JTextField();
 
+        ((AbstractDocument) fornitoreText.getDocument()).setDocumentFilter(new MaxLenghtDocumentFilter(50));
+
         firstPanel.add(codiceLabel);
         firstPanel.add(codiceText);
         firstPanel.add(fornitoreLabel);
@@ -54,6 +58,9 @@ public class NewVolandaDialog extends JDialog{
         var scrollPane = new JScrollPane(noteText);
         secondPanel.add(noteLabel);
         secondPanel.add(scrollPane);
+
+        ((AbstractDocument) noteText.getDocument()).setDocumentFilter(new MaxLenghtDocumentFilter(200));
+
 
         var aggiungi = GenericButton.getGenericButton("Aggiungi", BUTTON_SIZE, "Aggiungi");
         GenericButton.setBackgroundVisible(aggiungi, new Color(BACKGROUND_COLOR), true);
