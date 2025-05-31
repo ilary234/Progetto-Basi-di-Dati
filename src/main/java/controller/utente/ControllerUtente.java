@@ -72,4 +72,8 @@ public class ControllerUtente {
     public void inserisciRecensione(String utente, int codAnnuncio, int valutazione, String commento, Date data) {
         this.model.inserisciRecensione(utente, codAnnuncio, valutazione, commento, data);
     }
+
+    public void setCredenziali(Pair<String, String> credenziali) {
+        this.model.setCredenziali(credenziali);
+    }
 }
