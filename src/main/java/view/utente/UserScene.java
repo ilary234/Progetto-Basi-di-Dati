@@ -33,6 +33,7 @@ public class UserScene implements Scene {
     private JButton selected;
     private final ControllerUtente controller;
 
+
     public UserScene(final ControllerUtente controller) {
 
         this.controller = controller;
@@ -45,20 +46,19 @@ public class UserScene implements Scene {
         titlePanel.add(title);
 
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonsPanel.setBackground(Color.WHITE);
-        //buttonsPanel.setBackground(new Color(COLOR_BUTTONS_PANEL)); se vuoi il pannello azzurro e non bianco
+        buttonsPanel.setBackground(new Color(COLOR_BUTTONS_PANEL));
         var actionListener = new MenuActionListener();
 
         JButton homeButton = GenericButton.getGenericButton("Home", TEXT_SIZE, "Home");
-        homeButton.setForeground(new Color(COLOR_BUTTONS_PANEL));
+        homeButton.setForeground(Color.WHITE);
         JButton lineeButton = GenericButton.getGenericButton("Linee", TEXT_SIZE, "Linee");
-        lineeButton.setForeground(new Color(COLOR_BUTTONS_PANEL));
+        lineeButton.setForeground(Color.WHITE);
         JButton escursioniButton = GenericButton.getGenericButton("Escursioni", TEXT_SIZE, "Escursioni");
-        escursioniButton.setForeground(new Color(COLOR_BUTTONS_PANEL));
+        escursioniButton.setForeground(Color.WHITE);
         JButton concertiButton = GenericButton.getGenericButton("Concerti", TEXT_SIZE, "Concerti");
-        concertiButton.setForeground(new Color(COLOR_BUTTONS_PANEL));
+        concertiButton.setForeground(Color.WHITE);
         JButton giroPanoramicoButton = GenericButton.getGenericButton("Giro Panoramico", TEXT_SIZE, "Giro Panoramico");
-        giroPanoramicoButton.setForeground(new Color(COLOR_BUTTONS_PANEL));
+        giroPanoramicoButton.setForeground(Color.WHITE);
 
         homeButton.addActionListener(actionListener);
         lineeButton.addActionListener(actionListener);
@@ -103,6 +103,10 @@ public class UserScene implements Scene {
         this.cardLayout.show(this.workSpace, panel.getName());
     }
 
+    public JButton getSelectedButton() {
+        return selected;
+    }
+
     private class MenuActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -112,7 +116,7 @@ public class UserScene implements Scene {
             GenericButton.setBackgroundVisible(selected, SELECTED_COLOR, true);
             changeWorkPanel(switch(selected.getActionCommand()){
                 case "Home" -> new HomePanel(controller);
-                case "Linee" -> new LineePanel(controller);
+                case "Linee" -> new LineePanel(controller, UserScene.this);
                 case "Escursioni" -> new EscursioniPanel(controller);
                 case "Concerti" -> new ConcertiPanel(controller);
                 case "Giro Panoramico" -> new GiroPanoramicoPanel(controller);

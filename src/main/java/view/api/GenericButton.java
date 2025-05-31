@@ -3,6 +3,7 @@ package view.api;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class GenericButton{
@@ -16,6 +17,18 @@ public class GenericButton{
      */
     static public JButton getGenericButton(final String text, int fontSize, String actionCommand) { 
         final var button = new JButton(text);
+        button.setActionCommand(actionCommand);
+        button.setFont(new Font(FONT_FAMILY, Font.BOLD, fontSize));
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setFocusable(false);
+        button.setBorderPainted(false);
+
+        return button;
+    }
+
+    static public JButton getGenericButton(final ImageIcon icon, int fontSize, String actionCommand) { 
+        final var button = new JButton(icon);
         button.setActionCommand(actionCommand);
         button.setFont(new Font(FONT_FAMILY, Font.BOLD, fontSize));
         button.setOpaque(false);

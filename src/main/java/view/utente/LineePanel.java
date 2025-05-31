@@ -2,14 +2,17 @@ package view.utente;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,35 +27,34 @@ import view.api.WrapLayout;
 public class LineePanel implements WorkPanel {
 
     private static final String PANEL_NAME = "Linee";
+    private static final Color SELECTED_COLOR = new Color(0x99C2EA);
     private static final int TEXT_SIZE = 15;
     private final JPanel mainPanel = new JPanel(new BorderLayout());
     private final JPanel titlesPanel = new JPanel();
     private final ControllerUtente controller;
+    private int imageSize = 120; 
+    private int dynamicFontSize = TEXT_SIZE;
+    private UserScene userScene;
 
-    public LineePanel(ControllerUtente controller) {
-        
+    public LineePanel(ControllerUtente controller, UserScene userScene) {
         this.controller = controller;
+        this.userScene = userScene;
 
         this.titlesPanel.setLayout(new WrapLayout(FlowLayout.LEFT, 20, 20));
         this.titlesPanel.setOpaque(false);
 
-        updateLinee();
-
-        JPanel containerPanel = new JPanel(new BorderLayout());
-        containerPanel.add(titlesPanel, BorderLayout.CENTER);
-        
         JScrollPane annunciScrollPane = new JScrollPane(titlesPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         annunciScrollPane.getVerticalScrollBar().setUnitIncrement(16);
         annunciScrollPane.setBorder(null);
-        annunciScrollPane.getViewport().setBackground(Color.WHITE); //si può omettere
+        annunciScrollPane.getViewport().setBackground(Color.WHITE);
 
         annunciScrollPane.getViewport().addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 int width = annunciScrollPane.getViewport().getWidth();
-                titlesPanel.setPreferredSize(new Dimension(width, titlesPanel.getPreferredSize().height));
-                titlesPanel.revalidate();
-                titlesPanel.repaint();
+                imageSize = Math.max(60, width / 8); //numeri a caso
+                dynamicFontSize = Math.max(10, width / 60); //numeri a caso (se non va bene si può togliere)
+                updateLinee();
             }
         });
 
@@ -61,6 +63,8 @@ public class LineePanel implements WorkPanel {
 
         mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         mainPanel.add(annunciScrollPane, BorderLayout.CENTER);
+
+        updateLinee();
     }
 
     public void updateLinee() {
@@ -71,10 +75,33 @@ public class LineePanel implements WorkPanel {
             JPanel titlePanel = new JPanel();
             titlePanel.setBackground(Color.WHITE);
             titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
-            JButton button = GenericButton.getGenericButton("LINEA", TEXT_SIZE, "LINEA");
-            JLabel codiceLabel = GenericLabel.getGenericLabel(String.valueOf(linea.getKey()), TEXT_SIZE);
+            JButton button;
+            ImageIcon scaledIcon;
+            if (linea.getValue().equals("Città")) {
+                ImageIcon icon = new ImageIcon(getClass().getResource("img/bus.png"));
+                Image scaledImage = icon.getImage().getScaledInstance(imageSize, imageSize, java.awt.Image.SCALE_SMOOTH);
+                scaledIcon = new ImageIcon(scaledImage);
+                button = GenericButton.getGenericButton(scaledIcon, dynamicFontSize, "GP");
+            } else {
+                ImageIcon icon = new ImageIcon(getClass().getResource("img/BB.png"));
+                Image scaledImage = icon.getImage().getScaledInstance(imageSize, imageSize, java.awt.Image.SCALE_SMOOTH);
+                scaledIcon = new ImageIcon(scaledImage);
+                button = GenericButton.getGenericButton(scaledIcon, dynamicFontSize, "GP");
+            }
+            button.setAlignmentX(Component.CENTER_ALIGNMENT);
+            JLabel codiceLabel = GenericLabel.getGenericLabel(String.valueOf(linea.getKey()), dynamicFontSize);
             codiceLabel.setVisible(false);
-            JLabel categoriaLabel = GenericLabel.getGenericLabel(linea.getValue(), TEXT_SIZE);
+            codiceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            JLabel categoriaLabel = GenericLabel.getGenericLabel(linea.getValue(), dynamicFontSize);
+            categoriaLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            int codiceServizio = linea.getKey();
+            button.addActionListener(e -> {
+                InfoPanel infoPanel = new InfoPanel(controller, scaledIcon, String.valueOf(codiceServizio));
+                GenericButton.setBackgroundVisible(userScene.getSelectedButton(), SELECTED_COLOR, false);
+                userScene.changeWorkPanel(infoPanel);
+            });
+
             titlePanel.add(button);
             titlePanel.add(codiceLabel);
             titlePanel.add(categoriaLabel);

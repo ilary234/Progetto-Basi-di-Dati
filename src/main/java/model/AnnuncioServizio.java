@@ -118,6 +118,29 @@ public class AnnuncioServizio extends Comunicazione {
             }
             return result;
         }
+
+        public static List<String> find(Connection connection, String codiceServizio) {
+            List<String> info = new ArrayList<>();
+            var code = Integer.valueOf(codiceServizio);
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.FIND_SERVIZIO, code);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var codice = resultSet.getInt("CodAnnuncio");
+                    info.add(String.valueOf(codice));
+                    var titolo = resultSet.getString("Titolo");
+                    info.add(titolo);
+                    var descrizione = resultSet.getString("Descrizione");
+                    info.add(descrizione);
+                    var prezzoBase = resultSet.getFloat("PrezzoBase");
+                    info.add(String.valueOf(prezzoBase));
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return info;
+        }
     }
 
 }
