@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
+import model.Mezzo;
 import model.Servizio;
 import model.Volanda;
 import model.amministratore.ModelAmm;
@@ -90,6 +91,25 @@ public class ControllerAmm {
 
     public void addServizio(int codice, String partenza, String destinazione, String orario, int biglietti, String categoria) {
         this.model.addServizio(codice,  partenza, destinazione, orario, biglietti, categoria);
+    }
+
+    public List<Mezzo> getMezzi() {
+        return this.model.getMezzi();
+    }
+
+    public List<String> getMezziTypes() {
+        return this.model.getMezziTypes();
+    }
+
+    public void addMezzo(String numero, String targa, int euro, int immatricolazione, Date dataRevisione, String PAX,
+            String kmTotali, boolean CDPD, String tipo, String carrozzeria, String modello, String telaio,
+            String licenzaEuropea, String assicurazione) {
+        this.model.addMezzo(numero, targa, euro, immatricolazione, dataRevisione, PAX, kmTotali, CDPD, 
+                                tipo, carrozzeria, modello, telaio, licenzaEuropea, assicurazione);
+    }
+
+    public void addAssicurazione(String numero, Date dataInizioValidità, String tipologia, String durata) {
+        this.model.addAssicurazione(numero, dataInizioValidità, tipologia, durata);
     }
 
 }

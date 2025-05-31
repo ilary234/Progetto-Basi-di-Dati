@@ -107,6 +107,25 @@ public final class Queries {
             order by NumeroMezzo
         """;
 
+    public static final String GET_MEZZI = 
+            """
+            select *
+            from Mezzi
+            order by NumeroMezzo
+        """;
+
+    public static final String INSERT_MEZZO = 
+        """
+            insert into Mezzi
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+
+    public static final String INSERT_ASSICURAZIONE = 
+        """
+            insert into Assicurazioni
+            values (?, ?, ?, ?)
+        """;
+
     public static final String GET_COMMITTENTI_NAMES = 
         """
             select CodCommittente, Nominativo
