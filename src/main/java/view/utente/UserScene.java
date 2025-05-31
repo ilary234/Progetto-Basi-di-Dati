@@ -32,6 +32,7 @@ public class UserScene implements Scene {
     private final JPanel workSpace;
     private JButton selected;
     private final ControllerUtente controller;
+    private JButton homeButton;
 
 
     public UserScene(final ControllerUtente controller) {
@@ -49,7 +50,7 @@ public class UserScene implements Scene {
         buttonsPanel.setBackground(new Color(COLOR_BUTTONS_PANEL));
         var actionListener = new MenuActionListener();
 
-        JButton homeButton = GenericButton.getGenericButton("Home", TEXT_SIZE, "Home");
+        homeButton = GenericButton.getGenericButton("Home", TEXT_SIZE, "Home");
         homeButton.setForeground(Color.WHITE);
         JButton lineeButton = GenericButton.getGenericButton("Linee", TEXT_SIZE, "Linee");
         lineeButton.setForeground(Color.WHITE);
@@ -75,7 +76,7 @@ public class UserScene implements Scene {
         this.cardLayout = new CardLayout();
         this.workSpace = new JPanel(cardLayout);
 
-        this.changeWorkPanel(new HomePanel(this.controller));
+        this.changeWorkPanel(new HomePanel(this.controller, this));
         this.selected = homeButton;
         GenericButton.setBackgroundVisible(selected, SELECTED_COLOR, true);
 
@@ -107,6 +108,10 @@ public class UserScene implements Scene {
         return selected;
     }
 
+    public JButton getHomeButton() {
+        return this.homeButton;
+    }
+
     private class MenuActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -115,12 +120,12 @@ public class UserScene implements Scene {
             selected = button;
             GenericButton.setBackgroundVisible(selected, SELECTED_COLOR, true);
             changeWorkPanel(switch(selected.getActionCommand()){
-                case "Home" -> new HomePanel(controller);
+                case "Home" -> new HomePanel(controller, UserScene.this);
                 case "Linee" -> new LineePanel(controller, UserScene.this);
-                case "Escursioni" -> new EscursioniPanel(controller);
-                case "Concerti" -> new ConcertiPanel(controller);
-                case "Giro Panoramico" -> new GiroPanoramicoPanel(controller);
-                default -> new HomePanel(controller);
+                case "Escursioni" -> new EscursioniPanel(controller, UserScene.this);
+                case "Concerti" -> new ConcertiPanel(controller, UserScene.this);
+                case "Giro Panoramico" -> new GiroPanoramicoPanel(controller, UserScene.this);
+                default -> new HomePanel(controller, UserScene.this);
             });
         }
     }

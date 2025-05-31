@@ -35,15 +35,16 @@ public class AnnuncioServizio extends Comunicazione {
 
     public static final class DAO {
 
-        public static List<String> titlesList(Connection connection) {
-            List<String> annunci = new ArrayList<>();
+        public static Map<Integer, String> titlesList(Connection connection) {
+            Map<Integer, String> annunci = new HashMap<>();
             try (
                 var statement = DAOUtils.prepare(connection, Queries.GET_TITLES);
                 var resultSet = statement.executeQuery();
             ) {
                 while (resultSet.next()) {
+                    var codice = resultSet.getInt("CodServizio");
                     var titolo = resultSet.getString("Titolo");
-                    annunci.add(titolo);
+                    annunci.put(codice, titolo);
                 }
             } catch (Exception e) {
                 throw new DAOException(e);

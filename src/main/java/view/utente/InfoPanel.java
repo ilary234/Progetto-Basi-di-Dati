@@ -3,6 +3,7 @@ package view.utente;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -61,6 +62,7 @@ public class InfoPanel implements WorkPanel {
     private JPanel listaRecensioniPanel;
     private JLabel imageLabel;
     private JPanel imagePanel;
+    private UserScene userScene;
 
     private final JPanel rightPanel = new JPanel();
     private final JPanel switchPanel = new JPanel(new CardLayout());
@@ -69,10 +71,11 @@ public class InfoPanel implements WorkPanel {
     private static final String RECENSIONI = "Recensioni";
     private static final String ACQUISTO = "Acquisto biglietti";
 
-    public InfoPanel(ControllerUtente controller, ImageIcon imageIcon, String codServizio) {
+    public InfoPanel(ControllerUtente controller, UserScene userScene, ImageIcon imageIcon, String codServizio) {
         this.controller = controller;
         this.imageIcon = imageIcon;
         this.codServizio = codServizio;
+        this.userScene = userScene;
 
         List<String> info = this.controller.findServizio(this.codServizio);
 
@@ -110,7 +113,9 @@ public class InfoPanel implements WorkPanel {
         JLabel prezzoLabel = new JLabel("Prezzo: " + prezzoFormattato + " €");
         prezzoLabel.setFont(new Font("Roboto", Font.BOLD, 18));
         topPanel.add(titoloLabel);
+        topPanel.add(Box.createHorizontalStrut(10));
         topPanel.add(stelleLabel);
+        topPanel.add(Box.createHorizontalStrut(10));
         topPanel.add(prezzoLabel);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -184,7 +189,127 @@ public class InfoPanel implements WorkPanel {
         switchPanel.add(recensioniPanel, RECENSIONI);
 
         JPanel acquistoPanel = new JPanel();
-        acquistoPanel.add(new JLabel("Qui va il pannello di acquisto biglietto"));
+        JPanel categoriePanel = new JPanel();
+        categoriePanel.setLayout(new BoxLayout(categoriePanel, BoxLayout.Y_AXIS));
+        categoriePanel.setPreferredSize(new Dimension(500, 250));
+
+        List<String> categorie = this.controller.getNomiCategorie(Integer.parseInt(this.codServizio));
+        boolean isTransfer = this.controller.isTransfer(Integer.parseInt(this.codServizio));
+
+        if (isTransfer) {
+            int numCategorie = categorie.size() / 3;
+            int[] quantita = new int[numCategorie];
+            for (int i = 0; i < categorie.size(); i += 3) {
+                int idx = i / 3;
+                String nome = categorie.get(i);
+                String etaMin = categorie.get(i + 1);
+                String etaMax = categorie.get(i + 2);
+
+                JPanel riga = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+                JLabel nomeCat = new JLabel(nome + ": (" + etaMin + " - " + etaMax + ")");
+                JButton meno = new JButton("-");
+                JLabel num = new JLabel("0");
+                JButton piu = new JButton("+");
+
+                meno.addActionListener(e -> {
+                    if (quantita[idx] > 0) {
+                        quantita[idx]--;
+                        num.setText(String.valueOf(quantita[idx]));
+                    }
+                });
+                piu.addActionListener(e -> {
+                    quantita[idx]++;
+                    num.setText(String.valueOf(quantita[idx]));
+                });
+
+                riga.add(nomeCat);
+                riga.add(meno);
+                riga.add(num);
+                riga.add(piu);
+                riga.setAlignmentX(Component.CENTER_ALIGNMENT);
+                categoriePanel.add(riga);
+                if (i < categorie.size() - 3) categoriePanel.add(Box.createVerticalStrut(3));
+            }
+        } else {
+            int[] quantita = new int[categorie.size()];
+            for (int i = 0; i < categorie.size(); i++) {
+                int idx = i;
+                String durata = categorie.get(i);
+                JPanel riga = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+                JLabel nomeCat = new JLabel(durata);
+                JButton meno = new JButton("-");
+                JLabel num = new JLabel("0");
+                JButton piu = new JButton("+");
+
+                meno.addActionListener(e -> {
+                    if (quantita[idx] > 0) {
+                        quantita[idx]--;
+                        num.setText(String.valueOf(quantita[idx]));
+                    }
+                });
+                piu.addActionListener(e -> {
+                    quantita[idx]++;
+                    num.setText(String.valueOf(quantita[idx]));
+                });
+
+                riga.add(nomeCat);
+                riga.add(meno);
+                riga.add(num);
+                riga.add(piu);
+                riga.setAlignmentX(Component.CENTER_ALIGNMENT);
+                categoriePanel.add(riga);
+                if (i < categorie.size() - 1) categoriePanel.add(Box.createVerticalStrut(3));
+            }
+        }
+
+        categoriePanel.add(Box.createVerticalStrut(0));
+        JPanel bottonePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        bottonePanel.setBackground(new Color(COLOR_BUTTONS_PANEL));
+        bottonePanel.setPreferredSize(new Dimension(recensioniPanel.getWidth(), recensioniPanel.getHeight() / 4));
+        JButton aggiungiCarrello = GenericButton.getGenericButton("Aggiungi al carrello", dynamicFontSize, "Aggiungi al carrello");
+        aggiungiCarrello.setForeground(Color.WHITE);
+        bottonePanel.add(aggiungiCarrello);
+        categoriePanel.add(bottonePanel);
+        acquistoPanel.add(categoriePanel);
+
+        aggiungiCarrello.addActionListener(e -> {
+            boolean isLogged = controller.isLoggedIn();
+
+            if (!isLogged) {
+                JPanel loginPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+                JTextField userField = new JTextField();
+                JPasswordField passField = new JPasswordField();
+                loginPanel.add(new JLabel("Username:"));
+                loginPanel.add(userField);
+                loginPanel.add(new JLabel("Password:"));
+                loginPanel.add(passField);
+
+                int result = JOptionPane.showConfirmDialog(
+                    mainPanel,
+                    loginPanel,
+                    "Login",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE
+                );
+
+                if (result == JOptionPane.OK_OPTION) {
+                    String username = userField.getText();
+                    String password = new String(passField.getPassword());
+                    boolean loginOk = controller.checkUtente(username, password);
+                    if (!loginOk) {
+                        JOptionPane.showMessageDialog(mainPanel, "Credenziali non valide!", "Errore", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    } else {
+                        controller.setCredenziali(new Pair<>(username, password));
+                    }
+                } else {
+                    return;
+                }
+            }
+            JOptionPane.showMessageDialog(mainPanel, "Biglietti aggiunti al carrello!");
+            GenericButton.setBackgroundVisible(userScene.getHomeButton(), SELECTED_COLOR, true);
+            this.userScene.changeWorkPanel(new HomePanel(this.controller, this.userScene));
+        });
 
         switchPanel.add(dettagliPanel, DETTAGLI);
         switchPanel.add(recensioniPanel, RECENSIONI);
@@ -290,6 +415,9 @@ public class InfoPanel implements WorkPanel {
             controller.inserisciRecensione(username, Integer.parseInt(this.codAnnuncio), valutazione, commento, data);
             updateRecensioniPanel(this.listaRecensioniPanel);
             JOptionPane.showMessageDialog(mainPanel, "Recensione inserita con successo!");
+
+            InfoPanel nuovoInfoPanel = new InfoPanel(controller, userScene, imageIcon, codServizio);
+            userScene.changeWorkPanel(nuovoInfoPanel);
         }
     }
 

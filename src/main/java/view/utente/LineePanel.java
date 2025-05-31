@@ -97,7 +97,7 @@ public class LineePanel implements WorkPanel {
 
             int codiceServizio = linea.getKey();
             button.addActionListener(e -> {
-                InfoPanel infoPanel = new InfoPanel(controller, scaledIcon, String.valueOf(codiceServizio));
+                InfoPanel infoPanel = new InfoPanel(this.controller, this.userScene, scaledIcon, String.valueOf(codiceServizio));
                 GenericButton.setBackgroundVisible(userScene.getSelectedButton(), SELECTED_COLOR, false);
                 userScene.changeWorkPanel(infoPanel);
             });
