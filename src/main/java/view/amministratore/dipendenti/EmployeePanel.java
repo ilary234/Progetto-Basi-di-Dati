@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.Color;
 
 import view.amministratore.api.WorkPanel;
+import view.amministratore.dipendenti.autisti.AutistiPanel;
 import view.amministratore.dipendenti.impiegati.ImpiegatiPanel;
 import view.api.GenericButton;
 
@@ -34,7 +35,7 @@ public class EmployeePanel implements WorkPanel{
         this.dataPanel =  new JPanel(cardLayout);
         this.changeDataPanel(new ImpiegatiPanel(controller));
 
-        var buttonsPanel = new JPanel();
+        var buttonsPanel = new JPanel(new BorderLayout());
         var buttons = new JPanel(new GridLayout(1, 2));
         this.impiegati = GenericButton.getGenericButton("Impiegati", BUTTON_SIZE, "Impiegati");
         this.autisti = GenericButton.getGenericButton("Autisti", BUTTON_SIZE, "Autisti");
@@ -43,7 +44,7 @@ public class EmployeePanel implements WorkPanel{
         autisti.addActionListener(actionListener);
         buttons.add(impiegati);
         buttons.add(autisti);
-        buttonsPanel.add(buttons);
+        buttonsPanel.add(buttons, BorderLayout.WEST);
         GenericButton.setBackgroundVisible(impiegati, Color.LIGHT_GRAY, true);
 
         this.mainPanel = new JPanel(new BorderLayout());
@@ -80,6 +81,7 @@ public class EmployeePanel implements WorkPanel{
                 case "Autisti":
                     GenericButton.setBackgroundVisible(impiegati, Color.LIGHT_GRAY, false);
                     GenericButton.setBackgroundVisible(autisti, Color.LIGHT_GRAY, true);
+                    changeDataPanel(new AutistiPanel(controller));
                     break;
                 default:
                     break;

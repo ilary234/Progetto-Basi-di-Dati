@@ -175,4 +175,22 @@ public class ModelAmm {
         Impiegato.DAO.updatePassword(connection, code, password);
     }
 
+    public List<Autista> getAutisti() {
+        return Autista.DAO.getAutisti(connection);
+    }
+
+    public void addPatente(String numero, String tipologia, Date scadenza) {
+        Autista.DAO.addPatente(connection, numero, tipologia, dateFormat.format(scadenza));
+    }
+
+    public void addAutista(String cf, String patente, String nome, String cognome, Date dataNascita,
+            String luogoNascita, String residenza, String telefono, Date scadenzaCQC) {
+        Autista.DAO.addAutista(connection, cf, patente, nome, cognome, dateFormat.format(dataNascita), 
+            luogoNascita, residenza, telefono, dateFormat.format(scadenzaCQC));
+    }
+
+    public void addKB(int numero, String cf, Date scadenza) {
+        Autista.DAO.addKB(connection, numero, cf, dateFormat.format(scadenza));
+    }
+
 }

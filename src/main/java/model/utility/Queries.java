@@ -99,6 +99,30 @@ public final class Queries {
             select CF, Nome, Cognome
             from Autisti
         """;
+    
+    public static final String GET_AUTISTI = 
+        """
+            select a.*, NumeroKB
+            from autisti a left join kb on (a.CF = kb.Proprietario)
+        """;
+
+    public static final String INSERT_AUTISTA = 
+        """
+            insert into autisti
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+
+    public static final String INSERT_PATENTE = 
+        """
+            insert into patenti
+            values (?, ?, ?)
+        """;
+
+    public static final String INSERT_KB = 
+        """
+            insert into kb
+            values (?, ?, ?)
+        """;
 
     public static final String GET_MEZZI_NUMBERS = 
         """

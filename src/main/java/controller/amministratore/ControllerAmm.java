@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
+import model.Autista;
 import model.Impiegato;
 import model.Mezzo;
 import model.Servizio;
@@ -136,6 +137,23 @@ public class ControllerAmm {
 
     public void updatePassword(int code, String password) {
         this.model.updatePassword(code, password);
+    }
+
+    public List<Autista> getAutisti() {
+        return this.model.getAutisti();
+    }
+
+    public void addPatente(String numero, String tipologia, Date scadenza) {
+        this.model.addPatente(numero, tipologia, scadenza);
+    }
+
+    public void addAutista(String cf, String patente, String nome, String cognome, Date dataNascita,
+            String luogoNascita, String residenza, String telefono, Date scadenzaCQC) {
+        this.model.addAutista(cf, patente, nome, cognome, dataNascita, luogoNascita, residenza, telefono, scadenzaCQC);
+    }
+
+    public void addKB(int numero, String cf, Date scadenza) {
+        this.model.addKB(numero, cf, scadenza);
     }
 
 }
