@@ -23,12 +23,14 @@ public class Impiegato extends Dipendente {
         this.codImpiegato = Objects.requireNonNull(codImpiegato);
         this.password = (password);
     }
-    
 
     public int getCodImpiegato() {
         return codImpiegato;
     }
 
+    public String getPassword() {
+        return password;
+    }
 
     public static final class DAO {
 
@@ -87,6 +89,36 @@ public class Impiegato extends Dipendente {
             try (
                 var statement = DAOUtils.prepare(connection, Queries.INSERT_IMPIEGATO, cf, nome, cognome, dataNascita, luogoNascita, 
                                 residenza, telefono, null, password);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+
+        public static void updateResidenza(Connection connection, int code, String residenza) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.UPDATE_RESIDENZA_IMP, residenza, code);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+
+        public static void updateTelefono(Connection connection, int code, String telefono) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.UPDATE_TELEFONO_IMP, telefono, code);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+
+        public static void updatePassword(Connection connection, int code, String password) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.UPDATE_PASSWORD_IMP, password, code);
             ) {
                 statement.executeUpdate();
             } catch (Exception e) {

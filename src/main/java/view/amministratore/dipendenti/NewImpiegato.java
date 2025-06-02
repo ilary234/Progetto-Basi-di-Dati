@@ -90,10 +90,9 @@ public class NewImpiegato extends JDialog {
                 if (!cf.isBlank() && !nome.isBlank() && !cognome.isBlank() && !luogoNascita.isBlank() &&
                     !residenza.isBlank() && !telefono.isBlank() && !password.isBlank()) {
                     controller.addImpiegato(cf, nome, cognome, dataNascita, luogoNascita, residenza, telefono, password);
+                    NewImpiegato.this.setVisible(false);
+                    NewImpiegato.this.dispose();
                 }
-                //impiegatiPanel.updateImpiegati();
-                NewImpiegato.this.setVisible(false);
-                NewImpiegato.this.dispose();
             }
             
         });

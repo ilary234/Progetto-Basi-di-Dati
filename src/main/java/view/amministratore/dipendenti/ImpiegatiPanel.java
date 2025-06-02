@@ -67,6 +67,21 @@ public class ImpiegatiPanel implements WorkPanel{
         tableModel.fireTableDataChanged();
     }
 
+    public void updateResidenza(String residenza) {
+        var code = (int) impiegati.getValueAt(impiegati.getSelectedRow(), 0);
+        this.controller.updateResidenza(code, residenza);
+    }
+
+    public void updateTelefono(String telefono) {
+        var code = (int) impiegati.getValueAt(impiegati.getSelectedRow(), 0);
+        this.controller.updateTelefono(code, telefono);
+    }
+
+    public void updatePassword(String password) {
+        var code = (int) impiegati.getValueAt(impiegati.getSelectedRow(), 0);
+        this.controller.updatePassword(code, password);
+    }
+
     @Override
     public JPanel getPanel() {
         return this.mainPanel;
@@ -88,6 +103,16 @@ public class ImpiegatiPanel implements WorkPanel{
                     updateImpiegati();
                     break;
                 case "Modifica":
+                    var code = (int) impiegati.getValueAt(impiegati.getSelectedRow(), 0);
+                    var residenza = (String) impiegati.getValueAt(impiegati.getSelectedRow(), 6);
+                    var telefono = (String) impiegati.getValueAt(impiegati.getSelectedRow(), 7);
+                    var impiegato = controller.getMyData();
+                    if (code == impiegato.getCodImpiegato()) {
+                        new ChangePersonalData(controller, ImpiegatiPanel.this, residenza, telefono, impiegato.getPassword());
+                    } else {
+                        new ChangeOtherImpiegato(controller, ImpiegatiPanel.this, residenza, telefono);
+                    }
+                    updateImpiegati();
                     break;
                 default:
                     break;

@@ -122,4 +122,20 @@ public class ControllerAmm {
         this.model.addImpiegato(cf, nome, cognome, dataNascita, luogoNascita, residenza, telefono, password);
     }
 
+    public Impiegato getMyData() {
+        return this.model.getImpiegato();
+    }
+
+    public void updateResidenza(int code, String residenza) {
+        this.model.updateResidenza(code, residenza);
+    }
+
+    public void updateTelefono(int code, String telefono) {
+        this.model.updateTelefono(code, telefono);
+    }
+
+    public void updatePassword(int code, String password) {
+        this.model.updatePassword(code, password);
+    }
+
 }

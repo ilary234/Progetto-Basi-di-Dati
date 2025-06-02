@@ -41,6 +41,10 @@ public class ModelAmm {
         return false;
     }
 
+    public Impiegato getImpiegato() {
+        return impiegato.get();
+    }
+
     public List<String> getGiornaliere() {
         var dates = Giornaliera.DAO.dateList(connection);
         return dates.stream().map(d -> this.dateFormat.format(d)).toList();
@@ -157,6 +161,18 @@ public class ModelAmm {
             String residenza, String telefono, String password) {
         Impiegato.DAO.addImpiegato(connection, cf, nome, cognome, dateFormat.format(dataNascita), 
             luogoNascita, residenza, telefono, password);
+    }
+
+    public void updateResidenza(int code, String residenza) {
+        Impiegato.DAO.updateResidenza(connection, code, residenza);
+    }
+
+    public void updateTelefono(int code, String telefono) {
+        Impiegato.DAO.updateTelefono(connection, code, telefono);
+    }
+
+    public void updatePassword(int code, String password) {
+        Impiegato.DAO.updatePassword(connection, code, password);
     }
 
 }

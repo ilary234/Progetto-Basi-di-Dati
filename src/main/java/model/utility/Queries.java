@@ -207,6 +207,27 @@ public final class Queries {
             values (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """;
 
+    public static final String UPDATE_RESIDENZA_IMP =
+        """
+            update impiegati
+            set Residenza = ?
+            where CodImpiegato = ?
+        """;
+    
+    public static final String UPDATE_TELEFONO_IMP =
+        """
+            update impiegati
+            set Telefono = ?
+            where CodImpiegato = ?
+        """;
+
+    public static final String UPDATE_PASSWORD_IMP =
+        """
+            update impiegati
+            set Password = ?
+            where CodImpiegato = ?
+        """;
+
     public static final String FIND_IMPIEGATO =
         """
             select *
