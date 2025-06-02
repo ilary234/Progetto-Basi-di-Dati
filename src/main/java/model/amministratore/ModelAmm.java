@@ -149,4 +149,14 @@ public class ModelAmm {
         Mezzo.DAO.addAssicurazione(connection, numero, dateFormat.format(dataInizioValidità), tipologia, durata);
     }
 
+    public List<Impiegato> getImpiegati() {
+        return Impiegato.DAO.getImpiegati(connection);
+    }
+
+    public void addImpiegato(String cf, String nome, String cognome, Date dataNascita, String luogoNascita,
+            String residenza, String telefono, String password) {
+        Impiegato.DAO.addImpiegato(connection, cf, nome, cognome, dateFormat.format(dataNascita), 
+            luogoNascita, residenza, telefono, password);
+    }
+
 }

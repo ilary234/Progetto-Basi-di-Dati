@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 
 import controller.amministratore.ControllerAmm;
 import view.amministratore.api.WorkPanel;
+import view.amministratore.dipendenti.EmployeePanel;
 import view.amministratore.giornaliere.DailyPanel;
 import view.amministratore.mezzi.TransportPanel;
 import view.amministratore.servizi.ServicePanel;
@@ -104,7 +105,7 @@ public class MainScene implements Scene{
             changeWorkPanel(switch(selected.getActionCommand()){
                 case "Giornaliere" -> new DailyPanel(controller);
                 case "Servizi" -> new ServicePanel(controller);
-                case "Dipendenti" -> new EmployeePanel();
+                case "Dipendenti" -> new EmployeePanel(controller);
                 case "Mezzi" -> new TransportPanel(controller);
                 case "Biglietti" -> new TicketPanel();
                 default -> new DailyPanel(controller);

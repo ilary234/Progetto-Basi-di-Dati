@@ -1,7 +1,9 @@
 package model;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -19,7 +21,7 @@ public class Impiegato extends Dipendente {
 
         super(cF, nome, cognome, dataNascita, luogoNascita, residenza, telefono);
         this.codImpiegato = Objects.requireNonNull(codImpiegato);
-        this.password = Objects.requireNonNull(password);
+        this.password = (password);
     }
     
 
@@ -53,6 +55,43 @@ public class Impiegato extends Dipendente {
                 throw new DAOException(e);
             }
             return impiegato;
+        }
+
+        public static List<Impiegato> getImpiegati(Connection connection) {
+            List<Impiegato> impiegati = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_IMPIEGATI);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var code = resultSet.getInt("CodImpiegato");
+                    var cf = resultSet.getString("CF");
+                    var nome = resultSet.getString("Nome");
+                    var cognome = resultSet.getString("Cognome");
+                    var dataNascita = resultSet.getDate("DataNascita");
+                    var luogoNascita = resultSet.getString("LuogoNascita");
+                    var residenza = resultSet.getString("Residenza");
+                    var telefono = resultSet.getString("Telefono");
+
+                    var impiegato = new Impiegato(cf, nome, cognome, dataNascita, luogoNascita, residenza, telefono, code, null);
+                    impiegati.add(impiegato);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return impiegati;
+        }
+
+        public static void addImpiegato(Connection connection, String cf, String nome, String cognome, String dataNascita, String luogoNascita,
+                String residenza, String telefono, String password) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.INSERT_IMPIEGATO, cf, nome, cognome, dataNascita, luogoNascita, 
+                                residenza, telefono, null, password);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
         }
     }
 

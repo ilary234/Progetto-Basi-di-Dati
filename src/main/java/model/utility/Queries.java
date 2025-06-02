@@ -195,6 +195,18 @@ public final class Queries {
             and NumeroVolanda = ?
         """;
 
+    public static final String GET_IMPIEGATI = 
+        """
+            select *
+            from impiegati
+        """;
+    
+    public static final String INSERT_IMPIEGATO = 
+        """
+            insert into impiegati
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+
     public static final String FIND_IMPIEGATO =
         """
             select *

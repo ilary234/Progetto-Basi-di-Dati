@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
+import model.Impiegato;
 import model.Mezzo;
 import model.Servizio;
 import model.Volanda;
@@ -110,6 +111,15 @@ public class ControllerAmm {
 
     public void addAssicurazione(String numero, Date dataInizioValidità, String tipologia, String durata) {
         this.model.addAssicurazione(numero, dataInizioValidità, tipologia, durata);
+    }
+
+    public List<Impiegato> getImpiegati() {
+        return this.model.getImpiegati();
+    }
+
+    public void addImpiegato(String cf, String nome, String cognome, Date dataNascita, String luogoNascita,
+            String residenza, String telefono, String password) {
+        this.model.addImpiegato(cf, nome, cognome, dataNascita, luogoNascita, residenza, telefono, password);
     }
 
 }
