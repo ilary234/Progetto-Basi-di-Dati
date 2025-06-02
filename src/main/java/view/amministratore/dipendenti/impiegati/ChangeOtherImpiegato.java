@@ -1,4 +1,4 @@
-package view.amministratore.dipendenti;
+package view.amministratore.dipendenti.impiegati;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

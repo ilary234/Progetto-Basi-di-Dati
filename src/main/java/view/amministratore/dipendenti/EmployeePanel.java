@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.Color;
 
 import view.amministratore.api.WorkPanel;
+import view.amministratore.dipendenti.impiegati.ImpiegatiPanel;
 import view.api.GenericButton;
 
 public class EmployeePanel implements WorkPanel{
