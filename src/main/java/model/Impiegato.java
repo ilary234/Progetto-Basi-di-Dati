@@ -34,11 +34,10 @@ public class Impiegato extends Dipendente {
 
     public static final class DAO {
 
-        public static Optional<Impiegato> find(Connection connection, String codice, String password) {
+        public static Optional<Impiegato> find(Connection connection, int codice, String password) {
             Optional<Impiegato> impiegato = Optional.empty();
-            var code = Integer.valueOf(codice);
             try (
-                var statement = DAOUtils.prepare(connection, Queries.FIND_IMPIEGATO, code, password);
+                var statement = DAOUtils.prepare(connection, Queries.FIND_IMPIEGATO, codice, password);
                 var resultSet = statement.executeQuery();
             ) {
                 if (resultSet.next()) {
@@ -51,7 +50,7 @@ public class Impiegato extends Dipendente {
                     var telefono = resultSet.getString("Telefono");
 
                     impiegato = Optional.of(
-                        new Impiegato(cf, nome, cognome, dataNascita, luogoNascita, residenza, telefono, code, password));
+                        new Impiegato(cf, nome, cognome, dataNascita, luogoNascita, residenza, telefono, codice, password));
                 }
             } catch (Exception e) {
                 throw new DAOException(e);

@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import model.AnnuncioServizio;
 import model.Autista;
+import model.Biglietto;
 import model.Committente;
 import model.Comunicazione;
 import model.Giornaliera;
@@ -35,7 +36,7 @@ public class ModelAmm {
         this.dateFormat.applyPattern("yyyy.MM.dd");
     }
 
-    public boolean checkImpiegato(String cod, String pass) {
+    public boolean checkImpiegato(int cod, String pass) {
         this.impiegato = Impiegato.DAO.find(connection, cod, pass);
         if (this.impiegato.isPresent()) {
             return true;
@@ -237,6 +238,10 @@ public class ModelAmm {
 
     public void deleteComunicazione(int code) {
         Comunicazione.DAO.deleteComunicazione(connection, code);
+    }
+
+    public List<String> getStatisticheVendita(int year) {
+        return Biglietto.DAO.getStatistics(connection, year);
     }
 
 }

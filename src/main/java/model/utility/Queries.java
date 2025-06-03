@@ -105,6 +105,15 @@ public final class Queries {
             values (?, ?)
         """;
     
+    public static final String GET_BIGLIETTI_STATISTICS = 
+        """
+            select monthname(DataOraAcquisto) as Mese, count(*) as `Biglietti venduti`
+            from biglietti
+            where year(DataOraAcquisto) = ?
+            group by month(DataOraAcquisto)
+            order by count(*) desc;
+        """;
+    
     public static final String GET_AUTISTI_STATISTICS = 
         """
             select v.CodServizio, Categoria

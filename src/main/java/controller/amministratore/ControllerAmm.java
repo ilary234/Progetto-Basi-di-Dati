@@ -31,7 +31,7 @@ public class ControllerAmm {
         return this.mainView.getFrame();
     }
 
-    public boolean checkImpiegato(String cod, char[] pass) {
+    public boolean checkImpiegato(int cod, char[] pass) {
         return this.model.checkImpiegato(cod, String.valueOf(pass));
     }
 
@@ -198,6 +198,10 @@ public class ControllerAmm {
 
     public void deleteComunicazione(int code) {
         this.model.deleteComunicazione(code);
+    }
+
+    public List<String> getStatisticheVendita(int year) {
+        return this.model.getStatisticheVendita(year);
     }
 
 }
