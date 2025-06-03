@@ -74,6 +74,22 @@ public class Servizio {
             return codes;
         }
 
+        public static List<Integer> getCodesWithoutAnnuncio(Connection connection) {
+            List<Integer> codes = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_SERVIZI__NO_ANNUNCIO_CODES);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var codServizio = resultSet.getInt("CodServizio");
+                    codes.add(codServizio);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return codes;
+        }
+
         public static List<Servizio> getServizi(Connection connection) {
             List<Servizio> servizi = new ArrayList<>();
             try (

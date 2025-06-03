@@ -55,6 +55,15 @@ public final class Queries {
             order by CodServizio
         """;
 
+    public static final String GET_SERVIZI__NO_ANNUNCIO_CODES = 
+        """
+            select CodServizio
+            from Servizi
+            where CodServizio not in (select CodServizio
+							            from annunciservizi)
+            order by CodServizio
+        """;
+
     public static final String GET_SERVIZI = 
         """
             select *
@@ -233,6 +242,29 @@ public final class Queries {
             delete from commissioni
             where Data = ?
             and NumeroVolanda = ?
+        """;
+    
+    public static final String GET_ANNUNCI = 
+        """
+            select *
+            from annunciServizi
+        """;
+
+    public static final String INSERT_ANNUNCIO = 
+        """
+            insert into annunciServizi
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+    
+    public static final String UPDATE_ANNUNCIO = 
+        """
+            update annunciServizi
+            set Titolo = ?,
+            Descrizione = ?,
+            PrezzoBase = ?,
+            Visibile = ?,
+            BigliettiDisponibili = ?
+            where CodAnnuncio = ?
         """;
 
     public static final String GET_IMPIEGATI = 

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import model.AnnuncioServizio;
 import model.Autista;
 import model.Committente;
 import model.Giornaliera;
@@ -199,6 +200,26 @@ public class ModelAmm {
 
     public List<String> getStatisticheServizi() {
         return Servizio.DAO.getStatistics(connection);
+    }
+
+    public List<AnnuncioServizio> getAnnunci() {
+        return AnnuncioServizio.DAO.getAnnunci(connection);
+    }
+
+    public void addAnnuncio(int codServizio, String titolo, String descrizione, float prezzoBase, boolean visibile,
+            int bigliettiDisponibili) {
+        Date data = new Date();
+        AnnuncioServizio.DAO.insertAnnuncio(connection, codServizio, titolo, descrizione, dateFormat.format(data),
+                prezzoBase, visibile, bigliettiDisponibili, impiegato.get().getCodImpiegato());
+    }
+
+    public void updateAnnuncio(int code, String titolo, String descrizione, float prezzoBase, boolean visibile,
+            int bigliettiDisponibili) {
+        AnnuncioServizio.DAO.updateAnnuncio(connection, code, titolo, descrizione, prezzoBase, visibile, bigliettiDisponibili);
+    }
+
+    public List<Integer> getServiziWithoutAnnuncioCodes() {
+        return Servizio.DAO.getCodesWithoutAnnuncio(connection);
     }
 
 }

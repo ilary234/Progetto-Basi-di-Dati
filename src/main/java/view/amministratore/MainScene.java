@@ -14,6 +14,7 @@ import controller.amministratore.ControllerAmm;
 import view.amministratore.api.WorkPanel;
 import view.amministratore.dipendenti.EmployeePanel;
 import view.amministratore.giornaliere.DailyPanel;
+import view.amministratore.inserzioni.InserzioniPanel;
 import view.amministratore.mezzi.TransportPanel;
 import view.amministratore.servizi.ServicePanel;
 import view.api.GenericButton;
@@ -52,18 +53,18 @@ public class MainScene implements Scene{
         var giornaliere = GenericButton.getGenericButton("Giornaliere", BUTTON_SIZE, "Giornaliere");
         var mezzi = GenericButton.getGenericButton("Mezzi", BUTTON_SIZE, "Mezzi");
         var servizi = GenericButton.getGenericButton("Servizi", BUTTON_SIZE, "Servizi");
-        var biglietti = GenericButton.getGenericButton("Biglietti", BUTTON_SIZE, "Biglietti");
+        var inserzioni = GenericButton.getGenericButton("Inserzioni", BUTTON_SIZE, "Inserzioni");
         dipendenti.addActionListener(actionListener);
         giornaliere.addActionListener(actionListener);
         mezzi.addActionListener(actionListener);
         servizi.addActionListener(actionListener);
-        biglietti.addActionListener(actionListener);
+        inserzioni.addActionListener(actionListener);
 
         pagesPanel.add(giornaliere);
         pagesPanel.add(servizi);
         pagesPanel.add(dipendenti);
         pagesPanel.add(mezzi);
-        pagesPanel.add(biglietti);
+        pagesPanel.add(inserzioni);
         menuPanel.add(pagesPanel);
 
         this.cardLayout = new CardLayout();
@@ -107,7 +108,7 @@ public class MainScene implements Scene{
                 case "Servizi" -> new ServicePanel(controller);
                 case "Dipendenti" -> new EmployeePanel(controller);
                 case "Mezzi" -> new TransportPanel(controller);
-                case "Biglietti" -> new TicketPanel();
+                case "Inserzioni" -> new InserzioniPanel(controller);
                 default -> new DailyPanel(controller);
             });
         }

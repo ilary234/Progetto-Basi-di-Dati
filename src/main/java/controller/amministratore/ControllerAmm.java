@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
+import model.AnnuncioServizio;
 import model.Autista;
 import model.Impiegato;
 import model.Mezzo;
@@ -162,6 +163,24 @@ public class ControllerAmm {
 
     public List<String> getStatisticheServizi() {
         return this.model.getStatisticheServizi();
+    }
+
+    public List<AnnuncioServizio> getAnnunci() {
+        return this.model.getAnnunci();
+    }
+
+    public void addAnnuncio(int codServizio, String titolo, float prezzoBase, boolean visibile,
+            int bigliettiDisponibili, String descrizione) {
+        this.model.addAnnuncio(codServizio, titolo, descrizione, prezzoBase, visibile, bigliettiDisponibili);
+    }
+
+    public void updateAnnuncio(int code, String titolo, String descrizione, float prezzoBase, boolean visibile,
+            int bigliettiDisponibili) {
+        this.model.updateAnnuncio(code, titolo, descrizione, prezzoBase, visibile, bigliettiDisponibili);
+    }
+
+    public List<Integer> getServiziWithoutAnnuncioCodes() {
+        return this.model.getServiziWithoutAnnuncioCodes();
     }
 
 }

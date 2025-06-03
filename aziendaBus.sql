@@ -830,12 +830,13 @@ INSERT INTO `Servizi` VALUES (NULL, 'Via Marconi', 'Via Foscolo', '11:15', 40);
 INSERT INTO `Servizi` VALUES (NULL, 'Via Collinello', 'Via Verdi', '09:00', 27);
 INSERT INTO `Servizi` VALUES (NULL, 'Corso Italia', 'Viale dei Mille', '15:00', 60);
 INSERT INTO `Servizi` VALUES (NULL, 'Via della Repubblica', 'Piazza Garibaldi', '21:00', 40);
+INSERT INTO `Servizi` VALUES (NULL, 'Via Verdi', 'Piazza Sulis', '17:00', 20);
 
 # ---------------------------------------------------------------------- #
 # Add info into "AnnunciServizi"                                         #
 # ---------------------------------------------------------------------- #
-INSERT INTO `AnnunciServizi` Values (NULL, 1, 'Escursione Nuoro', 'Sabato con prenotazione. Partenza/Start at h6:00 da Alghero. Rientro/Return h20:00 ad Alghero', now(), 60.00, True, 60, 2);
-INSERT INTO `AnnunciServizi` Values (NULL, 2, 'Autunno in barbagia: visita ad Oliena', 'Sabato con prenotazione. Partenza/Start at h7:00 da Alghero. Rientro/Return h19:30 ad Alghero', now(), 65.00, True, 40, 3);
+INSERT INTO `AnnunciServizi` Values (NULL, 1, 'Escursione Nuoro', 'Sabato con prenotazione. \nPartenza/Start at h6:00 da Alghero.\nRientro/Return h20:00 ad Alghero', now(), 60.00, True, 60, 2);
+INSERT INTO `AnnunciServizi` Values (NULL, 2, 'Autunno in barbagia: visita ad Oliena', 'Sabato con prenotazione.\nPartenza/Start at h7:00 da Alghero.\nRientro/Return h19:30 ad Alghero', now(), 65.00, True, 40, 3);
 INSERT INTO `AnnunciServizi` Values (NULL, 3, 'Escursione alla diga di Seulo', 'Venerdì 11.07.2025 con prenotazione. Partenza/Start at h7:00 da Alghero. Rientro/Return h20:00 ad Alghero', now(), 60.00, True, 50, 3);
 INSERT INTO `AnnunciServizi` Values (NULL, 4, 'Escursione alla cascata di Busachi', 'Lunedì 14.07.2025 con prenotazione. Partenza/Start at h7:00 da Alghero. Rientro/Return h19:00 ad Alghero', now(), 45.00, True, 55, 2);
 INSERT INTO `AnnunciServizi` Values (NULL, 6, 'Concerto di Ligabue', "Sabato 12.07.25  Partenza/Start at h18:30 da Alghero. Rientro/Return h1:00 ad Alghero", now(), 45.00, True, 50, 5);
