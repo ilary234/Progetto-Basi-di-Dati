@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import controller.amministratore.ControllerAmm;
 import view.amministratore.api.WorkPanel;
 import view.amministratore.inserzioni.annunci.AnnuncioPanel;
+import view.amministratore.inserzioni.comunicazioni.ComunicazioniPanel;
 import view.api.GenericButton;
 
 public class InserzioniPanel implements WorkPanel {
@@ -79,7 +80,7 @@ public class InserzioniPanel implements WorkPanel {
                 case "Comunicazioni":
                     GenericButton.setBackgroundVisible(annunci, Color.LIGHT_GRAY, false);
                     GenericButton.setBackgroundVisible(comunicazioni, Color.LIGHT_GRAY, true);
-                    //changeDataPanel(new AutistiPanel(controller));
+                    changeDataPanel(new ComunicazioniPanel(controller));
                     break;
                 default:
                     break;

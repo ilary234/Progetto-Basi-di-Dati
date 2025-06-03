@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 
 import model.AnnuncioServizio;
 import model.Autista;
+import model.Comunicazione;
 import model.Impiegato;
 import model.Mezzo;
 import model.Servizio;
@@ -181,6 +182,22 @@ public class ControllerAmm {
 
     public List<Integer> getServiziWithoutAnnuncioCodes() {
         return this.model.getServiziWithoutAnnuncioCodes();
+    }
+
+    public List<Comunicazione> getComunicazioni() {
+        return this.model.getComunicazioni();
+    }
+
+    public void addComunicazione(String titolo, String descrizione) {
+        this.model.addComunicazione(titolo, descrizione);
+    }
+
+    public void updateComunicazione(int code, String titolo, String descrizione) {
+        this.model.updateComunicazione(code, titolo, descrizione);
+    }
+
+    public void deleteComunicazione(int code) {
+        this.model.deleteComunicazione(code);
     }
 
 }

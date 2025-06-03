@@ -837,14 +837,14 @@ INSERT INTO `Servizi` VALUES (NULL, 'Via Verdi', 'Piazza Sulis', '17:00', 20);
 # ---------------------------------------------------------------------- #
 INSERT INTO `AnnunciServizi` Values (NULL, 1, 'Escursione Nuoro', 'Sabato con prenotazione. \nPartenza/Start at h6:00 da Alghero.\nRientro/Return h20:00 ad Alghero', now(), 60.00, True, 60, 2);
 INSERT INTO `AnnunciServizi` Values (NULL, 2, 'Autunno in barbagia: visita ad Oliena', 'Sabato con prenotazione.\nPartenza/Start at h7:00 da Alghero.\nRientro/Return h19:30 ad Alghero', now(), 65.00, True, 40, 3);
-INSERT INTO `AnnunciServizi` Values (NULL, 3, 'Escursione alla diga di Seulo', 'Venerdì 11.07.2025 con prenotazione. Partenza/Start at h7:00 da Alghero. Rientro/Return h20:00 ad Alghero', now(), 60.00, True, 50, 3);
-INSERT INTO `AnnunciServizi` Values (NULL, 4, 'Escursione alla cascata di Busachi', 'Lunedì 14.07.2025 con prenotazione. Partenza/Start at h7:00 da Alghero. Rientro/Return h19:00 ad Alghero', now(), 45.00, True, 55, 2);
-INSERT INTO `AnnunciServizi` Values (NULL, 6, 'Concerto di Ligabue', "Sabato 12.07.25  Partenza/Start at h18:30 da Alghero. Rientro/Return h1:00 ad Alghero", now(), 45.00, True, 50, 5);
-INSERT INTO `AnnunciServizi` Values (NULL, 5, 'Concerto di Annalisa', 'Martedì 08.07.25. Partenza/Start at h18:00 da Alghero. Rientro/Return h1:30 ad Alghero', now(), 55.00, True, 35, 1);
-INSERT INTO `AnnunciServizi` Values (NULL, 8, 'Beachbus mattina', 'Tutti i giorni. Partenza/Start at h9:00 da Via della Repubblica. Ultima fermata Via Verdi', now(), 5.00, True, 30, 4);
-INSERT INTO `AnnunciServizi` Values (NULL, 9, 'Linea standard', 'Tutti i giorni. Partenza/Start at h8:00 da Via Collinello. Ultima fermata Via Foscolo', now(), 2.00, True, 40, 3);
-INSERT INTO `AnnunciServizi` Values (NULL, 7, 'Giro panoramico', 'Ogni martedì, venerdì e domenica. Partenza/Start at h15:00 dal porto. Arrivo a Fertilia', now(), 6.00, True, 55, 1);
-INSERT INTO `AnnunciServizi` Values (NULL, 10, 'Beachbus sera', 'Tutti i giorni. Partenza/Start at h21:00 da Via della Repubblica. Ultima fermata Via Verdi', now(), 5.00, True, 30, 4);
+INSERT INTO `AnnunciServizi` Values (NULL, 3, 'Escursione alla diga di Seulo', 'Venerdì 11.07.2025 con prenotazione. \nPartenza/Start at h7:00 da Alghero. \nRientro/Return h20:00 ad Alghero', now(), 60.00, True, 50, 3);
+INSERT INTO `AnnunciServizi` Values (NULL, 4, 'Escursione alla cascata di Busachi', 'Lunedì 14.07.2025 con prenotazione. \nPartenza/Start at h7:00 da Alghero. \nRientro/Return h19:00 ad Alghero', now(), 45.00, True, 55, 2);
+INSERT INTO `AnnunciServizi` Values (NULL, 6, 'Concerto di Ligabue', "Sabato 12.07.25  \nPartenza/Start at h18:30 da Alghero. \nRientro/Return h1:00 ad Alghero", now(), 45.00, True, 50, 5);
+INSERT INTO `AnnunciServizi` Values (NULL, 5, 'Concerto di Annalisa', 'Martedì 08.07.25. \nPartenza/Start at h18:00 da Alghero. \nRientro/Return h1:30 ad Alghero', now(), 55.00, True, 35, 1);
+INSERT INTO `AnnunciServizi` Values (NULL, 8, 'Beachbus mattina', 'Tutti i giorni. \nPartenza/Start at h9:00 da Via della Repubblica. \nUltima fermata Via Verdi', now(), 5.00, True, 30, 4);
+INSERT INTO `AnnunciServizi` Values (NULL, 9, 'Linea standard', 'Tutti i giorni. \nPartenza/Start at h8:00 da Via Collinello. \nUltima fermata Via Foscolo', now(), 2.00, True, 40, 3);
+INSERT INTO `AnnunciServizi` Values (NULL, 7, 'Giro panoramico', 'Ogni martedì, venerdì e domenica. \nPartenza/Start at h15:00 dal porto. \nArrivo a Fertilia', now(), 6.00, True, 55, 1);
+INSERT INTO `AnnunciServizi` Values (NULL, 10, 'Beachbus sera', 'Tutti i giorni. \nPartenza/Start at h21:00 da Via della Repubblica. \nUltima fermata Via Verdi', now(), 5.00, True, 30, 4);
 
 # ---------------------------------------------------------------------- #
 # Add info into "Recensioni"                                             #

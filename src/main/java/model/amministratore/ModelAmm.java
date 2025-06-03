@@ -14,6 +14,7 @@ import java.util.Optional;
 import model.AnnuncioServizio;
 import model.Autista;
 import model.Committente;
+import model.Comunicazione;
 import model.Giornaliera;
 import model.Impiegato;
 import model.Mezzo;
@@ -220,6 +221,22 @@ public class ModelAmm {
 
     public List<Integer> getServiziWithoutAnnuncioCodes() {
         return Servizio.DAO.getCodesWithoutAnnuncio(connection);
+    }
+
+    public List<Comunicazione> getComunicazioni() {
+        return Comunicazione.DAO.getComunicazioni(connection);
+    }
+
+    public void addComunicazione(String titolo, String descrizione) {
+        Comunicazione.DAO.insertComunicazione(connection, titolo, descrizione, dateFormat.format(new Date()), impiegato.get().getCodImpiegato());
+    }
+
+    public void updateComunicazione(int code, String titolo, String descrizione) {
+        Comunicazione.DAO.updateComunicazione(connection, code, titolo, descrizione);
+    }
+
+    public void deleteComunicazione(int code) {
+        Comunicazione.DAO.deleteComunicazione(connection, code);
     }
 
 }

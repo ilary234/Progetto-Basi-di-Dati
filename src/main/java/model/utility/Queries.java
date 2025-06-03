@@ -267,6 +267,32 @@ public final class Queries {
             where CodAnnuncio = ?
         """;
 
+    public static final String GET_COMUNICAZIONI = 
+        """
+            select *
+            from comunicazioni
+        """;
+
+    public static final String INSERT_COMUNICAZIONE = 
+        """
+            insert into comunicazioni
+            values (?, ?, ?, ?, ?)
+        """;
+
+    public static final String UPDATE_COMUNICAZIONE = 
+        """
+            update comunicazioni
+            set Titolo = ?,
+            Descrizione = ?
+            where CodComunicazione = ?
+        """;
+
+    public static final String DELETE_COMUNICAZIONE = 
+        """
+            delete from comunicazioni
+            where CodComunicazione = ?
+        """;
+
     public static final String GET_IMPIEGATI = 
         """
             select *
