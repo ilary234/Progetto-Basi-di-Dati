@@ -156,4 +156,12 @@ public class ControllerAmm {
         this.model.addKB(numero, cf, scadenza);
     }
 
+    public List<String> getStatisticheAutista(String cf) {
+        return this.model.getStatisticheAutista(cf);
+    }
+
+    public List<String> getStatisticheServizi() {
+        return this.model.getStatisticheServizi();
+    }
+
 }

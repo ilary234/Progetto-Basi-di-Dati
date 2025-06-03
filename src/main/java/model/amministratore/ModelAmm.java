@@ -193,4 +193,12 @@ public class ModelAmm {
         Autista.DAO.addKB(connection, numero, cf, dateFormat.format(scadenza));
     }
 
+    public List<String> getStatisticheAutista(String cf) {
+        return Autista.DAO.getStatistics(connection, cf);
+    }
+
+    public List<String> getStatisticheServizi() {
+        return Servizio.DAO.getStatistics(connection);
+    }
+
 }

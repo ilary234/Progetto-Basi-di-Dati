@@ -111,6 +111,10 @@ public class AutistiPanel implements WorkPanel {
                     new AddKB(controller, CF);
                     updateAutisti();
                     break;
+                case "Statistiche":
+                    var cf = (String) autisti.getValueAt(autisti.getSelectedRow(), 0); 
+                    new AutistiStatistic(controller, cf);
+                    break;
                 default:
                     break;
             }

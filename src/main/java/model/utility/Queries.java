@@ -57,14 +57,16 @@ public final class Queries {
 
     public static final String GET_SERVIZI = 
         """
-            select s.*, NomeLinea as Categoria
-            from Servizi s, CategorieServizi c
-            where s.CodServizio = c.CodServizio
-            union
-            select s.*, NomeTransfer as Categoria
-            from Servizi s, Classiservizi c
-            where s.CodServizio = c.CodServizio
-            order by CodServizio;
+            select *
+            from servizicategorie;
+        """;
+
+    public static final String GET_SERVIZI_STATISTICS = 
+        """
+            select CodServizio, Categoria, NumeroBigliettiVenduti
+            from servizicategorie
+            order by NumeroBigliettiVenduti desc
+            limit 10
         """;
 
     public static final String GET_CATEGORIE =
@@ -92,6 +94,20 @@ public final class Queries {
         """
             insert into ClassiServizi
             values (?, ?)
+        """;
+    
+    public static final String GET_AUTISTI_STATISTICS = 
+        """
+            select v.CodServizio, Categoria
+            from volande v, guida g, (select CodServizio, Categoria
+                                        from servizicategorie) as s
+            where v.NumeroVolanda = g.NumeroVolanda
+            and v.Data = g.Data
+            and v.CodServizio = s.CodServizio
+            and g.Autista = ?
+            group by v.CodServizio, Categoria
+            order by count(*) desc
+            limit 5;
         """;
 
     public static final String GET_AUTISTI_NAMES = 

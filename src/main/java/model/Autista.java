@@ -118,6 +118,25 @@ public class Autista extends Dipendente{
                 throw new DAOException(e);
             }
         }
+
+        public static List<String> getStatistics(Connection connection, String cf) {
+            List<String> servizi = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_AUTISTI_STATISTICS, cf);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var code = resultSet.getString("CodServizio");
+                    var categoria = resultSet.getString("Categoria");
+
+                    var servizio = "Cod: " + code + ", " + categoria;
+                    servizi.add(servizio);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return servizi;
+        }
     }
 
 }

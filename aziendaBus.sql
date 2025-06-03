@@ -457,6 +457,16 @@ from volande v left join veicolovolanda vv on (v.Data = vv.Data and v.NumeroVola
 		on (v.Data = a.Data and v.NumeroVolanda = a.NumeroVolanda) 
 	left join (select c.*, Nominativo from commissioni c, committenti cc where c.CodCommittente = cc.CodCommittente) as c 
 		on (v.Data = c.Data and v.NumeroVolanda = c.NumeroVolanda);
+        
+create view ServiziCategorie(CodServizio, Partenza, Destinazione, OrarioPartenza, NumeroBigliettiVenduti, Categoria) as
+select s.*, NomeLinea as Categoria
+from Servizi s, CategorieServizi c
+where s.CodServizio = c.CodServizio
+union
+select s.*, NomeTransfer as Categoria
+from Servizi s, Classiservizi c
+where s.CodServizio = c.CodServizio
+order by CodServizio;
 
 # ---------------------------------------------------------------------- #
 # Add info into "Patenti"                                                #
@@ -984,12 +994,15 @@ INSERT INTO `Guida` VALUES ('2025-07-08', 1, 'FLPLRT85C23D969Y');
 INSERT INTO `Guida` VALUES ('2025-07-08', 2, 'CHRCHR72H41D704V');
 INSERT INTO `Guida` VALUES ('2025-07-08', 3, 'CTTSLV69R60A192E');
 INSERT INTO `Guida` VALUES ('2025-07-08', 4, 'MRNMSM68E27H199X');
-INSERT INTO `Guida` VALUES ('2025-07-09', 1, 'SNTMTT04S07C573R');
+INSERT INTO `Guida` VALUES ('2025-07-09', 1, 'FLPLRT85C23D969Y');
 INSERT INTO `Guida` VALUES ('2025-07-09', 2, 'PRSGNN62M20A192T');
-INSERT INTO `Guida` VALUES ('2025-07-09', 3, 'CSDVNC04E43C573X');
+INSERT INTO `Guida` VALUES ('2025-07-09', 3, 'FLPLRT85C23D969Y');
 INSERT INTO `Guida` VALUES ('2025-07-10', 1, 'RSSRRT86L21H294N');
 INSERT INTO `Guida` VALUES ('2025-07-10', 2, 'CVNMTT95R25D704N');
 INSERT INTO `Guida` VALUES ('2025-07-10', 3, 'FLPLRT85C23D969Y');
+INSERT INTO `Guida` VALUES ('2025-07-12', 2, 'FLPLRT85C23D969Y');
+INSERT INTO `Guida` VALUES ('2025-07-13', 3, 'FLPLRT85C23D969Y');
+INSERT INTO `Guida` VALUES ('2025-07-14', 1, 'FLPLRT85C23D969Y');
 
 # ---------------------------------------------------------------------- #
 # Add info into "Tipo"                                                   #

@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -32,16 +33,32 @@ public class ServicePanel implements WorkPanel{
         this.mainPanel = new JPanel(new BorderLayout());
         
         var buttonsPanel = new JPanel(new BorderLayout());
+        var buttons = new JPanel();
         var create = GenericButton.getGenericButton("Nuovo +", BUTTON_SIZE, "Nuovo Servizio");
-        create.addActionListener(new ActionListener() {
+        var statistiche = GenericButton.getGenericButton("Statistiche", BUTTON_SIZE, "Statistiche");
+        var actionListener = new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                new NewService(controller, ServicePanel.this);
+                var button = (JButton) e.getSource();
+                switch (button.getActionCommand()) {
+                    case "Nuovo Servizio":
+                        new NewService(controller, ServicePanel.this);
+                        break;
+                    case "Statistiche":
+                        new ServiziStatistica(controller);
+                        break;
+                    default:
+                        break;
+                }
             }
             
-        });
-        buttonsPanel.add(create, BorderLayout.EAST);
+        };
+        create.addActionListener(actionListener);
+        statistiche.addActionListener(actionListener);
+        buttons.add(create);
+        buttons.add(statistiche);
+        buttonsPanel.add(buttons, BorderLayout.EAST);
 
         this.tableModel = new TableModel();
         this.servizi = new JTable(tableModel);
