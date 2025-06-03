@@ -79,10 +79,9 @@ public class NewVolandaDialog extends JDialog{
                         NewVolandaDialog.this.setVisible(false);
                         NewVolandaDialog.this.dispose();
                     }
-                } catch (Exception error) {
+                } catch (Exception e1) {
                     prezzoText.setText("");
                     kmText.setText("");
-                    error.printStackTrace();
                 }
             }
             

@@ -46,13 +46,17 @@ public class AddKB extends JDialog {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                var numero = Integer.parseInt(numeroText.getText());
-                var scadenza = scadenzaBox.getDate();
-                if(numero > 0) {
-                    controller.addKB(numero, cf, scadenza);
-                    AddKB.this.setVisible(false);
-                    AddKB.this.dispose();
-                };
+                try {
+                    var numero = Integer.parseInt(numeroText.getText());
+                    var scadenza = scadenzaBox.getDate();
+                    if(numero > 0 && scadenza != null) {
+                        controller.addKB(numero, cf, scadenza);
+                        AddKB.this.setVisible(false);
+                        AddKB.this.dispose();
+                    };
+                } catch (Exception e1) {
+                    numeroText.setText("");
+                }
             }
             
         });

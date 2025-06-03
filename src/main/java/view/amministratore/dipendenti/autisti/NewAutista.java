@@ -120,7 +120,7 @@ public class NewAutista extends JDialog {
                     var telefono = telefonoText.getText();
                     var scadenzaCQC = scadenzaCQCBox.getDate();
                     if (!cf.isBlank() && !nome.isBlank() && !cognome.isBlank() && !luogoNascita.isBlank() &&
-                        !residenza.isBlank() && !telefono.isBlank()) {
+                        !residenza.isBlank() && !telefono.isBlank() && dataNascita != null && scadenzaCQC != null) {
                         controller.addAutista(cf, patente, nome, cognome, dataNascita, luogoNascita, residenza, telefono, scadenzaCQC);
                         NewAutista.this.setVisible(false);
                         NewAutista.this.dispose();
@@ -181,7 +181,7 @@ public class NewAutista extends JDialog {
                     var numero = numeroText.getText();
                     var scadenza = scadenzaBox.getDate();
                     var tipologia = (String) tipologiaText.getSelectedItem();
-                    if (numero.length() == 10) {
+                    if (numero.length() == 10 && scadenza != null) {
                         controller.addPatente(numero, tipologia, scadenza);
                     }
                     NewAutista.this.changeDataPanel(new AutistaPanel(numero));

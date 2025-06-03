@@ -88,7 +88,7 @@ public class NewImpiegato extends JDialog {
                 var telefono = telefonoText.getText();
                 var password = passwordText.getText();
                 if (!cf.isBlank() && !nome.isBlank() && !cognome.isBlank() && !luogoNascita.isBlank() &&
-                    !residenza.isBlank() && !telefono.isBlank() && !password.isBlank()) {
+                    !residenza.isBlank() && !telefono.isBlank() && !password.isBlank() && dataNascita != null) {
                     controller.addImpiegato(cf, nome, cognome, dataNascita, luogoNascita, residenza, telefono, password);
                     NewImpiegato.this.setVisible(false);
                     NewImpiegato.this.dispose();
