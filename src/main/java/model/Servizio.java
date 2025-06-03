@@ -176,6 +176,21 @@ public class Servizio {
             }
             return servizi;
         }
+
+        public static boolean isTransfer(Connection connection, int codServizio) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.FIND_CATEGORIA, codServizio);
+                var resultSet = statement.executeQuery();
+            ) {
+                if (resultSet.next()) {
+                    int found = resultSet.getInt(1);
+                    return found == 1;
+                }
+                return false;
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
     }
 
 }

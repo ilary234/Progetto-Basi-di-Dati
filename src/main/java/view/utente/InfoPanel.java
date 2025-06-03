@@ -3,6 +3,7 @@ package view.utente;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -34,10 +35,11 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
+import com.mysql.cj.conf.ConnectionUrlParser.Pair;
+
 import controller.utente.ControllerUtente;
 import view.amministratore.api.WorkPanel;
 import view.api.GenericButton;
-import view.api.WrapLayout;
 
 public class InfoPanel implements WorkPanel {
 
@@ -53,13 +55,14 @@ public class InfoPanel implements WorkPanel {
     private final double stelle;
     private final String prezzo; 
     private final String codAnnuncio;
-    private int imageSize = 120; // dimensione iniziale
+    private int imageSize = 120; 
     private int dynamicFontSize = TEXT_SIZE;
     private JButton selected;
     private String codServizio;
     private JPanel listaRecensioniPanel;
     private JLabel imageLabel;
     private JPanel imagePanel;
+    private UserScene userScene;
 
     private final JPanel rightPanel = new JPanel();
     private final JPanel switchPanel = new JPanel(new CardLayout());
@@ -68,12 +71,13 @@ public class InfoPanel implements WorkPanel {
     private static final String RECENSIONI = "Recensioni";
     private static final String ACQUISTO = "Acquisto biglietti";
 
-    public InfoPanel(ControllerUtente controller, ImageIcon imageIcon, String codServizio) {
+    public InfoPanel(ControllerUtente controller, UserScene userScene, ImageIcon imageIcon, String codServizio) {
         this.controller = controller;
         this.imageIcon = imageIcon;
         this.codServizio = codServizio;
+        this.userScene = userScene;
 
-        List<String> info = this.controller.findServizio(codServizio);
+        List<String> info = this.controller.findServizio(this.codServizio);
 
         this.titolo = info.get(1);
         this.descrizione = info.get(2);
@@ -82,14 +86,18 @@ public class InfoPanel implements WorkPanel {
         this.stelle = this.controller.avgRating(this.codAnnuncio);
 
         this.imageLabel = new JLabel();
-        this.imageLabel.setIcon(resizeIcon(imageIcon, imageSize, imageSize)); // dimensione esempio
+        this.imageLabel.setIcon(resizeIcon(this.imageIcon, imageSize, imageSize));
         this.imagePanel = new JPanel(new BorderLayout());
         this.imagePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         this.imagePanel.add(this.imageLabel, BorderLayout.CENTER);
         this.imagePanel.setPreferredSize(new Dimension(300, 0)); // 1/3 dello spazio (adatta in base al layout finale)
 
-        rightPanel.setLayout(new WrapLayout(FlowLayout.LEFT, 20, 20));
-        rightPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); //da capire se serve
+        rightPanel.setLayout(new BorderLayout());
+        
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel centrePanel = new JPanel();
+        centrePanel.setLayout(new BoxLayout(centrePanel, BoxLayout.Y_AXIS));
+        centrePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JLabel titoloLabel = new JLabel(this.titolo);
         titoloLabel.setFont(new Font("Roboto", Font.BOLD, 22));
@@ -104,6 +112,11 @@ public class InfoPanel implements WorkPanel {
         String prezzoFormattato = String.format("%.2f", Double.valueOf(prezzo));
         JLabel prezzoLabel = new JLabel("Prezzo: " + prezzoFormattato + " €");
         prezzoLabel.setFont(new Font("Roboto", Font.BOLD, 18));
+        topPanel.add(titoloLabel);
+        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.add(stelleLabel);
+        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.add(prezzoLabel);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setBackground(new Color(COLOR_BUTTONS_PANEL));
@@ -117,11 +130,9 @@ public class InfoPanel implements WorkPanel {
         buttonPanel.add(recensioniButton);
         buttonPanel.add(acquistoButton);
 
-        // Card: Dettagli
         JPanel dettagliPanel = new JPanel(new BorderLayout());
         dettagliPanel.add(new JLabel(descrizione), BorderLayout.CENTER);
 
-        // Card: Recensioni !!!!!!!!!!!!!!!!!!!!!!!
         JPanel recensioniPanel = new JPanel(new BorderLayout());
         this.listaRecensioniPanel = new JPanel();
         this.listaRecensioniPanel.setLayout(new BoxLayout(this.listaRecensioniPanel, BoxLayout.Y_AXIS));
@@ -143,7 +154,6 @@ public class InfoPanel implements WorkPanel {
             boolean isLogged = controller.isLoggedIn();
 
             if (!isLogged) {
-                // Mostra dialog di login
                 JPanel loginPanel = new JPanel(new GridLayout(2, 2, 5, 5));
                 JTextField userField = new JTextField();
                 JPasswordField passField = new JPasswordField();
@@ -163,12 +173,12 @@ public class InfoPanel implements WorkPanel {
                 if (result == JOptionPane.OK_OPTION) {
                     String username = userField.getText();
                     String password = new String(passField.getPassword());
-                    // Qui puoi chiamare il metodo di login del controller
                     boolean loginOk = controller.checkUtente(username, password);
                     if (!loginOk) {
                         JOptionPane.showMessageDialog(mainPanel, "Credenziali non valide!", "Errore", JOptionPane.ERROR_MESSAGE);
                     } else {
                         mostraDialogRecensione(username);
+                        controller.setCredenziali(new Pair<>(username, password));
                     }
                 }
             } else {
@@ -176,20 +186,135 @@ public class InfoPanel implements WorkPanel {
             }
         });
 
-        // Aggiungi la card al CardLayout
         switchPanel.add(recensioniPanel, RECENSIONI);
 
-        // Card: Acquisto
         JPanel acquistoPanel = new JPanel();
-        acquistoPanel.add(new JLabel("Qui va il pannello di acquisto biglietto"));
+        JPanel categoriePanel = new JPanel();
+        categoriePanel.setLayout(new BoxLayout(categoriePanel, BoxLayout.Y_AXIS));
+        categoriePanel.setPreferredSize(new Dimension(500, 250));
 
-        // CardLayout setup
+        List<String> categorie = this.controller.getNomiCategorie(Integer.parseInt(this.codServizio));
+        boolean isTransfer = this.controller.isTransfer(Integer.parseInt(this.codServizio));
+
+        if (isTransfer) {
+            int numCategorie = categorie.size() / 3;
+            int[] quantita = new int[numCategorie];
+            for (int i = 0; i < categorie.size(); i += 3) {
+                int idx = i / 3;
+                String nome = categorie.get(i);
+                String etaMin = categorie.get(i + 1);
+                String etaMax = categorie.get(i + 2);
+
+                JPanel riga = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+                JLabel nomeCat = new JLabel(nome + ": (" + etaMin + " - " + etaMax + ")");
+                JButton meno = new JButton("-");
+                JLabel num = new JLabel("0");
+                JButton piu = new JButton("+");
+
+                meno.addActionListener(e -> {
+                    if (quantita[idx] > 0) {
+                        quantita[idx]--;
+                        num.setText(String.valueOf(quantita[idx]));
+                    }
+                });
+                piu.addActionListener(e -> {
+                    quantita[idx]++;
+                    num.setText(String.valueOf(quantita[idx]));
+                });
+
+                riga.add(nomeCat);
+                riga.add(meno);
+                riga.add(num);
+                riga.add(piu);
+                riga.setAlignmentX(Component.CENTER_ALIGNMENT);
+                categoriePanel.add(riga);
+                if (i < categorie.size() - 3) categoriePanel.add(Box.createVerticalStrut(3));
+            }
+        } else {
+            int[] quantita = new int[categorie.size()];
+            for (int i = 0; i < categorie.size(); i++) {
+                int idx = i;
+                String durata = categorie.get(i);
+                JPanel riga = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+                JLabel nomeCat = new JLabel(durata);
+                JButton meno = new JButton("-");
+                JLabel num = new JLabel("0");
+                JButton piu = new JButton("+");
+
+                meno.addActionListener(e -> {
+                    if (quantita[idx] > 0) {
+                        quantita[idx]--;
+                        num.setText(String.valueOf(quantita[idx]));
+                    }
+                });
+                piu.addActionListener(e -> {
+                    quantita[idx]++;
+                    num.setText(String.valueOf(quantita[idx]));
+                });
+
+                riga.add(nomeCat);
+                riga.add(meno);
+                riga.add(num);
+                riga.add(piu);
+                riga.setAlignmentX(Component.CENTER_ALIGNMENT);
+                categoriePanel.add(riga);
+                if (i < categorie.size() - 1) categoriePanel.add(Box.createVerticalStrut(3));
+            }
+        }
+
+        categoriePanel.add(Box.createVerticalStrut(0));
+        JPanel bottonePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        bottonePanel.setBackground(new Color(COLOR_BUTTONS_PANEL));
+        bottonePanel.setPreferredSize(new Dimension(recensioniPanel.getWidth(), recensioniPanel.getHeight() / 4));
+        JButton aggiungiCarrello = GenericButton.getGenericButton("Aggiungi al carrello", dynamicFontSize, "Aggiungi al carrello");
+        aggiungiCarrello.setForeground(Color.WHITE);
+        bottonePanel.add(aggiungiCarrello);
+        categoriePanel.add(bottonePanel);
+        acquistoPanel.add(categoriePanel);
+
+        aggiungiCarrello.addActionListener(e -> {
+            boolean isLogged = controller.isLoggedIn();
+
+            if (!isLogged) {
+                JPanel loginPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+                JTextField userField = new JTextField();
+                JPasswordField passField = new JPasswordField();
+                loginPanel.add(new JLabel("Username:"));
+                loginPanel.add(userField);
+                loginPanel.add(new JLabel("Password:"));
+                loginPanel.add(passField);
+
+                int result = JOptionPane.showConfirmDialog(
+                    mainPanel,
+                    loginPanel,
+                    "Login",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE
+                );
+
+                if (result == JOptionPane.OK_OPTION) {
+                    String username = userField.getText();
+                    String password = new String(passField.getPassword());
+                    boolean loginOk = controller.checkUtente(username, password);
+                    if (!loginOk) {
+                        JOptionPane.showMessageDialog(mainPanel, "Credenziali non valide!", "Errore", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    } else {
+                        controller.setCredenziali(new Pair<>(username, password));
+                    }
+                } else {
+                    return;
+                }
+            }
+            JOptionPane.showMessageDialog(mainPanel, "Biglietti aggiunti al carrello!");
+            GenericButton.setBackgroundVisible(userScene.getHomeButton(), SELECTED_COLOR, true);
+            this.userScene.changeWorkPanel(new HomePanel(this.controller, this.userScene));
+        });
+
         switchPanel.add(dettagliPanel, DETTAGLI);
         switchPanel.add(recensioniPanel, RECENSIONI);
         switchPanel.add(acquistoPanel, ACQUISTO);
 
-        // Listener per i bottoni
-        //CardLayout cL = (CardLayout) (switchPanel.getLayout());
         ActionListener menuListener = e -> {
             JButton button = (JButton) e.getSource();
             GenericButton.setBackgroundVisible(selected, SELECTED_COLOR, false);
@@ -205,18 +330,11 @@ public class InfoPanel implements WorkPanel {
         this.selected = dettagliButton;
         GenericButton.setBackgroundVisible(selected, SELECTED_COLOR, true);
 
-        // Composizione rightPanel
-        rightPanel.add(titoloLabel);
-        rightPanel.add(Box.createVerticalStrut(10));
-        rightPanel.add(stelleLabel);
-        rightPanel.add(Box.createVerticalStrut(10));
-        rightPanel.add(prezzoLabel);
-        rightPanel.add(Box.createVerticalStrut(20));
-        rightPanel.add(buttonPanel);
-        rightPanel.add(Box.createVerticalStrut(10));
-        rightPanel.add(switchPanel);
-
-        // Layout principale
+        centrePanel.add(topPanel);
+        centrePanel.add(buttonPanel);
+        centrePanel.add(switchPanel);
+        rightPanel.add(centrePanel, BorderLayout.CENTER);
+        
         mainPanel.add(imagePanel, BorderLayout.WEST);
         mainPanel.add(rightPanel, BorderLayout.CENTER);
 
@@ -224,11 +342,10 @@ public class InfoPanel implements WorkPanel {
             @Override
             public void componentResized(ComponentEvent e) {
                 int width = mainPanel.getWidth();
-                int newImageSize = Math.max(100, width / 4); // solo l'immagine cresce
+                int newImageSize = Math.max(100, width / 4); 
                 imageLabel.setIcon(resizeIcon(imageIcon, newImageSize, newImageSize));
-                imagePanel.setPreferredSize(new Dimension(newImageSize + 40, 0)); // +40 per il padding
+                imagePanel.setPreferredSize(new Dimension(newImageSize + 40, 0)); 
 
-                // NON aggiornare la dimensione dei font o dei pannelli centrali!
                 mainPanel.revalidate();
                 mainPanel.repaint();
             }
@@ -244,7 +361,6 @@ public class InfoPanel implements WorkPanel {
     private void mostraDialogRecensione(String username) {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
 
-        // Spinner per valutazione
         JPanel valutazionePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         valutazionePanel.add(new JLabel("Valutazione:"));
         JSpinner spinner = new JSpinner(new SpinnerNumberModel(5, 1, 5, 1));
@@ -254,7 +370,6 @@ public class InfoPanel implements WorkPanel {
         tf.setFocusable(false); 
         valutazionePanel.add(spinner);
 
-        // Area testo per commento
         JPanel commentoPanel = new JPanel(new BorderLayout());
         commentoPanel.add(new JLabel("Commento (max 200 caratteri):"), BorderLayout.NORTH);
         JTextArea commentoArea = new JTextArea(5, 30);
@@ -263,7 +378,6 @@ public class InfoPanel implements WorkPanel {
         commentoArea.setWrapStyleWord(true);
         commentoPanel.add(new JScrollPane(commentoArea), BorderLayout.CENTER);
 
-        // Conta caratteri
         JLabel contaLabel = new JLabel("0/200");
         commentoArea.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { aggiorna(); }
@@ -301,6 +415,9 @@ public class InfoPanel implements WorkPanel {
             controller.inserisciRecensione(username, Integer.parseInt(this.codAnnuncio), valutazione, commento, data);
             updateRecensioniPanel(this.listaRecensioniPanel);
             JOptionPane.showMessageDialog(mainPanel, "Recensione inserita con successo!");
+
+            InfoPanel nuovoInfoPanel = new InfoPanel(controller, userScene, imageIcon, codServizio);
+            userScene.changeWorkPanel(nuovoInfoPanel);
         }
     }
 
@@ -325,7 +442,7 @@ public class InfoPanel implements WorkPanel {
             String stelle = "★".repeat(Integer.parseInt(valutazione));
             JLabel valutazioneLabel = new JLabel(stelle);
             valutazioneLabel.setFont(new Font("Roboto", Font.PLAIN, 13));
-            int maxWidth = 400; // scegli la larghezza che preferisci
+            int maxWidth = 400; 
             String commentoHtml = "<html><div style='width:" + maxWidth + "px'><i>" +
                 (commento != null && !commento.isEmpty() ? commento : "Nessun commento") +
                 "</i></div></html>";

@@ -13,6 +13,9 @@ import com.mysql.cj.conf.ConnectionUrlParser.Pair;
 
 import model.AnnuncioServizio;
 import model.Recensione;
+import model.Servizio;
+import model.TipoLinea;
+import model.TipoTransfer;
 import model.Utente;
 
 public class ModelUtente {
@@ -28,7 +31,7 @@ public class ModelUtente {
         this.dateFormat.applyPattern("yyyy.MM.dd");
     }
 
-    public List<String> getTitoliAnnunci() {
+    public Map<Integer, String> getTitoliAnnunci() {
         return AnnuncioServizio.DAO.titlesList(connection);
     }
 
@@ -74,5 +77,25 @@ public class ModelUtente {
 
     public void inserisciRecensione(String utente, int codAnnuncio, int valutazione, String commento, Date data) {
         Recensione.DAO.inserisciRecensione(connection, utente, codAnnuncio, valutazione, commento, data);
+    }
+
+    public boolean isTransfer(int codice) {
+        return Servizio.DAO.isTransfer(connection, codice);
+    }
+
+    public List<String> getTransfers(int codice) {
+        return TipoTransfer.DAO.getTransfers(connection, codice);
+    }
+
+    public List<String> getLinee(int codice) {
+        return TipoLinea.DAO.getLinee(connection, codice);
+    }
+
+    public String getImageLines(String codice) {
+        return TipoLinea.DAO.getImageLines(connection, codice);
+    }
+
+    public String getImageTransfers(String codice) {
+        return TipoTransfer.DAO.getImageTransfers(connection, codice);
     }
 }

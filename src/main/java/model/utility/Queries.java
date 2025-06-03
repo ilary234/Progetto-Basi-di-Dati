@@ -345,8 +345,8 @@ public final class Queries {
 
     public static final String GET_TITLES =
         """
-            SELECT Titolo
-            FROM annunciservizi
+            SELECT CodServizio, Titolo
+            FROM AnnunciServizi
         """;
 
     public static final String GET_LINES = 
@@ -413,6 +413,47 @@ public final class Queries {
         """
             INSERT INTO Recensioni (Utente, CodAnnuncio, Valutazione, Commento, Data)
             VALUES (?, ?, ?, ?, ?);
+        """;
+
+    public static final String FIND_CATEGORIA =
+        """
+            SELECT COUNT(*)
+            FROM ClassiServizi
+            WHERE CodServizio = ?
+        """;
+
+    public static final String GET_NAME_TRANSFERS =
+        """
+            SELECT NomeTipologia, EtàMinima, EtàMassima
+            FROM TipoTransfer
+            WHERE CategoriaTransfer = (SELECT NomeTransfer
+                                       FROM ClassiServizi
+                                       WHERE CodServizio = ?)
+        """;
+    
+    public static final String GET_NAME_LINES =
+        """
+            SELECT Durata
+            FROM TipoLinea
+            WHERE CategoriaServizio = (SELECT NomeLinea
+                                       FROM CategorieServizi
+                                       WHERE CodServizio = ?)
+        """;
+
+    public static final String GET_IMAGE_LINES =
+        """
+        SELECT tl.CategoriaServizio
+        FROM TipoLinea tl
+        JOIN CategorieServizi cs ON tl.CategoriaServizio = cs.NomeLinea
+        WHERE cs.CodServizio = ?
+        """;
+
+    public static final String GET_IMAGE_TRANSFERS =
+        """
+        SELECT tt.CategoriaTransfer
+        FROM TipoTransfer tt
+        JOIN ClassiServizi cs ON tt.CategoriaTransfer = cs.NomeTransfer
+        WHERE cs.CodServizio = ?
         """;
 
 }

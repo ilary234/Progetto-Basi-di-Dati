@@ -19,7 +19,7 @@ public class ControllerUtente {
         this.model = model;
     }
 
-    public List<String> getTitoliAnnunci() {
+    public Map<Integer, String> getTitoliAnnunci() {
         return this.model.getTitoliAnnunci();
     }
 
@@ -71,5 +71,30 @@ public class ControllerUtente {
 
     public void inserisciRecensione(String utente, int codAnnuncio, int valutazione, String commento, Date data) {
         this.model.inserisciRecensione(utente, codAnnuncio, valutazione, commento, data);
+    }
+
+    public void setCredenziali(Pair<String, String> credenziali) {
+        this.model.setCredenziali(credenziali);
+    }
+
+    public boolean isTransfer(int codice) {
+        return this.model.isTransfer(codice);
+    }
+
+    public List<String> getNomiCategorie(int codice) {
+        if(this.model.isTransfer(codice)) {
+            return this.model.getTransfers(codice);
+        } else {
+            return this.model.getLinee(codice);
+        }
+    }
+
+    public String getImmagineCategoria(int codice) {
+        String codiceServizio = String.valueOf(codice);
+        if(this.model.isTransfer(codice)) {
+            return this.model.getImageTransfers(codiceServizio);
+        } else {
+            return this.model.getImageLines(codiceServizio);
+        }
     }
 }
