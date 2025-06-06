@@ -355,7 +355,6 @@ public class InfoPanel implements WorkPanel {
                     }
                 }
             }
-            System.out.println("Costo totale biglietti da aggiungere: " + String.format("%.2f", costoTotale) + " €");
             this.controller.aggiungiBigliettiAlCarrello(bigliettiDaAggiungere, isTransfer, this.codAnnuncio, this.controller.getCredenziali().left);
             List<String> dettagliOrdineAperto = controller.getDettagliOrdineAperto();
             if (dettagliOrdineAperto == null || dettagliOrdineAperto.isEmpty()) {
