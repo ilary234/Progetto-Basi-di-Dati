@@ -36,6 +36,25 @@ public class Biglietto {
 
     public static final class DAO {
 
+        public static List<String> getStatistics(Connection connection, int year) {
+            List<String> statistiche = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_BIGLIETTI_STATISTICS, year);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var mese = resultSet.getString("Mese");
+                    var biglietti = resultSet.getInt("Biglietti venduti");
+
+                    var stat = mese + ": " + biglietti;
+                    statistiche.add(stat);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return statistiche;
+        }
+
         public static int creaBiglietto(Connection connection, float costoBiglietto, int codAnnuncio, int codOrdine) {
             try (
                 var statement = connection.prepareStatement(

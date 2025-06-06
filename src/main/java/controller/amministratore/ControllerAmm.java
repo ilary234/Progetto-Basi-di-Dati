@@ -6,6 +6,10 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
+import model.AnnuncioServizio;
+import model.Autista;
+import model.Comunicazione;
+import model.Impiegato;
 import model.Mezzo;
 import model.Servizio;
 import model.Volanda;
@@ -27,7 +31,7 @@ public class ControllerAmm {
         return this.mainView.getFrame();
     }
 
-    public boolean checkImpiegato(String cod, char[] pass) {
+    public boolean checkImpiegato(int cod, char[] pass) {
         return this.model.checkImpiegato(cod, String.valueOf(pass));
     }
 
@@ -110,6 +114,94 @@ public class ControllerAmm {
 
     public void addAssicurazione(String numero, Date dataInizioValidità, String tipologia, String durata) {
         this.model.addAssicurazione(numero, dataInizioValidità, tipologia, durata);
+    }
+
+    public List<Impiegato> getImpiegati() {
+        return this.model.getImpiegati();
+    }
+
+    public void addImpiegato(String cf, String nome, String cognome, Date dataNascita, String luogoNascita,
+            String residenza, String telefono, String password) {
+        this.model.addImpiegato(cf, nome, cognome, dataNascita, luogoNascita, residenza, telefono, password);
+    }
+
+    public Impiegato getMyData() {
+        return this.model.getImpiegato();
+    }
+
+    public void updateResidenza(int code, String residenza) {
+        this.model.updateResidenza(code, residenza);
+    }
+
+    public void updateTelefono(int code, String telefono) {
+        this.model.updateTelefono(code, telefono);
+    }
+
+    public void updatePassword(int code, String password) {
+        this.model.updatePassword(code, password);
+    }
+
+    public List<Autista> getAutisti() {
+        return this.model.getAutisti();
+    }
+
+    public void addPatente(String numero, String tipologia, Date scadenza) {
+        this.model.addPatente(numero, tipologia, scadenza);
+    }
+
+    public void addAutista(String cf, String patente, String nome, String cognome, Date dataNascita,
+            String luogoNascita, String residenza, String telefono, Date scadenzaCQC) {
+        this.model.addAutista(cf, patente, nome, cognome, dataNascita, luogoNascita, residenza, telefono, scadenzaCQC);
+    }
+
+    public void addKB(int numero, String cf, Date scadenza) {
+        this.model.addKB(numero, cf, scadenza);
+    }
+
+    public List<String> getStatisticheAutista(String cf) {
+        return this.model.getStatisticheAutista(cf);
+    }
+
+    public List<String> getStatisticheServizi() {
+        return this.model.getStatisticheServizi();
+    }
+
+    public List<AnnuncioServizio> getAnnunci() {
+        return this.model.getAnnunci();
+    }
+
+    public void addAnnuncio(int codServizio, String titolo, float prezzoBase, boolean visibile,
+            int bigliettiDisponibili, String descrizione) {
+        this.model.addAnnuncio(codServizio, titolo, descrizione, prezzoBase, visibile, bigliettiDisponibili);
+    }
+
+    public void updateAnnuncio(int code, String titolo, String descrizione, float prezzoBase, boolean visibile,
+            int bigliettiDisponibili) {
+        this.model.updateAnnuncio(code, titolo, descrizione, prezzoBase, visibile, bigliettiDisponibili);
+    }
+
+    public List<Integer> getServiziWithoutAnnuncioCodes() {
+        return this.model.getServiziWithoutAnnuncioCodes();
+    }
+
+    public List<Comunicazione> getComunicazioni() {
+        return this.model.getComunicazioni();
+    }
+
+    public void addComunicazione(String titolo, String descrizione) {
+        this.model.addComunicazione(titolo, descrizione);
+    }
+
+    public void updateComunicazione(int code, String titolo, String descrizione) {
+        this.model.updateComunicazione(code, titolo, descrizione);
+    }
+
+    public void deleteComunicazione(int code) {
+        this.model.deleteComunicazione(code);
+    }
+
+    public List<String> getStatisticheVendita(int year) {
+        return this.model.getStatisticheVendita(year);
     }
 
 }

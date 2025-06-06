@@ -25,4 +25,32 @@ public abstract class Dipendente {
         this.telefono = Objects.requireNonNull(telefono);
     }
 
+    public String getCF() {
+        return CF;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getCognome() {
+        return cognome;
+    }
+
+    public Date getDataNascita() {
+        return dataNascita;
+    }
+
+    public String getLuogoNascita() {
+        return luogoNascita;
+    }
+
+    public String getResidenza() {
+        return residenza;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+    
 }

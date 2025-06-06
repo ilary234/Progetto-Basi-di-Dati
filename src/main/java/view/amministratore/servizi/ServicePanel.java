@@ -5,10 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+
+import com.toedter.calendar.JYearChooser;
 
 import controller.amministratore.ControllerAmm;
 import model.Servizio;
@@ -32,16 +36,43 @@ public class ServicePanel implements WorkPanel{
         this.mainPanel = new JPanel(new BorderLayout());
         
         var buttonsPanel = new JPanel(new BorderLayout());
+        var buttons = new JPanel();
         var create = GenericButton.getGenericButton("Nuovo +", BUTTON_SIZE, "Nuovo Servizio");
-        create.addActionListener(new ActionListener() {
+        var statistiche = GenericButton.getGenericButton("Statistiche", BUTTON_SIZE, "Statistiche");
+        var vendite = GenericButton.getGenericButton("Vendite", BUTTON_SIZE, "Vendite");
+        var actionListener = new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                new NewService(controller, ServicePanel.this);
+                var button = (JButton) e.getSource();
+                switch (button.getActionCommand()) {
+                    case "Nuovo Servizio":
+                        new NewService(controller, ServicePanel.this);
+                        break;
+                    case "Statistiche":
+                        new ServiziStatistica(controller);
+                        break;
+                    case "Vendite":
+                        var yearChooser = new JYearChooser();
+                        var input = (int) JOptionPane.showConfirmDialog(controller.getFrame(), yearChooser, "Select year", JOptionPane.DEFAULT_OPTION);
+                        if (input == JOptionPane.OK_OPTION) {
+                            var year = yearChooser.getYear();
+                            new VenditaStatistica(controller, year);
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
             
-        });
-        buttonsPanel.add(create, BorderLayout.EAST);
+        };
+        create.addActionListener(actionListener);
+        statistiche.addActionListener(actionListener);
+        vendite.addActionListener(actionListener);
+        buttons.add(create);
+        buttons.add(statistiche);
+        buttons.add(vendite);
+        buttonsPanel.add(buttons, BorderLayout.EAST);
 
         this.tableModel = new TableModel();
         this.servizi = new JTable(tableModel);

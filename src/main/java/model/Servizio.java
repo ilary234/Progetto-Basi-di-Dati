@@ -16,8 +16,7 @@ public class Servizio {
     private final String destinazione;
     private final String orarioPartenza;
     private int bigliettiVenduti;
-    private final String categoriaServizio; 
-    private final List<Corse> corse;
+    private final String categoriaServizio;
 
     public Servizio(int codServizio, String partenza, String destinazione, String orarioPartenza, int bigliettiVenduti,
             List<Corse> corse, String categoriaServizio) {
@@ -27,7 +26,6 @@ public class Servizio {
         this.orarioPartenza = Objects.requireNonNull(orarioPartenza);
         this.bigliettiVenduti = Objects.requireNonNull(bigliettiVenduti);
         this.categoriaServizio = Objects.requireNonNull(categoriaServizio);
-        this.corse = new ArrayList<>(corse);
     }
 
 
@@ -64,6 +62,22 @@ public class Servizio {
             List<Integer> codes = new ArrayList<>();
             try (
                 var statement = DAOUtils.prepare(connection, Queries.GET_SERVIZI_CODES);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var codServizio = resultSet.getInt("CodServizio");
+                    codes.add(codServizio);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return codes;
+        }
+
+        public static List<Integer> getCodesWithoutAnnuncio(Connection connection) {
+            List<Integer> codes = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_SERVIZI__NO_ANNUNCIO_CODES);
                 var resultSet = statement.executeQuery();
             ) {
                 while (resultSet.next()) {
@@ -141,6 +155,26 @@ public class Servizio {
             } catch (Exception e) {
                 throw new DAOException(e);
             }
+        }
+
+        public static List<String> getStatistics(Connection connection) {
+            List<String> servizi = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_SERVIZI_STATISTICS);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var code = resultSet.getString("CodServizio");
+                    var categoria = resultSet.getString("Categoria");
+                    var biglietti = resultSet.getInt("NumeroBigliettiVenduti");
+
+                    var servizio = "Cod: " + code + ", " + categoria + ", Biglietti: " + biglietti;
+                    servizi.add(servizio);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return servizi;
         }
 
         public static boolean isTransfer(Connection connection, int codServizio) {

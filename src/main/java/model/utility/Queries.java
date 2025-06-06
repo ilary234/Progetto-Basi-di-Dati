@@ -55,16 +55,27 @@ public final class Queries {
             order by CodServizio
         """;
 
+    public static final String GET_SERVIZI__NO_ANNUNCIO_CODES = 
+        """
+            select CodServizio
+            from Servizi
+            where CodServizio not in (select CodServizio
+							            from annunciservizi)
+            order by CodServizio
+        """;
+
     public static final String GET_SERVIZI = 
         """
-            select s.*, NomeLinea as Categoria
-            from Servizi s, CategorieServizi c
-            where s.CodServizio = c.CodServizio
-            union
-            select s.*, NomeTransfer as Categoria
-            from Servizi s, Classiservizi c
-            where s.CodServizio = c.CodServizio
-            order by CodServizio;
+            select *
+            from servizicategorie;
+        """;
+
+    public static final String GET_SERVIZI_STATISTICS = 
+        """
+            select CodServizio, Categoria, NumeroBigliettiVenduti
+            from servizicategorie
+            order by NumeroBigliettiVenduti desc
+            limit 10
         """;
 
     public static final String GET_CATEGORIE =
@@ -93,11 +104,58 @@ public final class Queries {
             insert into ClassiServizi
             values (?, ?)
         """;
+    
+    public static final String GET_BIGLIETTI_STATISTICS = 
+        """
+            select monthname(DataOraAcquisto) as Mese, count(*) as `Biglietti venduti`
+            from biglietti
+            where year(DataOraAcquisto) = ?
+            group by month(DataOraAcquisto)
+            order by count(*) desc;
+        """;
+    
+    public static final String GET_AUTISTI_STATISTICS = 
+        """
+            select v.CodServizio, Categoria
+            from volande v, guida g, (select CodServizio, Categoria
+                                        from servizicategorie) as s
+            where v.NumeroVolanda = g.NumeroVolanda
+            and v.Data = g.Data
+            and v.CodServizio = s.CodServizio
+            and g.Autista = ?
+            group by v.CodServizio, Categoria
+            order by count(*) desc
+            limit 5;
+        """;
 
     public static final String GET_AUTISTI_NAMES = 
         """
             select CF, Nome, Cognome
             from Autisti
+        """;
+    
+    public static final String GET_AUTISTI = 
+        """
+            select a.*, NumeroKB
+            from autisti a left join kb on (a.CF = kb.Proprietario)
+        """;
+
+    public static final String INSERT_AUTISTA = 
+        """
+            insert into autisti
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+
+    public static final String INSERT_PATENTE = 
+        """
+            insert into patenti
+            values (?, ?, ?)
+        """;
+
+    public static final String INSERT_KB = 
+        """
+            insert into kb
+            values (?, ?, ?)
         """;
 
     public static final String GET_MEZZI_NUMBERS = 
@@ -193,6 +251,88 @@ public final class Queries {
             delete from commissioni
             where Data = ?
             and NumeroVolanda = ?
+        """;
+    
+    public static final String GET_ANNUNCI = 
+        """
+            select *
+            from annunciServizi
+        """;
+
+    public static final String INSERT_ANNUNCIO = 
+        """
+            insert into annunciServizi
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+    
+    public static final String UPDATE_ANNUNCIO = 
+        """
+            update annunciServizi
+            set Titolo = ?,
+            Descrizione = ?,
+            PrezzoBase = ?,
+            Visibile = ?,
+            BigliettiDisponibili = ?
+            where CodAnnuncio = ?
+        """;
+
+    public static final String GET_COMUNICAZIONI = 
+        """
+            select *
+            from comunicazioni
+        """;
+
+    public static final String INSERT_COMUNICAZIONE = 
+        """
+            insert into comunicazioni
+            values (?, ?, ?, ?, ?)
+        """;
+
+    public static final String UPDATE_COMUNICAZIONE = 
+        """
+            update comunicazioni
+            set Titolo = ?,
+            Descrizione = ?
+            where CodComunicazione = ?
+        """;
+
+    public static final String DELETE_COMUNICAZIONE = 
+        """
+            delete from comunicazioni
+            where CodComunicazione = ?
+        """;
+
+    public static final String GET_IMPIEGATI = 
+        """
+            select *
+            from impiegati
+        """;
+    
+    public static final String INSERT_IMPIEGATO = 
+        """
+            insert into impiegati
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+
+    public static final String UPDATE_RESIDENZA_IMP =
+        """
+            update impiegati
+            set Residenza = ?
+            where CodImpiegato = ?
+        """;
+    
+    public static final String UPDATE_TELEFONO_IMP =
+        """
+            update impiegati
+            set Telefono = ?
+            where CodImpiegato = ?
+        """;
+
+    public static final String UPDATE_PASSWORD_IMP =
+        """
+            update impiegati
+            set Password = ?
+            where CodImpiegato = ?
         """;
 
     public static final String FIND_IMPIEGATO =

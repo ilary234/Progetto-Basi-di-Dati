@@ -11,8 +11,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import model.AnnuncioServizio;
 import model.Autista;
+import model.Biglietto;
 import model.Committente;
+import model.Comunicazione;
 import model.Giornaliera;
 import model.Impiegato;
 import model.Mezzo;
@@ -33,12 +36,16 @@ public class ModelAmm {
         this.dateFormat.applyPattern("yyyy.MM.dd");
     }
 
-    public boolean checkImpiegato(String cod, String pass) {
+    public boolean checkImpiegato(int cod, String pass) {
         this.impiegato = Impiegato.DAO.find(connection, cod, pass);
         if (this.impiegato.isPresent()) {
             return true;
         }
         return false;
+    }
+
+    public Impiegato getImpiegato() {
+        return impiegato.get();
     }
 
     public List<String> getGiornaliere() {
@@ -147,6 +154,94 @@ public class ModelAmm {
 
     public void addAssicurazione(String numero, Date dataInizioValidità, String tipologia, String durata) {
         Mezzo.DAO.addAssicurazione(connection, numero, dateFormat.format(dataInizioValidità), tipologia, durata);
+    }
+
+    public List<Impiegato> getImpiegati() {
+        return Impiegato.DAO.getImpiegati(connection);
+    }
+
+    public void addImpiegato(String cf, String nome, String cognome, Date dataNascita, String luogoNascita,
+            String residenza, String telefono, String password) {
+        Impiegato.DAO.addImpiegato(connection, cf, nome, cognome, dateFormat.format(dataNascita), 
+            luogoNascita, residenza, telefono, password);
+    }
+
+    public void updateResidenza(int code, String residenza) {
+        Impiegato.DAO.updateResidenza(connection, code, residenza);
+    }
+
+    public void updateTelefono(int code, String telefono) {
+        Impiegato.DAO.updateTelefono(connection, code, telefono);
+    }
+
+    public void updatePassword(int code, String password) {
+        Impiegato.DAO.updatePassword(connection, code, password);
+    }
+
+    public List<Autista> getAutisti() {
+        return Autista.DAO.getAutisti(connection);
+    }
+
+    public void addPatente(String numero, String tipologia, Date scadenza) {
+        Autista.DAO.addPatente(connection, numero, tipologia, dateFormat.format(scadenza));
+    }
+
+    public void addAutista(String cf, String patente, String nome, String cognome, Date dataNascita,
+            String luogoNascita, String residenza, String telefono, Date scadenzaCQC) {
+        Autista.DAO.addAutista(connection, cf, patente, nome, cognome, dateFormat.format(dataNascita), 
+            luogoNascita, residenza, telefono, dateFormat.format(scadenzaCQC));
+    }
+
+    public void addKB(int numero, String cf, Date scadenza) {
+        Autista.DAO.addKB(connection, numero, cf, dateFormat.format(scadenza));
+    }
+
+    public List<String> getStatisticheAutista(String cf) {
+        return Autista.DAO.getStatistics(connection, cf);
+    }
+
+    public List<String> getStatisticheServizi() {
+        return Servizio.DAO.getStatistics(connection);
+    }
+
+    public List<AnnuncioServizio> getAnnunci() {
+        return AnnuncioServizio.DAO.getAnnunci(connection);
+    }
+
+    public void addAnnuncio(int codServizio, String titolo, String descrizione, float prezzoBase, boolean visibile,
+            int bigliettiDisponibili) {
+        Date data = new Date();
+        AnnuncioServizio.DAO.insertAnnuncio(connection, codServizio, titolo, descrizione, dateFormat.format(data),
+                prezzoBase, visibile, bigliettiDisponibili, impiegato.get().getCodImpiegato());
+    }
+
+    public void updateAnnuncio(int code, String titolo, String descrizione, float prezzoBase, boolean visibile,
+            int bigliettiDisponibili) {
+        AnnuncioServizio.DAO.updateAnnuncio(connection, code, titolo, descrizione, prezzoBase, visibile, bigliettiDisponibili);
+    }
+
+    public List<Integer> getServiziWithoutAnnuncioCodes() {
+        return Servizio.DAO.getCodesWithoutAnnuncio(connection);
+    }
+
+    public List<Comunicazione> getComunicazioni() {
+        return Comunicazione.DAO.getComunicazioni(connection);
+    }
+
+    public void addComunicazione(String titolo, String descrizione) {
+        Comunicazione.DAO.insertComunicazione(connection, titolo, descrizione, dateFormat.format(new Date()), impiegato.get().getCodImpiegato());
+    }
+
+    public void updateComunicazione(int code, String titolo, String descrizione) {
+        Comunicazione.DAO.updateComunicazione(connection, code, titolo, descrizione);
+    }
+
+    public void deleteComunicazione(int code) {
+        Comunicazione.DAO.deleteComunicazione(connection, code);
+    }
+
+    public List<String> getStatisticheVendita(int year) {
+        return Biglietto.DAO.getStatistics(connection, year);
     }
 
 }

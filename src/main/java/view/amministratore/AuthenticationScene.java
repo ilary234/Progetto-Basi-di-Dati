@@ -42,15 +42,18 @@ public class AuthenticationScene implements Scene {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                var cod = insertCodice.getText();
-                var pass = insertPassword.getPassword();
-                if (!cod.isBlank() && pass.length > 0) {
-                    if (controller.checkImpiegato(cod, pass)) {
-                        controller.enter();
+                try {
+                    var cod = Integer.valueOf(insertCodice.getText());
+                    var pass = insertPassword.getPassword();
+                    if (cod > 0 && pass.length > 0) {
+                        if (controller.checkImpiegato(cod, pass)) {
+                            controller.enter();
                     };
                 }
-                insertCodice.setText("");
-                insertPassword.setText("");
+                } catch (Exception e1) {
+                    insertCodice.setText("");
+                    insertPassword.setText("");
+                }
             }
             
         });

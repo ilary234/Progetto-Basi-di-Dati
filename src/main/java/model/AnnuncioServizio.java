@@ -33,7 +33,75 @@ public class AnnuncioServizio extends Comunicazione {
         this.bigliettiDisponibili = Objects.requireNonNull(bigliettiDisponibili);
     }
 
+    public int getCodServizio() {
+        return codServizio;
+    }
+
+    public float getPrezzoBase() {
+        return prezzoBase;
+    }
+
+    public boolean isVisibile() {
+        return visibile;
+    }
+
+    public int getBigliettiDisponibili() {
+        return bigliettiDisponibili;
+    }
+
+
     public static final class DAO {
+
+        public static void insertAnnuncio(Connection connection, int codServizio, String titolo, String descrizione,
+                String data, float prezzoBase, boolean visibile, int bigliettiDisponibili, int codImpiegato) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.INSERT_ANNUNCIO, null, codServizio, titolo, 
+                    descrizione, data, prezzoBase, visibile, bigliettiDisponibili, codImpiegato);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+
+        public static void updateAnnuncio(Connection connection, int code, String titolo, String descrizione, float prezzoBase,
+                boolean visibile, int bigliettiDisponibili) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.UPDATE_ANNUNCIO, titolo, descrizione, 
+                    prezzoBase, visibile, bigliettiDisponibili, code);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+
+        public static List<AnnuncioServizio> getAnnunci(Connection connection) {
+            List<AnnuncioServizio> annunci = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_ANNUNCI);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var codAnnuncio = resultSet.getInt("CodAnnuncio");
+                    var codServizio = resultSet.getInt("CodServizio");
+                    var titolo = resultSet.getString("Titolo");
+                    var dataPubblicazione = resultSet.getDate("DataPubblicazione");
+                    var descrizione = resultSet.getString("Descrizione");
+                    var prezzoBase = resultSet.getFloat("PrezzoBase");
+                    var visibile = resultSet.getBoolean("Visibile");
+                    var bigliettiDisponibili = resultSet.getInt("BigliettiDisponibili");
+                    var codImpiegato = resultSet.getInt("CodImpiegato");
+
+                    var annuncio = new AnnuncioServizio(codAnnuncio, codServizio, titolo, descrizione, 
+                            dataPubblicazione, prezzoBase, visibile, bigliettiDisponibili, codImpiegato);
+                    annunci.add(annuncio);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return annunci;
+        }
 
         public static Map<Integer, String> titlesList(Connection connection) {
             Map<Integer, String> annunci = new HashMap<>();

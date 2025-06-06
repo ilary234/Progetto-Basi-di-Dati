@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -164,10 +165,13 @@ public class DailyPanel implements WorkPanel{
                     createGiornaliere();
                     break;
                 case "Elimina Giornaliera":
-                    var date = selected.getActionCommand();
-                    controller.deleteGiornaliera(date);
-                    createGiornaliere();
-                    break;
+                    var response = JOptionPane.showConfirmDialog(controller.getFrame(), "Sei sicuro di voler eliminare?", 
+                        "Conferma", JOptionPane.YES_NO_OPTION);
+                    if (response ==  0) {
+                        var date = selected.getActionCommand();
+                        controller.deleteGiornaliera(date);
+                        createGiornaliere();
+                    }
                 case "Nuova Volanda":
                     new NewVolandaDialog(controller, DailyPanel.this);
                     break;
@@ -179,10 +183,14 @@ public class DailyPanel implements WorkPanel{
                     new ChangeDialog(controller, DailyPanel.this, autista, mezzo, commmittente);
                     break;
                 case "Elimina Volanda":
-                    var day = selected.getActionCommand();
-                    var numeroVolanda = volande.getSelectedRow() + 1;
-                    controller.deleteVolanda(day, numeroVolanda);
-                    updateGiornaliera();
+                    var resp = JOptionPane.showConfirmDialog(controller.getFrame(), "Sei sicuro di voler eliminare?", 
+                        "Conferma", JOptionPane.YES_NO_OPTION);
+                    if (resp ==  0) {
+                        var day = selected.getActionCommand();
+                        var numeroVolanda = volande.getSelectedRow() + 1;
+                        controller.deleteVolanda(day, numeroVolanda);
+                        updateGiornaliera();
+                    }
                     break;
                 default:
                     break;

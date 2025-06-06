@@ -182,7 +182,7 @@ public class NewTransport extends JDialog{
                     var modello = modelloText.getText();
                     var telaio = telaioText.getText();
                     var licenzaEuropea = licenzaEuropeaText.getText();
-                    if (!numero.isBlank() && !targa.isBlank() && !PAX.isBlank() && !kmTotali.isBlank()) {
+                    if (!numero.isBlank() && !targa.isBlank() && !PAX.isBlank() && !kmTotali.isBlank() && dataRevisione != null) {
                         if (tipo.equals("Pullman") && !carrozzeria.isBlank() && !modello.isBlank() && !telaio.isBlank() && !licenzaEuropea.isBlank()) {
                             controller.addMezzo(numero, targa, euro, immatricolazione, dataRevisione, PAX, kmTotali, CDPD, 
                                 tipo, carrozzeria, modello, telaio, licenzaEuropea, assicurazione);
