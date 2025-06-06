@@ -63,5 +63,39 @@ public class TipoTransfer {
                 throw new DAOException(e);
             }
         }
+
+        public static float getPercentuale(Connection connection, String categoria) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_PERCENTUALE_TRANSFERS, categoria);
+                var resultSet = statement.executeQuery();
+            ) {
+                if (resultSet.next()) {
+                    return resultSet.getFloat("PercentualeDaPagare");
+                }
+                throw new DAOException("Percentuale non trovata per la categoria: " + categoria);
+            } catch (Exception e) {
+                throw new DAOException("Errore durante il recupero della percentuale da pagare", e);
+            }
+        }
+
+        public static void creaAssociazione(Connection connection, int numeroBiglietto, String nomeTipologia) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.INSERT_TIPOLOGIA, numeroBiglietto, nomeTipologia);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);  
+            }   
+        }
+
+        public static void eliminaAssociazione(Connection connection, int codOrdine, String categoria) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.DELETE_TICKETS_TRANSFER, categoria, codOrdine);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);  
+            }   
+        }
     }
 }

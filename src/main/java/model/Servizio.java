@@ -157,6 +157,16 @@ public class Servizio {
                 throw new DAOException(e);
             }
         }
+
+        public static void updateBigliettiServizio(Connection connection, String titolo, int quantita) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.UPDATE_BIGLIETTI_VENDUTI, quantita, titolo);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
     }
 
 }

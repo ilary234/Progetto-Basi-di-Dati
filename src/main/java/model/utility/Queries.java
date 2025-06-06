@@ -293,7 +293,7 @@ public final class Queries {
     
     public static final String GET_NAME_LINES =
         """
-            SELECT Durata
+            SELECT NomeTipo
             FROM TipoLinea
             WHERE CategoriaServizio = (SELECT NomeLinea
                                        FROM CategorieServizi
@@ -302,18 +302,258 @@ public final class Queries {
 
     public static final String GET_IMAGE_LINES =
         """
-        SELECT tl.CategoriaServizio
-        FROM TipoLinea tl
-        JOIN CategorieServizi cs ON tl.CategoriaServizio = cs.NomeLinea
-        WHERE cs.CodServizio = ?
+            SELECT tl.CategoriaServizio
+            FROM TipoLinea tl
+            JOIN CategorieServizi cs ON tl.CategoriaServizio = cs.NomeLinea
+            WHERE cs.CodServizio = ?
         """;
 
     public static final String GET_IMAGE_TRANSFERS =
         """
-        SELECT tt.CategoriaTransfer
-        FROM TipoTransfer tt
-        JOIN ClassiServizi cs ON tt.CategoriaTransfer = cs.NomeTransfer
-        WHERE cs.CodServizio = ?
+            SELECT tt.CategoriaTransfer
+            FROM TipoTransfer tt
+            JOIN ClassiServizi cs ON tt.CategoriaTransfer = cs.NomeTransfer
+            WHERE cs.CodServizio = ?
         """;
 
+    public static final String INSERT_USER =
+        """
+            INSERT INTO Utenti (Username, Password, Nome, Cognome, Email)
+            VALUES (?, ?, ?, ?, ?);
+        """;
+
+    public static final String GET_ORDINE_APERTO =
+        """
+            SELECT CodOrdine 
+            FROM Ordini 
+            WHERE Acquirente = ? 
+            AND TipoPagamento = ?
+        """;
+
+    public static final String GET_ORDINI =
+        """
+            SELECT CodOrdine, DataAcquisto, CostoTotale 
+            FROM Ordini 
+            WHERE Acquirente = ? 
+            AND TipoPagamento <> '' 
+            ORDER BY DataAcquisto DESC  
+        """;
+
+    public static final String INSERT_ORDINE =
+        """
+            INSERT INTO Ordini (CodOrdine, OraAcquisto, DataAcquisto, TipoPagamento, CostoTotale, Acquirente)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """;
+
+    public static final String UPDATE_COSTO_TOTALE =
+        """
+            UPDATE Ordini 
+            SET CostoTotale = CostoTotale + ? 
+            WHERE CodOrdine = ?
+        """;
+
+    public static final String UPDATE_DATI_ORDINE =
+        """
+            UPDATE Ordini 
+            SET OraAcquisto = ?, DataAcquisto = ?, TipoPagamento = ?, CostoTotale = ?
+            WHERE Acquirente = ?
+            AND CodOrdine = ?
+        """;
+
+    public static final String GET_PERCENTUALE_TRANSFERS =
+        """
+            SELECT PercentualeDaPagare
+            FROM TipoTransfer
+            WHERE NomeTipologia = ?
+        """;
+
+    public static final String GET_PERCENTUALE_LINES =
+        """
+            SELECT DISTINCT PercentualeDaPagare
+            FROM TipoLinea
+            WHERE NomeTipo = ?
+        """;
+
+    public static final String GET_PREZZO_BASE =
+        """
+            SELECT PrezzoBase
+            FROM AnnunciServizi
+            WHERE CodAnnuncio = ?
+        """;
+
+    public static final String INSERT_BIGLIETTO =
+        """
+            INSERT INTO Biglietti (NumeroBiglietto, Costo, CodAnnuncio, CodOrdine)
+            VALUES (?, ?, ?, ?);
+        """;
+
+    public static final String INSERT_TIPO =
+        """
+            INSERT INTO Tipo (NumeroBiglietto, NomeTipo)
+            VALUES (?, ?);
+        """;
+    
+    public static final String INSERT_TIPOLOGIA =
+        """
+            INSERT INTO Tipologia (NumeroBiglietto, NomeTipologia)
+            VALUES (?, ?);
+        """;
+
+    public static final String GET_DETTAGLI_ORDINE_APERTO =
+        """
+            SELECT a.Titolo AS Titolo, tp.NomeTipo AS Categoria, COUNT(*) AS Quantita
+            FROM Biglietti b
+            JOIN AnnunciServizi a ON b.CodAnnuncio = a.CodAnnuncio
+            JOIN Tipo tp ON b.NumeroBiglietto = tp.NumeroBiglietto
+            WHERE b.CodOrdine = ?
+            GROUP BY a.Titolo, Categoria
+            UNION
+            SELECT a.Titolo AS Titolo, tpl.NomeTipologia AS Categoria, COUNT(*) AS Quantita
+            FROM Biglietti b
+            JOIN AnnunciServizi a ON b.CodAnnuncio = a.CodAnnuncio
+            JOIN Tipologia tpl ON b.NumeroBiglietto = tpl.NumeroBiglietto
+            WHERE b.CodOrdine = ?
+            GROUP BY a.Titolo, Categoria
+        """;
+
+    public static final String GET_ORDINI_PRECEDENTI =
+        """
+            SELECT CodOrdine, DataAcquisto, CostoTotale
+            FROM Ordini
+            WHERE TipoPagamento <> ?
+            AND Acquirente = ?
+        """;
+
+    public static final String GET_COSTO_TOTALE =
+        """
+            SELECT CostoTotale
+            FROM Ordini
+            WHERE CodOrdine = ?
+        """;
+
+    public static final String GET_CATEGORIE_PREZZI =
+        """
+            SELECT tt.NomeTipologia AS Categoria, SUM(b.Costo) AS TotaleCategoria
+            FROM TipoTransfer tt
+            JOIN Tipologia t ON t.NomeTipologia = tt.NomeTipologia
+            JOIN Biglietti b ON b.NumeroBiglietto = t.NumeroBiglietto
+            WHERE b.CodOrdine = ?
+            GROUP BY tt.NomeTipologia
+            UNION 
+            SELECT tl.NomeTipo AS Categoria, SUM(b.Costo) AS TotaleCategoria
+            FROM TipoLinea tl
+            JOIN Tipo t ON t.NomeTipo = tl.NomeTipo
+            JOIN Biglietti b ON b.NumeroBiglietto = t.NumeroBiglietto
+            WHERE b.CodOrdine = ?
+            GROUP BY tl.NomeTipo
+            ORDER BY Categoria
+        """;
+
+    public static final String GET_SCONTI =
+        """
+            SELECT tt.NomeTipologia AS Categoria, s.Sconto
+            FROM Sconti s
+            JOIN TipoTransfer tt ON tt.NomeTipologia = s.TipoBiglietto
+            JOIN Tipologia t ON t.NomeTipologia = tt.NomeTipologia
+            JOIN Biglietti b ON b.NumeroBiglietto = t.NumeroBiglietto
+            WHERE b.CodOrdine = ?
+            GROUP BY tt.NomeTipologia, s.Sconto, s.Quantità
+            HAVING COUNT(*) >= s.Quantità
+            ORDER BY Categoria
+        """;
+
+    public static final String GET_ANNUNCI_QUANTITA =
+        """
+            SELECT a.Titolo AS Titolo, COUNT(*) AS Quantita
+            FROM Biglietti b
+            JOIN AnnunciServizi a ON b.CodAnnuncio = a.CodAnnuncio
+            WHERE b.CodOrdine = ?
+            GROUP BY a.Titolo
+            UNION
+            SELECT a.Titolo AS Titolo, COUNT(*) AS Quantita
+            FROM Biglietti b
+            JOIN AnnunciServizi a ON b.CodAnnuncio = a.CodAnnuncio
+            WHERE b.CodOrdine = ?
+            GROUP BY a.Titolo;
+        """;
+
+    public static final String UPDATE_BIGLIETTI_DISPONIBILI =
+        """
+            UPDATE AnnunciServizi 
+            SET BigliettiDisponibili = BigliettiDisponibili - ? 
+            WHERE Titolo = ?
+        """;
+
+    public static final String UPDATE_BIGLIETTI_VENDUTI =
+        """
+            UPDATE Servizi 
+            SET NumeroBigliettiVenduti = NumeroBigliettiVenduti + ? 
+            WHERE CodServizio = (SELECT CodServizio
+                                FROM AnnunciServizi
+                                WHERE Titolo = ?)
+        """;
+
+    public static final String GET_BIGLIETTI_DISPONIBILI = 
+        """
+            SELECT BigliettiDisponibili
+            FROM AnnunciServizi
+            WHERE CodServizio = ?
+        """;
+
+    public static final String GET_CODICE_SERVIZIO =
+        """
+            SELECT CodServizio
+            FROM AnnunciServizi
+            WHERE Titolo = ?
+                
+        """;
+
+    public static final String DELETE_TICKETS_TRANSFER =
+        """
+            DELETE FROM Tipologia
+            WHERE NomeTipologia = ?
+            AND NumeroBiglietto = ?
+        """;
+    
+    public static final String DELETE_TICKETS_LINEA =
+        """
+            DELETE FROM Tipo
+            WHERE NomeTipo = ?
+            AND NumeroBiglietto = ?
+        """;
+    
+    public static final String GET_BIGLIETTI_DA_RIMUOVERE =
+        """
+            SELECT b.NumeroBiglietto
+            FROM Biglietti b
+            JOIN Tipologia t on b.NumeroBiglietto = t.NumeroBiglietto
+            WHERE t.NomeTipologia = ?
+            AND b.CodOrdine = ?
+            UNION
+            SELECT b.NumeroBiglietto
+            FROM Biglietti b
+            JOIN Tipo t on b.NumeroBiglietto = t.NumeroBiglietto
+            WHERE t.NomeTipo = ?
+            AND b.CodOrdine = ?
+        """;
+
+    public static final String DELETE_TICKET =
+        """
+            DELETE FROM Biglietti
+            WHERE NumeroBiglietto = ?
+        """;
+    
+    public static final String GET_COSTO_BIGLIETTO =
+        """
+            SELECT Costo
+            FROM Biglietti 
+            WHERE NumeroBiglietto = ?
+        """;
+    
+    public static final String UPDATE_COSTO_ORDINE =
+        """
+            UPDATE Ordini 
+            SET CostoTotale = CostoTotale - ? 
+            WHERE CodOrdine = ?
+        """;
 }

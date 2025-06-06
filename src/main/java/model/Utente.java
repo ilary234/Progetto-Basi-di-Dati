@@ -39,5 +39,15 @@ public class Utente {
                 throw new DAOException(e);  
             }   
         }
+
+        public static void inserisciUtente(Connection connection, String username, String password, String nome, String cognome, String email) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.INSERT_USER, username, password, nome, cognome, email);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
     }
 }

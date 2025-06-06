@@ -1,5 +1,6 @@
 package controller.utente;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,10 @@ public class ControllerUtente {
 
     private final View mainView;
     private final ModelUtente model;
+
+    public ModelUtente getModel() {
+        return model;
+    }
 
     public ControllerUtente(View mainView, ModelUtente model) {
         this.mainView = mainView;
@@ -96,5 +101,65 @@ public class ControllerUtente {
         } else {
             return this.model.getImageLines(codiceServizio);
         }
+    }
+
+    public void inserisciUtente(String username, String password, String nome, String cognome, String email) {
+        this.model.inserisciUtente(username, password, nome, cognome, email);
+    }
+
+    public void creaNuovoOrdine(Time orario, Date data, String username) {
+       this.model.creaNuovoOrdine(orario, data, username);
+    }
+
+    public void updateDatiOrdine(Time orario, Date data, String tipoPagamento, String username, float prezzoScontato) {
+        this.model.updateDatiOrdine(orario, data, tipoPagamento, username, prezzoScontato);
+    }
+
+    public void aggiungiBigliettiAlCarrello(Map<String, Integer> bigliettiDaAggiungere, boolean isTransfer, String codAnnuncio, String username) {
+        this.model.aggiungiBigliettiAlCarrello(bigliettiDaAggiungere, isTransfer, codAnnuncio, username);
+    }
+
+    public Integer getOrdineAperto() {
+        return this.model.getCodOrdine();
+    }
+
+    public List<String> getDettagliOrdineAperto() {
+        return this.model.getDettagliOrdineAperto();
+    }
+
+    public List<String> getOrdiniPrecedenti(String username) {
+        return this.model.getOrdiniPrecedenti(username);
+    }
+
+    public int getCostoTotale() {
+        return this.model.getCostoTotale();
+    }
+
+    public Map<String, Float> getCategoriePrezzi() {
+        return this.model.getCategoriePrezzi();
+    }
+    
+    public Map<String, Float> getSconti() {
+        return this.model.getSconti();
+    }
+
+    public Map<String, Integer> getAnnunciDaModificare() {
+        return this.model.getAnnunciDaModificare();
+    }
+
+    public void updateBigliettiAnnuncioServizio(String titolo, int quantita) {
+        this.model.updateBigliettiAnnuncioServizio(titolo, quantita);
+    }
+
+    public void updateBigliettiServizio(String titolo, int quantita) {
+        this.model.updateBigliettiServizio(titolo, quantita);
+    }
+
+    public int getBigliettiDisponibili(int codServizio) {
+        return this.model.getBigliettiDisponibili(codServizio);
+    }
+
+    public void rimuoviDalCarrello(String titolo, String categoria) {
+        this.model.rimuoviDalCarrello(titolo, categoria);
     }
 }

@@ -90,7 +90,6 @@ public class ViewUtente implements View{
 
     @Override
     public JFrame getFrame() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFrame'");
+        return this.frame;
     }
 }

@@ -52,8 +52,8 @@ public class LineePanel implements WorkPanel {
             @Override
             public void componentResized(ComponentEvent e) {
                 int width = annunciScrollPane.getViewport().getWidth();
-                imageSize = Math.max(60, width / 8); //numeri a caso
-                dynamicFontSize = Math.max(10, width / 60); //numeri a caso (se non va bene si può togliere)
+                imageSize = Math.max(60, width / 8); 
+                dynamicFontSize = Math.max(10, width / 60); 
                 updateLinee();
             }
         });

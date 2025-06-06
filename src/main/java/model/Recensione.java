@@ -69,7 +69,7 @@ public class Recensione {
                     var descrizione = resultSet.getString("Commento");
                     recensioni.add(descrizione);
                     var data = resultSet.getDate("Data");
-                    recensioni.add(data.toString()); // chiedi ad ila
+                    recensioni.add(data.toString());
                 }
             } catch (Exception e) {
                 throw new DAOException(e);

@@ -43,15 +43,14 @@ create table `Autisti` (
      `Telefono` varchar(15) not null,
      `ScadenzaCQC` date not null,
      constraint `Pk_Autisti` primary key (`CF`),
-     constraint `Fk_Autisti` unique (`NumeroPatente`));
+     constraint `Fk_Autisti` unique (`NumeroPatente`)
+);
 
 create table `Biglietti` (
      `NumeroBiglietto` integer not null auto_increment,
-     `DataOraAcquisto` datetime not null,
-     `TipoPagamento` varchar(20) not null,
-     `Costo` float not null check (`Costo` > 0),
-     `Acquirente` varchar(25) not null,
+     `Costo` float not null check (`Costo` >= 0),
      `CodAnnuncio` integer not null,
+     `CodOrdine` integer not null,
      constraint `Pk_Biglietti` primary key (`NumeroBiglietto`)
 );
 
@@ -178,6 +177,16 @@ create table `Mezzi` (
      constraint `Fk_Mezzi` unique (`Assicurazione`)
 );
 
+create table `Ordini` (
+     `CodOrdine` integer not null auto_increment,
+     `OraAcquisto` time not null,
+     `DataAcquisto` date not null,
+     `TipoPagamento` varchar(20) not null,
+     `CostoTotale` float not null,
+     `Acquirente` varchar(25) not null,
+     constraint `Pk_Ordini` primary key (`CodOrdine`)
+);
+
 create table `Patenti` (
      `NumeroPatente` char(10) not null,
      `Tipologia` varchar(2) not null,
@@ -299,13 +308,13 @@ alter table `Autisti` add constraint `Fk_AutistiPatente`
      foreign key (`NumeroPatente`)
      references `Patenti` (`NumeroPatente`);
 
-alter table `Biglietti` add constraint `Fk_BigliettiAcquirente`
-     foreign key (`Acquirente`)
-     references  `Utenti` (`Username`);
-
 alter table `Biglietti` add constraint `Fk_BigliettiAnnuncio`
      foreign key (`CodAnnuncio`)
      references `AnnunciServizi` (`CodAnnuncio`);
+
+alter table `Biglietti` add constraint `Fk_BigliettiOrdine`
+     foreign key (`CodOrdine`)
+     references `Ordini` (`CodOrdine`);
 
 alter table `CategorieServizi` add constraint `Fk_CategorieServiziServizio`
      foreign key (`CodServizio`)
@@ -372,6 +381,10 @@ alter table `KB` add constraint `Fk_KBProprietario`
 alter table `Mezzi` add constraint `Fk_MezziAssicurazione`
      foreign key (`Assicurazione`)
      references `Assicurazioni` (`NumeroPolizza`);
+
+alter table `Ordini` add constraint `Fk_OrdiniAcquirente`
+     foreign key (`Acquirente`)
+     references `Utenti` (`Username`);
 
 alter table `Recensioni` add constraint `Fk_RecensioniAnnuncio`
      foreign key (`CodAnnuncio`)
@@ -912,35 +925,54 @@ INSERT INTO `Volande` VALUES ('2025-07-14', 3, 9, 'Percorso standard', NULL, 240
 INSERT INTO `Volande` VALUES ('2025-07-14', 4, 4, 'Escursione cascata Mularza Noa a Busachi', 'CattognoViaggi', 375, 140);
 
 # ---------------------------------------------------------------------- #
+# Add info into "Ordini"                                              #
+# ---------------------------------------------------------------------- #
+INSERT INTO `Ordini` VALUES (NULL, '08:00:00', '2025-01-08', 'Carta di credito', 9.60, 'Fernando'); 
+INSERT INTO `Ordini` VALUES (NULL, '08:00:00', '2025-03-23', 'Carta di credito', 90.00, 'Fernando'); 
+INSERT INTO `Ordini` VALUES (NULL, '08:30:00', '2025-07-12', 'Bancomat', 6.00, 'Angelina'); 
+INSERT INTO `Ordini` VALUES (NULL, '11:00:00', '2025-02-20', 'Carta di credito', 45.00, 'Salvatore'); 
+INSERT INTO `Ordini` VALUES (NULL, '15:30:00', '2025-02-27', 'Bancomat', 22.50, 'Fernando'); 
+INSERT INTO `Ordini` VALUES (NULL, '12:30:00', '2025-02-28', 'Bancomat', 11.00, 'Angelina'); 
+INSERT INTO `Ordini` VALUES (NULL, '16:00:00', '2025-08-08', 'Carta di credito', 6.00, 'Angelina'); 
+INSERT INTO `Ordini` VALUES (NULL, '15:24:00', '2025-08-08', 'Carta di credito', 90.00, 'Salvatore'); 
+INSERT INTO `Ordini` VALUES (NULL, '19:57:00', '2025-08-08', 'Carta di credito', 45.00, 'Fernando'); 
+INSERT INTO `Ordini` VALUES (NULL, '11:33:00', '2025-09-15', 'Bancomat', 165.00, 'Angelina'); 
+INSERT INTO `Ordini` VALUES (NULL, '10:43:00', '2025-09-16', 'Bancomat', 110.00, 'Angelina'); 
+INSERT INTO `Ordini` VALUES (NULL, '12:17:00', '2025-11-09', 'Bancomat', 9.60, 'Salvatore'); 
+INSERT INTO `Ordini` VALUES (NULL, '10:34:00', '2025-11-09', 'Bancomat', 90.00, 'Salvatore'); 
+INSERT INTO `Ordini` VALUES (NULL, '08:00:00', '2025-10-08', 'Carta di credito', 10.00, 'Fernando'); 
+INSERT INTO `Ordini` VALUES (NULL, '20:20:00', '2025-10-08', 'Carta di credito', 21.00, 'Salvatore');
+
+# ---------------------------------------------------------------------- #
 # Add info into "Biglietti"                                              #
 # ---------------------------------------------------------------------- #
-INSERT INTO `Biglietti` VALUES (NULL, '2025-01-08 08:00:00', 'Carta di credito', 6.00, 'Fernando', 7);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-01-08 08:00:00', 'Carta di credito', 3.60, 'Fernando', 7);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-03-23 08:00:00', 'Carta di credito', 30.00, 'Fernando', 3);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-03-23 08:00:00', 'Carta di credito', 60.00, 'Fernando', 3);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-07-12 08:30:00', 'Bancomat', 6.00, 'Angelina', 7);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-02-20 11:00:00', 'Carta di credito', 45.00, 'Salvatore', 4);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-02-27 15:30:00', 'Bancomat', 22.50, 'Fernando', 4);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-02-28 12:30:00', 'Bancomat', 2.00, 'Angelina', 9);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-02-28 12:30:00', 'Bancomat', 3.00, 'Angelina', 9);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-02-28 12:30:00', 'Bancomat', 6.00, 'Angelina', 9);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-08-08 16:00:00', 'Carta di credito', 6.00, 'Angelina', 7);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-08-08 15:24:00', 'Carta di credito', 45.00, 'Salvatore', 6);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-08-08 15:24:00', 'Carta di credito', 45.00, 'Salvatore', 6);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-08-08 19:57:00', 'Carta di credito', 45.00, 'Fernando', 6);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-09-15 11:33:00', 'Bancomat', 55.00, 'Angelina', 5);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-09-15 11:33:00', 'Bancomat', 55.00, 'Angelina', 5);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-09-15 11:33:00', 'Bancomat', 55.00, 'Angelina', 5);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-09-16 10:43:00', 'Bancomat', 55.00, 'Angelina', 5);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-09-16 10:43:00', 'Bancomat', 55.00, 'Angelina', 5);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-11-09 12:17:00', 'Bancomat', 6.00, 'Salvatore', 7);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-11-09 12:17:00', 'Bancomat', 3.60, 'Salvatore', 7);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-11-09 10:34:00', 'Bancomat', 45.00, 'Salvatore', 6);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-11-09 10:34:00', 'Bancomat', 45.00, 'Salvatore', 6);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-10-08 08:00:00', 'Carta di credito', 5.00, 'Fernando', 8);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-10-08 08:00:00', 'Carta di credito', 5.00, 'Fernando', 8);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-10-08 20:20:00', 'Carta di credito', 7.50, 'Salvatore', 10);
-INSERT INTO `Biglietti` VALUES (NULL, '2025-10-08 20:20:00', 'Carta di credito', 13.50, 'Salvatore', 10);
+INSERT INTO `Biglietti` VALUES (NULL, 6.00, 7, 1);
+INSERT INTO `Biglietti` VALUES (NULL, 3.60, 7, 1);
+INSERT INTO `Biglietti` VALUES (NULL, 30.00, 3, 2);
+INSERT INTO `Biglietti` VALUES (NULL, 60.00, 3, 2);
+INSERT INTO `Biglietti` VALUES (NULL, 6.00, 7, 3);
+INSERT INTO `Biglietti` VALUES (NULL, 45.00, 4, 4);
+INSERT INTO `Biglietti` VALUES (NULL, 22.50, 4, 5);
+INSERT INTO `Biglietti` VALUES (NULL, 2.00, 9, 6);
+INSERT INTO `Biglietti` VALUES (NULL, 3.00, 9, 6);
+INSERT INTO `Biglietti` VALUES (NULL, 6.00, 9, 6);
+INSERT INTO `Biglietti` VALUES (NULL, 6.00, 7, 7);
+INSERT INTO `Biglietti` VALUES (NULL, 45.00, 6, 8);
+INSERT INTO `Biglietti` VALUES (NULL, 45.00, 6, 8);
+INSERT INTO `Biglietti` VALUES (NULL, 45.00, 6, 9);
+INSERT INTO `Biglietti` VALUES (NULL, 55.00, 5, 10);
+INSERT INTO `Biglietti` VALUES (NULL, 55.00, 5, 10);
+INSERT INTO `Biglietti` VALUES (NULL, 55.00, 5, 10);
+INSERT INTO `Biglietti` VALUES (NULL, 55.00, 5, 11);
+INSERT INTO `Biglietti` VALUES (NULL, 55.00, 5, 11);
+INSERT INTO `Biglietti` VALUES (NULL, 6.00, 7, 12);
+INSERT INTO `Biglietti` VALUES (NULL, 3.60, 7, 12);
+INSERT INTO `Biglietti` VALUES (NULL, 45.00, 6, 13);
+INSERT INTO `Biglietti` VALUES (NULL, 45.00, 6, 13);
+INSERT INTO `Biglietti` VALUES (NULL, 5.00, 8, 14);
+INSERT INTO `Biglietti` VALUES (NULL, 5.00, 8, 14);
+INSERT INTO `Biglietti` VALUES (NULL, 7.50, 10, 15);
+INSERT INTO `Biglietti` VALUES (NULL, 13.50, 10, 15);
 
 # ---------------------------------------------------------------------- #
 # Add info into "VeicoloVolanda"                                         #

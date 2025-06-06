@@ -1,6 +1,7 @@
 package model.utente;
 
 import java.sql.Connection;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,6 +13,8 @@ import java.util.Objects;
 import com.mysql.cj.conf.ConnectionUrlParser.Pair;
 
 import model.AnnuncioServizio;
+import model.Biglietto;
+import model.Ordine;
 import model.Recensione;
 import model.Servizio;
 import model.TipoLinea;
@@ -23,6 +26,7 @@ public class ModelUtente {
     private final Connection connection;
     private final SimpleDateFormat dateFormat;
     private Pair<String, String> credenziali;
+    private Integer codOrdine;
 
     public ModelUtente(Connection connection) {
         Objects.requireNonNull(connection, "Model created with null connection");
@@ -97,5 +101,111 @@ public class ModelUtente {
 
     public String getImageTransfers(String codice) {
         return TipoTransfer.DAO.getImageTransfers(connection, codice);
+    }
+
+    public void inserisciUtente(String username, String password, String nome, String cognome, String email) {
+        Utente.DAO.inserisciUtente(connection, username, password, nome, cognome, email);
+    }
+
+    public void creaNuovoOrdine(Time orario, Date data, String username) {
+        this.codOrdine = Ordine.DAO.creaNuovoOrdine(connection, orario, data, username);
+    }
+
+    public void updateDatiOrdine(Time orario, Date data, String tipoPagamento, String username, float prezzoScontato) {
+        int codOrdine = Ordine.DAO.getOrdineAperto(connection, username);
+        Ordine.DAO.updateDatiOrdine(connection, orario, data, tipoPagamento, username, codOrdine, prezzoScontato);
+    }
+
+    public void aggiungiBigliettiAlCarrello(Map<String, Integer> bigliettiDaAggiungere, boolean isTransfer, String codAnnuncio, String username) {
+        bigliettiDaAggiungere.forEach((categoria, quantita) -> {
+            float percentuale = isTransfer
+                ? TipoTransfer.DAO.getPercentuale(connection, categoria)
+                : TipoLinea.DAO.getPercentuale(connection, categoria);
+
+            float prezzoAnnuncio = AnnuncioServizio.DAO.getPrezzo(connection, codAnnuncio);
+            float costoBiglietto = prezzoAnnuncio * percentuale;
+            int codOrdine = Ordine.DAO.getOrdineAperto(connection, username);
+
+            for (int i = 0; i < quantita; i++) {
+                int numeroBiglietto = Biglietto.DAO.creaBiglietto(connection, costoBiglietto, Integer.parseInt(codAnnuncio), codOrdine);
+                if (isTransfer) {
+                    TipoTransfer.DAO.creaAssociazione(connection, numeroBiglietto, categoria);
+
+                } else {
+                    TipoLinea.DAO.creaAssociazione(connection, numeroBiglietto, categoria);
+                }
+            }
+            Ordine.DAO.updateCostoTotale(connection, codOrdine, costoBiglietto * quantita);
+        });
+    }
+
+    public List<String> getDettagliOrdineAperto() {
+        return Ordine.DAO.getDettagliOrdineAperto(connection, this.codOrdine);
+    }
+
+    public Integer getCodOrdine() {
+        return codOrdine;
+    }
+
+    public void aggiornaCodOrdineAperto(String username) {
+        this.codOrdine = Ordine.DAO.getOrdineAperto(connection, username);
+    }
+
+    public float getPercentuale(boolean isTransfer, String categoria) {
+        float percentuale;
+        if(isTransfer) {
+            percentuale = TipoTransfer.DAO.getPercentuale(connection, categoria);
+        } else {
+            percentuale = TipoLinea.DAO.getPercentuale(connection, categoria);
+        }
+        return percentuale;
+    }
+
+    public List<String> getOrdiniPrecedenti(String username) {
+        return Ordine.DAO.getOrdiniPrecedenti(connection, username);
+    }
+
+    public int getCostoTotale() {
+        return Ordine.DAO.getCostoTotale(connection, this.codOrdine);
+    }
+
+    public Map<String, Float> getCategoriePrezzi() {
+        return Ordine.DAO.getCategoriePrezzi(connection, this.codOrdine);
+    }
+
+    public Map<String, Float> getSconti() {
+        return Ordine.DAO.getSconti(connection, this.codOrdine);
+    }
+
+    public Map<String, Integer> getAnnunciDaModificare() {
+        return AnnuncioServizio.DAO.getAnnunciDaModificare(connection, this.codOrdine);
+    }
+    
+    public void updateBigliettiAnnuncioServizio(String titolo, int quantita) {
+        AnnuncioServizio.DAO.updateBigliettiAnnuncioServizio(connection, titolo, quantita);
+    }
+
+    public void updateBigliettiServizio(String titolo, int quantita) {
+        Servizio.DAO.updateBigliettiServizio(connection, titolo, quantita);
+    }
+
+    public int getBigliettiDisponibili(int codServizio) {
+        return AnnuncioServizio.DAO.getBigliettiDisponibili(connection, codServizio);
+    }
+
+    public void rimuoviDalCarrello(String titolo, String categoria) {
+        List<Integer> numeriBiglietto = Biglietto.DAO.getBigliettiDaRimuovere(connection, codOrdine, categoria);
+        int codServizio = AnnuncioServizio.DAO.getCodiceServizio(connection, titolo);
+        boolean isTransfer = Servizio.DAO.isTransfer(connection, codServizio);
+        for (Integer numeroBiglietto : numeriBiglietto) {
+            if (isTransfer) {
+                TipoTransfer.DAO.eliminaAssociazione(connection, numeroBiglietto, categoria);
+            } else {
+                TipoLinea.DAO.eliminaAssociazione(connection, numeroBiglietto, categoria);
+            }
+            float costo = Biglietto.DAO.getCostoBiglietto(connection, numeroBiglietto);
+            Ordine.DAO.updateCostoOrdine(connection, costo, codOrdine);
+            Biglietto.DAO.eliminaBiglietto(connection, numeroBiglietto);
+        }
     }
 }

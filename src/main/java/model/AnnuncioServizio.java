@@ -142,6 +142,78 @@ public class AnnuncioServizio extends Comunicazione {
             }
             return info;
         }
-    }
 
+        public static float getPrezzo(Connection connection, String codAnnuncio) {
+            var code = Integer.valueOf(codAnnuncio);
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_PREZZO_BASE, code);
+                var resultSet = statement.executeQuery();
+            ) {
+                if (resultSet.next()) {
+                    return resultSet.getFloat("PrezzoBase");
+                } else {
+                    throw new DAOException("Prezzo non trovato per codAnnuncio: " + codAnnuncio);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+
+        public static Map<String, Integer> getAnnunciDaModificare(Connection connection, int codOrdine) {
+            Map<String, Integer> result = new HashMap<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_ANNUNCI_QUANTITA, codOrdine, codOrdine);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    String titolo = resultSet.getString("Titolo");
+                    int quantita = resultSet.getInt("Quantita");
+                    result.put(titolo, quantita);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return result;
+        }
+
+        public static void updateBigliettiAnnuncioServizio(Connection connection, String titolo, int quantita) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.UPDATE_BIGLIETTI_DISPONIBILI, quantita, titolo);
+            ) {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+
+        public static int getBigliettiDisponibili(Connection connection, int codServizio) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_BIGLIETTI_DISPONIBILI, codServizio);
+                var resultSet = statement.executeQuery();
+            ) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("BigliettiDisponibili");
+                } else {
+                    throw new DAOException("Non è stata trovata la quantità di biglietti disponibili");
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+
+        public static int getCodiceServizio(Connection connection, String titolo) {
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_CODICE_SERVIZIO, titolo);
+                var resultSet = statement.executeQuery();
+            ) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("CodServizio");
+                } else {
+                    throw new DAOException("Non è stato trovato nessun codice servizio!");
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+        }
+    }
 }

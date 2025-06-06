@@ -18,7 +18,6 @@ public class AppUtente {
         });
         var controller = new ControllerUtente(view, model);
         view.setController(controller);
-        //controller.userRequestedInitialPage();
     }
 
 }

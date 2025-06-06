@@ -46,14 +46,14 @@ public class ConcertiPanel implements WorkPanel {
         JScrollPane annunciScrollPane = new JScrollPane(titlesPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         annunciScrollPane.getVerticalScrollBar().setUnitIncrement(16);
         annunciScrollPane.setBorder(null);
-        annunciScrollPane.getViewport().setBackground(Color.WHITE); //si può omettere
+        annunciScrollPane.getViewport().setBackground(Color.WHITE);
 
         annunciScrollPane.getViewport().addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 int width = annunciScrollPane.getViewport().getWidth();
-                imageSize = Math.max(60, width / 8); //numeri a caso
-                dynamicFontSize = Math.max(10, width / 60); //numeri a caso (se non va bene si può togliere)
+                imageSize = Math.max(60, width / 8);
+                dynamicFontSize = Math.max(10, width / 60);
                 updateConcerti();
             }
         });

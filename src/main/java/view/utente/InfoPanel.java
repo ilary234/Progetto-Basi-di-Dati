@@ -12,7 +12,12 @@ import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.sql.Date;
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -30,6 +35,8 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -77,6 +84,10 @@ public class InfoPanel implements WorkPanel {
         this.codServizio = codServizio;
         this.userScene = userScene;
 
+        int bigliettiDisponibili = this.controller.getBigliettiDisponibili(Integer.parseInt(codServizio));
+
+        List<JLabel> labelsQuantita = new ArrayList<>();
+        List<Integer> quantitaCorrente = new ArrayList<>();
         List<String> info = this.controller.findServizio(this.codServizio);
 
         this.titolo = info.get(1);
@@ -90,7 +101,7 @@ public class InfoPanel implements WorkPanel {
         this.imagePanel = new JPanel(new BorderLayout());
         this.imagePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         this.imagePanel.add(this.imageLabel, BorderLayout.CENTER);
-        this.imagePanel.setPreferredSize(new Dimension(300, 0)); // 1/3 dello spazio (adatta in base al layout finale)
+        this.imagePanel.setPreferredSize(new Dimension(300, 0)); 
 
         rightPanel.setLayout(new BorderLayout());
         
@@ -129,6 +140,7 @@ public class InfoPanel implements WorkPanel {
         buttonPanel.add(dettagliButton);
         buttonPanel.add(recensioniButton);
         buttonPanel.add(acquistoButton);
+        acquistoButton.setEnabled(bigliettiDisponibili != 0);
 
         JPanel dettagliPanel = new JPanel(new BorderLayout());
         dettagliPanel.add(new JLabel(descrizione), BorderLayout.CENTER);
@@ -162,13 +174,7 @@ public class InfoPanel implements WorkPanel {
                 loginPanel.add(new JLabel("Password:"));
                 loginPanel.add(passField);
 
-                int result = JOptionPane.showConfirmDialog(
-                    mainPanel,
-                    loginPanel,
-                    "Login",
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.PLAIN_MESSAGE
-                );
+                int result = JOptionPane.showConfirmDialog(mainPanel, loginPanel, "Login", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
                 if (result == JOptionPane.OK_OPTION) {
                     String username = userField.getText();
@@ -177,6 +183,7 @@ public class InfoPanel implements WorkPanel {
                     if (!loginOk) {
                         JOptionPane.showMessageDialog(mainPanel, "Credenziali non valide!", "Errore", JOptionPane.ERROR_MESSAGE);
                     } else {
+                        controller.getModel().aggiornaCodOrdineAperto(username);
                         mostraDialogRecensione(username);
                         controller.setCredenziali(new Pair<>(username, password));
                     }
@@ -186,9 +193,7 @@ public class InfoPanel implements WorkPanel {
             }
         });
 
-        switchPanel.add(recensioniPanel, RECENSIONI);
-
-        JPanel acquistoPanel = new JPanel();
+        JPanel acquistoPanel = new JPanel(new BorderLayout());
         JPanel categoriePanel = new JPanel();
         categoriePanel.setLayout(new BoxLayout(categoriePanel, BoxLayout.Y_AXIS));
         categoriePanel.setPreferredSize(new Dimension(500, 250));
@@ -216,10 +221,14 @@ public class InfoPanel implements WorkPanel {
                         quantita[idx]--;
                         num.setText(String.valueOf(quantita[idx]));
                     }
+                    quantitaCorrente.clear();
+                    for (int q : quantita) quantitaCorrente.add(q);
                 });
                 piu.addActionListener(e -> {
                     quantita[idx]++;
                     num.setText(String.valueOf(quantita[idx]));
+                    quantitaCorrente.clear();
+                    for (int q : quantita) quantitaCorrente.add(q);
                 });
 
                 riga.add(nomeCat);
@@ -246,11 +255,17 @@ public class InfoPanel implements WorkPanel {
                         quantita[idx]--;
                         num.setText(String.valueOf(quantita[idx]));
                     }
+                    quantitaCorrente.clear();
+                    for (int q : quantita) quantitaCorrente.add(q);
                 });
                 piu.addActionListener(e -> {
                     quantita[idx]++;
                     num.setText(String.valueOf(quantita[idx]));
+                    quantitaCorrente.clear();
+                    for (int q : quantita) quantitaCorrente.add(q);
                 });
+
+                labelsQuantita.add(num);
 
                 riga.add(nomeCat);
                 riga.add(meno);
@@ -263,14 +278,13 @@ public class InfoPanel implements WorkPanel {
         }
 
         categoriePanel.add(Box.createVerticalStrut(0));
-        JPanel bottonePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottonePanel = new JPanel();
         bottonePanel.setBackground(new Color(COLOR_BUTTONS_PANEL));
-        bottonePanel.setPreferredSize(new Dimension(recensioniPanel.getWidth(), recensioniPanel.getHeight() / 4));
-        JButton aggiungiCarrello = GenericButton.getGenericButton("Aggiungi al carrello", dynamicFontSize, "Aggiungi al carrello");
+        JButton aggiungiCarrello = GenericButton.getGenericButton("Aggiungi al Carrello", dynamicFontSize, "Aggiungi al Carrello");
         aggiungiCarrello.setForeground(Color.WHITE);
         bottonePanel.add(aggiungiCarrello);
-        categoriePanel.add(bottonePanel);
-        acquistoPanel.add(categoriePanel);
+        acquistoPanel.add(categoriePanel, BorderLayout.CENTER);
+        acquistoPanel.add(bottonePanel, BorderLayout.SOUTH);
 
         aggiungiCarrello.addActionListener(e -> {
             boolean isLogged = controller.isLoggedIn();
@@ -300,15 +314,57 @@ public class InfoPanel implements WorkPanel {
                         JOptionPane.showMessageDialog(mainPanel, "Credenziali non valide!", "Errore", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {
+                        controller.getModel().aggiornaCodOrdineAperto(username);
                         controller.setCredenziali(new Pair<>(username, password));
                     }
                 } else {
                     return;
                 }
             }
-            JOptionPane.showMessageDialog(mainPanel, "Biglietti aggiunti al carrello!");
-            GenericButton.setBackgroundVisible(userScene.getHomeButton(), SELECTED_COLOR, true);
-            this.userScene.changeWorkPanel(new HomePanel(this.controller, this.userScene));
+
+            String username = controller.getCredenziali().left;
+            Integer codOrdineAperto = controller.getOrdineAperto();
+
+            if (codOrdineAperto == null) {
+                Date data = new Date(System.currentTimeMillis());
+                Time orario = new Time(System.currentTimeMillis());
+                controller.creaNuovoOrdine(orario, data, username);
+            }
+
+            Map<String, Integer> bigliettiDaAggiungere = new HashMap<>();
+            double costoTotale = 0.0;
+            if (isTransfer) {
+                for (int i = 0; i < categorie.size(); i += 3) {
+                    int idx = i / 3;
+                    int qta = quantitaCorrente.get(idx);
+                    if (qta > 0) {
+                        bigliettiDaAggiungere.put(categorie.get(i), qta); 
+                        float percentuale = controller.getModel().getPercentuale(isTransfer, categorie.get(i));
+                        double prezzoAnnuncio = Double.parseDouble(prezzo);
+                        costoTotale += prezzoAnnuncio * percentuale * qta;
+                    }
+                }
+            } else {
+                for (int i = 0; i < categorie.size(); i++) {
+                    int qta = quantitaCorrente.get(i);
+                    if (qta > 0) {
+                        bigliettiDaAggiungere.put(categorie.get(i), qta);
+                        float percentuale = controller.getModel().getPercentuale(isTransfer, categorie.get(i));
+                        double prezzoAnnuncio = Double.parseDouble(prezzo);
+                        costoTotale += prezzoAnnuncio * percentuale * qta;
+                    }
+                }
+            }
+            System.out.println("Costo totale biglietti da aggiungere: " + String.format("%.2f", costoTotale) + " €");
+            this.controller.aggiungiBigliettiAlCarrello(bigliettiDaAggiungere, isTransfer, this.codAnnuncio, this.controller.getCredenziali().left);
+            List<String> dettagliOrdineAperto = controller.getDettagliOrdineAperto();
+            if (dettagliOrdineAperto == null || dettagliOrdineAperto.isEmpty()) {
+                JOptionPane.showMessageDialog(mainPanel, "Il carrello è vuoto!");
+            } else {
+                JOptionPane.showMessageDialog(mainPanel, "Biglietti aggiunti al carrello!");
+                InfoPanel nuovoInfoPanel = new InfoPanel(controller, userScene, imageIcon, codServizio);
+                userScene.changeWorkPanel(nuovoInfoPanel);
+            }
         });
 
         switchPanel.add(dettagliPanel, DETTAGLI);
@@ -379,10 +435,10 @@ public class InfoPanel implements WorkPanel {
         commentoPanel.add(new JScrollPane(commentoArea), BorderLayout.CENTER);
 
         JLabel contaLabel = new JLabel("0/200");
-        commentoArea.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { aggiorna(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { aggiorna(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { aggiorna(); }
+        commentoArea.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { aggiorna(); }
+            public void removeUpdate(DocumentEvent e) { aggiorna(); }
+            public void changedUpdate(DocumentEvent e) { aggiorna(); }
             private void aggiorna() {
                 int len = commentoArea.getText().length();
                 contaLabel.setText(len + "/200");
@@ -410,9 +466,13 @@ public class InfoPanel implements WorkPanel {
             if (commento.length() > 200) {
                 commento = commento.substring(0, 200);
             }
-            java.sql.Date data = new java.sql.Date(System.currentTimeMillis());
+            Date data = new Date(System.currentTimeMillis());
 
-            controller.inserisciRecensione(username, Integer.parseInt(this.codAnnuncio), valutazione, commento, data);
+            if (commento.isEmpty()) {
+                this.controller.inserisciRecensione(username, Integer.parseInt(this.codAnnuncio), valutazione, null, data);
+            } else {
+                this.controller.inserisciRecensione(username, Integer.parseInt(this.codAnnuncio), valutazione, commento, data);
+            }
             updateRecensioniPanel(this.listaRecensioniPanel);
             JOptionPane.showMessageDialog(mainPanel, "Recensione inserita con successo!");
 
