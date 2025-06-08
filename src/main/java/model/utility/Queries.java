@@ -107,10 +107,11 @@ public final class Queries {
     
     public static final String GET_BIGLIETTI_STATISTICS = 
         """
-            select monthname(DataOraAcquisto) as Mese, count(*) as `Biglietti venduti`
-            from biglietti
-            where year(DataOraAcquisto) = ?
-            group by month(DataOraAcquisto)
+            select monthname(DataAcquisto) as Mese, count(*) as `Biglietti venduti`
+            from biglietti b, ordini o
+            where b.CodOrdine = o.CodOrdine
+            and year(DataAcquisto) = ?
+            group by month(DataAcquisto)
             order by count(*) desc;
         """;
     

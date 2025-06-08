@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -15,7 +16,8 @@ import view.api.View;
 
 public class ViewUtente implements View{
 
-    private static final double FRAME_SIZE_FACTOR = 0.6;
+    private static final double FRAME_SIZE_FACTOR = 0.7;
+    private static final String FRAME_ICON_PATH = "view/logo.png";
 
     private final JFrame frame;
     private final Dimension screenSize;
@@ -31,8 +33,10 @@ public class ViewUtente implements View{
      * @param visible if the window should be visible
      */
     public ViewUtente(final Runnable onClose) {
-        this.frame = new JFrame("Utente");
+        this.frame = new JFrame();
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        final var iconImage = new ImageIcon(ClassLoader.getSystemResource(FRAME_ICON_PATH)).getImage();
+        this.frame.setIconImage(iconImage);
 
         // Set the size of the frame
         this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();

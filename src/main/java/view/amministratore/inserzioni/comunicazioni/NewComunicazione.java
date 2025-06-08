@@ -34,7 +34,7 @@ public class NewComunicazione extends JDialog {
         var titolo = GenericLabel.getGenericLabel("Titolo*: ", TEXT_SIZE);
         var descrizione = GenericLabel.getGenericLabel("Descrizione*: ", TEXT_SIZE);
 
-        var titoloText = new JTextField();
+        var titoloText = new JTextField(20);
         var descrizioneText = new JTextArea(10, 20);
         ((AbstractDocument) titoloText.getDocument()).setDocumentFilter(new MaxLenghtDocumentFilter(50));
 

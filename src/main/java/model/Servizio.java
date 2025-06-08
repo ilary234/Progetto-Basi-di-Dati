@@ -19,7 +19,7 @@ public class Servizio {
     private final String categoriaServizio;
 
     public Servizio(int codServizio, String partenza, String destinazione, String orarioPartenza, int bigliettiVenduti,
-            List<Corse> corse, String categoriaServizio) {
+            String categoriaServizio) {
         this.codServizio = Objects.requireNonNull(codServizio);
         this.partenza = Objects.requireNonNull(partenza);
         this.destinazione = Objects.requireNonNull(destinazione);
@@ -104,7 +104,7 @@ public class Servizio {
                     var bigliettiVenduti = resultSet.getInt("NumeroBigliettiVenduti");
                     var categoria = resultSet.getString("Categoria");
 
-                    var servizio = new Servizio(codServizio, partenza, destinazione, orario, bigliettiVenduti, List.of(), categoria);
+                    var servizio = new Servizio(codServizio, partenza, destinazione, orario, bigliettiVenduti, categoria);
                     servizi.add(servizio);
                 }
             } catch (Exception e) {

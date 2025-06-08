@@ -12,20 +12,20 @@ import model.utility.Queries;
 
 public class Mezzo {
 
-    private final int numeroMezzo; //integer not null,
-    private final String targa; //char(7) not null,
-    private final int euro; //integer not null,
-    private final int annoImmatricolazione; //smallint not null,
-    private final Date dataRevisione; //date not null, 
-    private final int PAX; //smallint not null,
-    private int kmTotali; //integer not null,
-    private boolean CDPD; //boolean not null,
-    private final String carrozzeria; //varchar(20),
-    private final String modello; //varchar(50),
-    private final String telaio; //varchar(50),
-    private final String numeroLicenzaEuropea; //char(10),
+    private final int numeroMezzo;
+    private final String targa;
+    private final int euro;
+    private final int annoImmatricolazione;
+    private final Date dataRevisione;
+    private final int PAX;
+    private int kmTotali;
+    private boolean CDPD;
+    private final String carrozzeria;
+    private final String modello;
+    private final String telaio;
+    private final String numeroLicenzaEuropea;
 
-    private String assicurazione; //varchar(20) not null,
+    private String assicurazione;
 
     public Mezzo(int numeroMezzo, String targa, String assicurazione, int euro, int annoImmatricolazione,
             Date dataRevisione, int pAX, int kmTotali, boolean cDPD, String carrozzeria, 

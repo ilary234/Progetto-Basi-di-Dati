@@ -4,23 +4,12 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import model.utility.DAOException;
 import model.utility.DAOUtils;
 import model.utility.Queries;
 
 public class Giornaliera {
-
-    private final Date data;
-    private final int codImp;
-    private final List<Volanda> volande;
-
-    public Giornaliera(Date data, int codImp, List<Volanda> volande) {
-        this.data = Objects.requireNonNull(data);
-        this.codImp = Objects.requireNonNull(codImp);
-        this.volande = new ArrayList<>(volande);
-    }
 
     public static final class DAO {
 

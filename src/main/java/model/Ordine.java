@@ -2,41 +2,17 @@ package model;
 
 import java.sql.Connection;
 import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 import model.utility.DAOException;
 import model.utility.DAOUtils;
 import model.utility.Queries;
 
 public class Ordine {
-
-    private final int codOrdine;
-    private final String tipoPagamento;
-    private final LocalTime orarioAcquisto;
-    private final SimpleDateFormat dateFormat;
-    private final Date dataAcquisto;
-    private final float costoTotale;
-    private final String acquirente;
-    
-    public Ordine(int codOrdine, String tipoPagamento, LocalTime orarioAcquisto, Date dataAcquisto, float costoTotale, String acquirente) {
-        this.codOrdine = Objects.requireNonNull(codOrdine);
-        this.tipoPagamento = Objects.requireNonNull(tipoPagamento);
-        this.orarioAcquisto = Objects.requireNonNull(orarioAcquisto);
-        this.dateFormat = (SimpleDateFormat)SimpleDateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALY);
-        this.dateFormat.applyPattern("yyyy.MM.dd");
-        this.dataAcquisto = Objects.requireNonNull(dataAcquisto);
-        this.costoTotale = Objects.requireNonNull(costoTotale);
-        this.acquirente = Objects.requireNonNull(acquirente);
-    }
 
     public static final class DAO {
 
