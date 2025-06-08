@@ -165,7 +165,7 @@ public class ModelUtente {
         return Ordine.DAO.getOrdiniPrecedenti(connection, username);
     }
 
-    public int getCostoTotale() {
+    public float getCostoTotale() {
         return Ordine.DAO.getCostoTotale(connection, this.codOrdine);
     }
 

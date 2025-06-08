@@ -132,7 +132,7 @@ public class CarrelloPanel extends JPanel {
 
         panel.add(new JScrollPane(listaPanel), BorderLayout.CENTER);
 
-        double costoTotale = 0;
+        float costoTotale = 0;
         if(codOrdine != null) {
             costoTotale = controller.getCostoTotale();
         }

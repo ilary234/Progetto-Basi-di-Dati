@@ -131,7 +131,7 @@ public class ControllerUtente {
         return this.model.getOrdiniPrecedenti(username);
     }
 
-    public int getCostoTotale() {
+    public float getCostoTotale() {
         return this.model.getCostoTotale();
     }
 

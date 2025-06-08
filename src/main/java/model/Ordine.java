@@ -138,13 +138,13 @@ public class Ordine {
             return dettagli;
         }
 
-        public static int getCostoTotale(Connection connection, int codOrdine) {
+        public static float getCostoTotale(Connection connection, int codOrdine) {
             try (
                 var statement = DAOUtils.prepare(connection, Queries.GET_COSTO_TOTALE, codOrdine);
                 var resultSet = statement.executeQuery();
             ) {
                 if (resultSet.next()) {
-                    return resultSet.getInt("CostoTotale");
+                    return resultSet.getFloat("CostoTotale");
                 } else {
                     throw new DAOException("Non è stato trovato nessun costo totale!");
                 }
