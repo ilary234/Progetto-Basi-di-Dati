@@ -77,7 +77,7 @@ public class LineePanel implements WorkPanel {
             titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
             JButton button;
             ImageIcon scaledIcon;
-            if (linea.getValue().equals("Città")) {
+            if (linea.getValue().equals("Linea standard")) {
                 ImageIcon icon = new ImageIcon(getClass().getResource("img/bus.png"));
                 Image scaledImage = icon.getImage().getScaledInstance(imageSize, imageSize, java.awt.Image.SCALE_SMOOTH);
                 scaledIcon = new ImageIcon(scaledImage);

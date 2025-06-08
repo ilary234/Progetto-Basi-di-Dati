@@ -128,7 +128,7 @@ public class AnnuncioServizio extends Comunicazione {
             ) {
                 while (resultSet.next()) {
                     var codice = resultSet.getInt("CodServizio");
-                    var categoria = resultSet.getString("NomeLinea");
+                    var categoria = resultSet.getString("Titolo");
                     result.put(codice, categoria);
                 }
             } catch (Exception e) {
@@ -145,7 +145,7 @@ public class AnnuncioServizio extends Comunicazione {
             ) {
                 while (resultSet.next()) {
                     var codice = resultSet.getInt("CodServizio");
-                    var categoria = resultSet.getString("NomeTransfer");
+                    var categoria = resultSet.getString("Titolo");
                     result.put(codice, categoria);
                 }
             } catch (Exception e) {

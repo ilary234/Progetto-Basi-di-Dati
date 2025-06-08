@@ -352,15 +352,19 @@ public final class Queries {
 
     public static final String GET_LINES = 
         """
-            SELECT *
-            FROM CategorieServizi
+            SELECT CodServizio, Titolo 
+            FROM AnnunciServizi 
+            WHERE CodServizio IN (SELECT CodServizio 
+                                  FROM CategorieServizi) 
         """;
 
     public static final String GET_GP = 
         """
-            SELECT *
-            FROM ClassiServizi
-            WHERE NomeTransfer = 'Giro Panoramico'
+            SELECT CodServizio, Titolo 
+            FROM AnnunciServizi 
+            WHERE CodServizio IN (SELECT CodServizio 
+                                  FROM ClassiServizi 
+                                  WHERE NomeTransfer = 'Giro panoramico') 
         """;
     
     public static final String GET_CONCERTS = 
@@ -392,14 +396,14 @@ public final class Queries {
         """
             SELECT AVG(Valutazione) AS MediaValutazioni
             FROM Recensioni
-            WHERE CodAnnuncio = ?;
+            WHERE CodAnnuncio = ?
         """;
 
     public static final String GET_REVIEWS =
         """
             SELECT Utente, Valutazione, Commento, Data
             FROM Recensioni
-            WHERE CodAnnuncio = ?;
+            WHERE CodAnnuncio = ?
         """;
     
     public static final String FIND_UTENTE =
@@ -412,8 +416,8 @@ public final class Queries {
     
     public static final String INSERT_REVIEW =
         """
-            INSERT INTO Recensioni (Utente, CodAnnuncio, Valutazione, Commento, Data)
-            VALUES (?, ?, ?, ?, ?);
+            INSERT INTO Recensioni
+            VALUES (?, ?, ?, ?, ?)
         """;
 
     public static final String FIND_CATEGORIA =
@@ -459,8 +463,8 @@ public final class Queries {
 
     public static final String INSERT_USER =
         """
-            INSERT INTO Utenti (Username, Password, Nome, Cognome, Email)
-            VALUES (?, ?, ?, ?, ?);
+            INSERT INTO Utenti
+            VALUES (?, ?, ?, ?, ?)
         """;
 
     public static final String GET_ORDINE_APERTO =
@@ -482,7 +486,7 @@ public final class Queries {
 
     public static final String INSERT_ORDINE =
         """
-            INSERT INTO Ordini (CodOrdine, OraAcquisto, DataAcquisto, TipoPagamento, CostoTotale, Acquirente)
+            INSERT INTO Ordini
             VALUES (?, ?, ?, ?, ?, ?)
         """;
 
@@ -510,7 +514,7 @@ public final class Queries {
 
     public static final String GET_PERCENTUALE_LINES =
         """
-            SELECT DISTINCT PercentualeDaPagare
+            SELECT PercentualeDaPagare
             FROM TipoLinea
             WHERE NomeTipo = ?
         """;
@@ -524,20 +528,20 @@ public final class Queries {
 
     public static final String INSERT_BIGLIETTO =
         """
-            INSERT INTO Biglietti (NumeroBiglietto, Costo, CodAnnuncio, CodOrdine)
-            VALUES (?, ?, ?, ?);
+            INSERT INTO Biglietti
+            VALUES (?, ?, ?, ?)
         """;
 
     public static final String INSERT_TIPO =
         """
-            INSERT INTO Tipo (NumeroBiglietto, NomeTipo)
-            VALUES (?, ?);
+            INSERT INTO Tipo
+            VALUES (?, ?)
         """;
     
     public static final String INSERT_TIPOLOGIA =
         """
-            INSERT INTO Tipologia (NumeroBiglietto, NomeTipologia)
-            VALUES (?, ?);
+            INSERT INTO Tipologia
+            VALUES (?, ?)
         """;
 
     public static final String GET_DETTAGLI_ORDINE_APERTO =
@@ -615,7 +619,7 @@ public final class Queries {
             FROM Biglietti b
             JOIN AnnunciServizi a ON b.CodAnnuncio = a.CodAnnuncio
             WHERE b.CodOrdine = ?
-            GROUP BY a.Titolo;
+            GROUP BY a.Titolo
         """;
 
     public static final String UPDATE_BIGLIETTI_DISPONIBILI =
