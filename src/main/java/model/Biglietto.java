@@ -1,38 +1,14 @@
 package model;
 
 import java.sql.Connection;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 import model.utility.DAOException;
 import model.utility.DAOUtils;
 import model.utility.Queries;
 
 public class Biglietto {
-
-    private final int numeroBiglietto; 
-    private final SimpleDateFormat dateFormat;
-    private final Date dataOraAcquisto;
-    private final String tipoPagamento;
-    private final float costo;      
-    private final String acquirente;
-    private final int codAnnuncio;
-
-    public Biglietto(int numeroBiglietto, Date dataOraAcquisto, String tipoPagamento, float costo, String acquirente, int codAnnuncio) {
-        this.numeroBiglietto = Objects.requireNonNull(numeroBiglietto);
-        this.dateFormat = (SimpleDateFormat)SimpleDateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALY);
-        this.dateFormat.applyPattern("yyyy.MM.dd");
-        this.dataOraAcquisto = Objects.requireNonNull(dataOraAcquisto);
-        this.tipoPagamento = Objects.requireNonNull(tipoPagamento);
-        this.costo = Objects.requireNonNull(costo);
-        this.acquirente = Objects.requireNonNull(acquirente);
-        this.codAnnuncio = Objects.requireNonNull(codAnnuncio);
-    }
 
     public static final class DAO {
 

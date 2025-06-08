@@ -12,12 +12,12 @@ import model.utility.Queries;
 
 public class Volanda {
 
-    private final int numeroVolanda; //integer not null,
-    private final int codServizio; //integer not null,
-    private String note; //varchar(200) not null,
-    private String fornitore; //varchar(50),
-    private float prezzo; // float not null check (`Prezzo` > 0),
-    private int km; //integer not null check (`Km` > 0),
+    private final int numeroVolanda;
+    private final int codServizio;
+    private String note;
+    private String fornitore;
+    private float prezzo;
+    private int km;
 
     private String autista;
     private int mezzo;
@@ -28,7 +28,7 @@ public class Volanda {
         this.numeroVolanda = Objects.requireNonNull(numeroVolanda);
         this.codServizio = Objects.requireNonNull(codServizio);
         this.note = Objects.requireNonNull(note);
-        this.fornitore = fornitore;//.isBlank() ? fornitore : "";
+        this.fornitore = fornitore;
         this.prezzo = Objects.requireNonNull(prezzo);
         this.km = Objects.requireNonNull(km);
         this.autista = autista;
@@ -36,17 +36,6 @@ public class Volanda {
         this.committente = committente;
     }
 
-    /*public void setAutista(final String cF) {
-        this.autista = cF;
-    }
-
-    public void setMezzo(final int mezzo) {
-        this.mezzo = mezzo;
-    }
-
-    public void setCommittente(final int committente) {
-        this.committente = committente;
-    }*/
 
     public int getNumeroVolanda() {
         return numeroVolanda;

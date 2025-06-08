@@ -5,13 +5,13 @@ import java.util.Objects;
 
 public abstract class Dipendente {
 
-    protected final String CF; //char(16) not null,
-    protected final String nome; //varchar(20) not null,
-    protected final String cognome; //varchar(20) not null,
-    protected final Date dataNascita; //date not null,
-    protected final String luogoNascita; //varchar(20) not null,
-    protected String residenza; //varchar(15) not null,
-    protected String telefono; //varchar(15) not null,
+    protected final String CF;
+    protected final String nome;
+    protected final String cognome;
+    protected final Date dataNascita;
+    protected final String luogoNascita;
+    protected String residenza;
+    protected String telefono;
 
 
     public Dipendente(String cF, String nome, String cognome, Date dataNascita, String luogoNascita, String residenza,

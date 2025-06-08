@@ -12,8 +12,8 @@ import model.utility.Queries;
 
 public class Autista extends Dipendente{
 
-    private String numeroPatente; //char(10) not null,
-    private Date scadenzaCQC; //date not null,
+    private String numeroPatente;
+    private Date scadenzaCQC;
     private int numeroKB;
 
     public Autista(String cF, String nome, String cognome, Date dataNascita, String luogoNascita, String residenza,

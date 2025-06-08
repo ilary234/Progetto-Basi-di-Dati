@@ -1,7 +1,7 @@
 package model.amministratore;
 
 import model.utility.DAOUtils;
-import view.amministratore.api.ViewAmm;
+import view.amministratore.ViewAmm;
 
 import java.sql.SQLException;
 

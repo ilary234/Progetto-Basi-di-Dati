@@ -332,6 +332,7 @@ public class InfoPanel implements WorkPanel {
             }
 
             Map<String, Integer> bigliettiDaAggiungere = new HashMap<>();
+            @SuppressWarnings("unused")
             double costoTotale = 0.0;
             if (isTransfer) {
                 for (int i = 0; i < categorie.size(); i += 3) {

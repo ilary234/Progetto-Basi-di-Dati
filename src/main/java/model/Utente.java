@@ -1,27 +1,12 @@
 package model;
 
 import java.sql.Connection;
-import java.util.Objects;
 
 import model.utility.DAOException;
 import model.utility.DAOUtils;
 import model.utility.Queries;
 
 public class Utente {
-    
-    private final String username; 
-    private final String password; 
-    private final String nome; 
-    private final String cognome; 
-    private final String email; 
-
-    public Utente(String username, String password, String nome, String cognome, String email) {
-        this.username = Objects.requireNonNull(username);
-        this.password = Objects.requireNonNull(password);
-        this.nome = Objects.requireNonNull(nome);
-        this.cognome = Objects.requireNonNull(cognome);
-        this.email = email;
-    }
 
     public static final class DAO {
 
