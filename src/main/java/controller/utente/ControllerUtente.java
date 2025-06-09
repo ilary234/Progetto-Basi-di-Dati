@@ -8,19 +8,16 @@ import java.util.Map;
 import com.mysql.cj.conf.ConnectionUrlParser.Pair;
 
 import model.utente.ModelUtente;
-import view.api.View;
 
 public class ControllerUtente {
 
-    private final View mainView;
     private final ModelUtente model;
 
     public ModelUtente getModel() {
         return model;
     }
 
-    public ControllerUtente(View mainView, ModelUtente model) {
-        this.mainView = mainView;
+    public ControllerUtente(ModelUtente model) {
         this.model = model;
     }
 

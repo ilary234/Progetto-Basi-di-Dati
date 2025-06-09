@@ -16,7 +16,7 @@ public class AppUtente {
                 connection.close();
             } catch (Exception ignored) {}
         });
-        var controller = new ControllerUtente(view, model);
+        var controller = new ControllerUtente(model);
         view.setController(controller);
     }
 
