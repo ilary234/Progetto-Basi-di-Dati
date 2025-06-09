@@ -87,6 +87,12 @@ public final class Queries {
             from Classiservizi;
         """;
 
+    public static final String GET_LINEE =
+        """
+            select *
+            from Categorieservizi
+        """;
+
     public static final String INSERT_SERVIZIO = 
         """
             insert into servizi

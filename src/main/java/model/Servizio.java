@@ -141,7 +141,7 @@ public class Servizio {
         }
 
         public static void addCategoriaServizio(Connection connection, int codice, String categoria) {
-            var linee = AnnuncioServizio.DAO.getLines(connection).values();
+            var linee = getLinee(connection);           
             var query = "";
             if (linee.contains(categoria)) {
                 query = Queries.INSERT_CATEGORIA;
@@ -155,6 +155,22 @@ public class Servizio {
             } catch (Exception e) {
                 throw new DAOException(e);
             }
+        }
+
+        private static List<String> getLinee(Connection connection) {
+            List<String> lines = new ArrayList<>();
+            try (
+                var statement = DAOUtils.prepare(connection, Queries.GET_LINEE);
+                var resultSet = statement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    var nome = resultSet.getString("NomeLinea");
+                    lines.add(nome);
+                }
+            } catch (Exception e) {
+                throw new DAOException(e);
+            }
+            return lines;
         }
 
         public static List<String> getStatistics(Connection connection) {

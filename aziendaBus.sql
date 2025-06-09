@@ -888,6 +888,7 @@ INSERT INTO `ClassiServizi` VALUES (4, 'Escursione');
 INSERT INTO `ClassiServizi` VALUES (5, 'Concerto');
 INSERT INTO `ClassiServizi` VALUES (6, 'Concerto');
 INSERT INTO `ClassiServizi` VALUES (7, 'Giro panoramico');
+INSERT INTO `ClassiServizi` VALUES (11, 'Giro panoramico');
 
 # ---------------------------------------------------------------------- #
 # Add info into "Giornaliere"                                            #
