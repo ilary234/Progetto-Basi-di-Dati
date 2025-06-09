@@ -172,6 +172,7 @@ public class DailyPanel implements WorkPanel{
                         controller.deleteGiornaliera(date);
                         createGiornaliere();
                     }
+                    break;
                 case "Nuova Volanda":
                     new NewVolandaDialog(controller, DailyPanel.this);
                     break;
